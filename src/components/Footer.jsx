@@ -352,7 +352,7 @@ export default function Footer() {
               <span className="text-xl font-bold text-white tracking-tight">{companyName}</span>
             )}
             <p className="text-sm text-slate-400 leading-relaxed mt-4">
-              {translate(
+              {settings?.footerDescription ? (activeLang === 'tr' ? settings.footerDescription : (settings.footerDescriptionEn || settings.footerDescription)) : translate(
                 'Yüksek kaliteli hizmet ve müşteri memnuniyeti vizyonuyla dijital dünyada yanınızdayız.',
                 'We are with you in the digital world with our vision of high quality service and customer satisfaction.'
               )}

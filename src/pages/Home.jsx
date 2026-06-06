@@ -20,10 +20,10 @@ export default function Home() {
       : `Welcome to ${companyName}. We offer professional solutions with modern technologies and our expert team.`;
     
     updateSEOMeta({
-      title: activeLang === 'tr' ? 'Ana Sayfa' : 'Home',
+      title: settings?.homeTitle || (activeLang === 'tr' ? 'Ana Sayfa' : 'Home'),
       description: settings?.companyDescription || homeDescription,
       image: settings?.logos?.header || settings?.logos?.footer || '',
-      companyName
+      companyName: settings?.homeTitle ? '' : companyName
     });
   }, [activeLang, companyName, settings]);
 

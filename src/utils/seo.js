@@ -2,8 +2,9 @@
  * Updates the document title and meta tags for SEO dynamically.
  * Overwrites or removes existing tags to prevent stale tags from persisting during route transitions.
  */
-export function updateSEOMeta({ title, description, image, companyName = 'CoreWeb' }) {
-  const finalTitle = title ? `${title} | ${companyName}` : companyName;
+export function updateSEOMeta({ title, description, image, companyName }) {
+  const resolvedCompany = companyName === undefined ? 'CoreWeb' : companyName;
+  const finalTitle = (title && resolvedCompany && resolvedCompany !== '') ? `${title} | ${resolvedCompany}` : (title || resolvedCompany || '');
   document.title = finalTitle;
 
   const updateTag = (name, content, attr = 'name') => {

@@ -106,18 +106,32 @@ export default function HeroSlider({ sliders = [], activeLang }) {
                 )}
 
                 {/* Button Action */}
-                {slide.btnText && (
-                  <div className="pt-4">
-                    <a
-                      href={slide.btnUrl || '#'}
-                      className={`inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl shadow-md transition-all duration-300 transform hover:-translate-y-0.5 ${
-                        isDarkTheme
-                          ? 'bg-white text-slate-900 hover:bg-slate-100 hover:shadow-white/10'
-                          : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-500/10'
-                      }`}
-                    >
-                      {slide.btnText}
-                    </a>
+                {(localized.btnText || slide.btnText || localized.btn2Text || slide.btn2Text) && (
+                  <div className="pt-4 flex flex-wrap gap-4 items-center">
+                    {(localized.btnText || slide.btnText) && (
+                      <a
+                        href={localized.btnUrl || slide.btnUrl || '#'}
+                        className={`inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl shadow-md transition-all duration-300 transform hover:-translate-y-0.5 ${
+                          isDarkTheme
+                            ? 'bg-white text-slate-900 hover:bg-slate-100 hover:shadow-white/10'
+                            : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-500/10'
+                        }`}
+                      >
+                        {localized.btnText || slide.btnText}
+                      </a>
+                    )}
+                    {(localized.btn2Text || slide.btn2Text) && (
+                      <a
+                        href={localized.btn2Url || slide.btn2Url || '#'}
+                        className={`inline-flex items-center justify-center px-6 py-3 border text-sm font-semibold rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 ${
+                          isDarkTheme
+                            ? 'bg-transparent text-white border-white/30 hover:bg-white/10'
+                            : 'bg-transparent text-indigo-600 border-indigo-600/30 hover:bg-indigo-50'
+                        }`}
+                      >
+                        {localized.btn2Text || slide.btn2Text}
+                      </a>
+                    )}
                   </div>
                 )}
               </div>
