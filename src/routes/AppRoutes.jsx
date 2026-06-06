@@ -1,0 +1,130 @@
+import { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
+import { detectAndResolveTenant } from '../utils/tenantResolver';
+import SiteLayout from '../layouts/SiteLayout';
+import Home from '../pages/Home';
+import BlogList from '../pages/BlogList';
+import BlogDetail from '../pages/BlogDetail';
+import NewsList from '../pages/NewsList';
+import NewsDetail from '../pages/NewsDetail';
+import ProductList from '../pages/ProductList';
+import ProductDetail from '../pages/ProductDetail';
+import Contact from '../pages/Contact';
+import LoadingState from '../components/LoadingState';
+import NotFoundSite from '../components/NotFoundSite';
+
+function RouteResolver() {
+  const params = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [tenantMapping, setTenantMapping] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [resolvedLang, setResolvedLang] = useState(null);
+
+  const hostname = window.location.hostname;
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+
+  useEffect(() => {
+    let slug = null;
+    if (isLocalOrPortal) {
+      slug = params.tenantSlug;
+    }
+
+    const resolve = async () => {
+      setLoading(true);
+      try {
+        const mapping = await detectAndResolveTenant(slug);
+        setTenantMapping(mapping);
+
+        if (mapping) {
+          const pathSegments = location.pathname.split('/').filter(Boolean);
+          // If local/demo: path is /:tenantSlug/:lang/... (lang is segment index 1)
+          // If production/subdomain: path is /:lang/... (lang is segment index 0)
+          const langIndex = isLocalOrPortal ? 1 : 0;
+          const urlLang = pathSegments[langIndex];
+
+          const enabledLangs = mapping.enabledLanguages || ['tr'];
+          const defaultLang = mapping.defaultLanguage || 'tr';
+
+          if (urlLang && enabledLangs.includes(urlLang)) {
+            setResolvedLang(urlLang);
+          } else {
+            // Redirect to default language
+            const newSegments = [...pathSegments];
+            if (urlLang && !enabledLangs.includes(urlLang)) {
+              newSegments[langIndex] = defaultLang;
+            } else if (!urlLang || (isLocalOrPortal && newSegments.length < 2)) {
+              if (isLocalOrPortal) {
+                // Ensure slug is first, then lang
+                newSegments[0] = params.tenantSlug;
+                newSegments[1] = defaultLang;
+              } else {
+                newSegments[0] = defaultLang;
+              }
+            }
+            const redirectPath = '/' + newSegments.join('/');
+            navigate(redirectPath, { replace: true });
+          }
+        }
+      } catch (err) {
+        console.error('Resolution failed:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    resolve();
+  }, [params.tenantSlug, location.pathname, hostname, isLocalOrPortal, navigate]);
+
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  if (!tenantMapping) {
+    return <NotFoundSite reason="Web sitesi bulunamadı veya pasif durumda." />;
+  }
+
+  if (!resolvedLang) {
+    return <LoadingState />;
+  }
+
+  return (
+    <SiteLayout tenantMapping={tenantMapping} activeLang={resolvedLang}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/:slug" element={<BlogDetail />} />
+        <Route path="/haberler" element={<NewsList />} />
+        <Route path="/haberler/:slug" element={<NewsDetail />} />
+        <Route path="/urunler" element={<ProductList />} />
+        <Route path="/urunler/:slug" element={<ProductDetail />} />
+        <Route path="/iletisim" element={<Contact />} />
+        <Route path="*" element={<NotFoundSite reason="Sayfa bulunamadı." />} />
+      </Routes>
+    </SiteLayout>
+  );
+}
+
+export default function AppRoutes() {
+  const hostname = window.location.hostname;
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        {isLocalOrPortal ? (
+          <>
+            <Route path="/:tenantSlug/:lang/*" element={<RouteResolver />} />
+            <Route path="/:tenantSlug/*" element={<RouteResolver />} />
+            <Route path="*" element={<NotFoundSite reason="Lütfen URL'e kiracı slug'ını ekleyin. Örnek: /kreatiffikirler/tr/" />} />
+          </>
+        ) : (
+          <>
+            <Route path="/:lang/*" element={<RouteResolver />} />
+            <Route path="*" element={<RouteResolver />} />
+          </>
+        )}
+      </Routes>
+    </BrowserRouter>
+  );
+}

@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-06-05T17:30:37.150Z",
+  "overall_status": "SUCCESS",
+  "duration_ms": 32396,
+  "test_results": [
+    {
+      "name": "Page Load & Dev Widget",
+      "status": "PASSED"
+    },
+    {
+      "name": "Consent check gating",
+      "status": "PASSED"
+    },
+    {
+      "name": "Email format validation",
+      "status": "PASSED"
+    },
+    {
+      "name": "Contact Form Success Submission",
+      "status": "PASSED"
+    },
+    {
+      "name": "Firestore Emulator Lead Write",
+      "status": "PASSED"
+    },
+    {
+      "name": "Newsletter Form Success Submission",
+      "status": "PASSED"
+    },
+    {
+      "name": "Firestore Emulator Subscriber Write",
+      "status": "PASSED"
+    },
+    {
+      "name": "Newsletter Duplicate Check",
+      "status": "PASSED"
+    },
+    {
+      "name": "reCAPTCHA low-score gating",
+      "status": "PASSED"
+    },
+    {
+      "name": "Honeypot protection gating",
+      "status": "PASSED"
+    },
+    {
+      "name": "Rate limit gating",
+      "status": "PASSED"
+    }
+  ],
+  "console_errors": [
+    {
+      "page": "Iletisim",
+      "type": "CONSOLE_ERROR",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+      "url": "http://localhost:5188/kreatiffikirler/tr/iletisim",
+      "isPermissionError": false,
+      "isJsError": false,
+      "isCritical": false
+    },
+    {
+      "page": "Iletisim",
+      "type": "CONSOLE_ERROR",
+      "text": "API Error in submitLead: Error: reCAPTCHA doğrulaması başarısız oldu (Olası bot algılandı).",
+      "url": "http://localhost:5188/kreatiffikirler/tr/iletisim",
+      "isPermissionError": false,
+      "isJsError": false,
+      "isCritical": false
+    },
+    {
+      "page": "Iletisim",
+      "type": "CONSOLE_ERROR",
+      "text": "Submission failed: Error: reCAPTCHA doğrulaması başarısız oldu (Olası bot algılandı).",
+      "url": "http://localhost:5188/kreatiffikirler/tr/iletisim",
+      "isPermissionError": false,
+      "isJsError": false,
+      "isCritical": false
+    },
+    {
+      "page": "Iletisim",
+      "type": "CONSOLE_ERROR",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+      "url": "http://localhost:5188/kreatiffikirler/tr/iletisim",
+      "isPermissionError": false,
+      "isJsError": false,
+      "isCritical": false
+    },
+    {
+      "page": "Iletisim",
+      "type": "CONSOLE_ERROR",
+      "text": "API Error in submitLead: Error: Geçersiz istek.",
+      "url": "http://localhost:5188/kreatiffikirler/tr/iletisim",
+      "isPermissionError": false,
+      "isJsError": false,
+      "isCritical": false
+    },
+    {
+      "page": "Iletisim",
+      "type": "CONSOLE_ERROR",
+      "text": "Submission failed: Error: Geçersiz istek.",
+      "url": "http://localhost:5188/kreatiffikirler/tr/iletisim",
+      "isPermissionError": false,
+      "isJsError": false,
+      "isCritical": false
+    },
+    {
+      "page": "Iletisim",
+      "type": "CONSOLE_ERROR",
+      "text": "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+      "url": "http://localhost:5188/kreatiffikirler/tr/iletisim",
+      "isPermissionError": false,
+      "isJsError": false,
+      "isCritical": false
+    },
+    {
+      "page": "Iletisim",
+      "type": "CONSOLE_ERROR",
+      "text": "API Error in submitLead: Error: Çok fazla istek gönderildi. Lütfen bir saat sonra tekrar deneyin.",
+      "url": "http://localhost:5188/kreatiffikirler/tr/iletisim",
+      "isPermissionError": false,
+      "isJsError": false,
+      "isCritical": false
+    },
+    {
+      "page": "Iletisim",
+      "type": "CONSOLE_ERROR",
+      "text": "Submission failed: Error: Çok fazla istek gönderildi. Lütfen bir saat sonra tekrar deneyin.",
+      "url": "http://localhost:5188/kreatiffikirler/tr/iletisim",
+      "isPermissionError": false,
+      "isJsError": false,
+      "isCritical": false
+    }
+  ],
+  "console_warnings": []
+}
