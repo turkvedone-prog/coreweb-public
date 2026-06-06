@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CoreWeb - Yönetilebilir Kurumsal Web Altyapısı ve Performans Mimarisi</title>
+    <meta name="description" content="CoreWeb; işletmeler için özel tasarımlı, hızlı açılan, SEO uyumlu ve müşteri paneliyle kolayca yönetilebilir kurumsal web siteleri geliştirir." />
+    
+    <!-- JSON-LD LocalBusiness Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "CoreWeb",
+      "image": "https://www.coreweb.tr/logo.png",
+      "url": "https://www.coreweb.tr",
+      "description": "Özel tasarımlı, yüksek performanslı ve yönetim paneliyle kontrol edilebilir kurumsal web altyapı hizmeti.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Istanbul",
+        "addressCountry": "TR"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <!-- 1. Header (Navigasyon) -->
+    <header class="header">
+      <div class="header__container">
+        <a href="/" class="header__logo"><img src="/logo.png" alt="CoreWeb Logo" class="logo-img" /></a>
+        <button class="header__toggle" aria-label="Menüyü Aç" aria-expanded="false" id="menu-toggle">
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="header__nav" id="header-nav">
+          <a href="#services" class="header__link">Hizmetler</a>
+          <a href="#panel" class="header__link">Yönetim Paneli</a>
+          <a href="#solutions" class="header__link">Sektörel Çözümler</a>
+          <a href="#process" class="header__link">Süreç</a>
+          <a href="#packages" class="header__link">Paketler</a>
+          <a href="#projects" class="header__link">Projeler</a>
+          <a href="#contact" class="header__btn">Planlayalım</a>
+        </nav>
+      </div>
+    </header>
+    
+    <main>
+      <!-- 2. Hero Section -->
+      <section class="hero" id="hero">
+        <div class="hero__container">
+          <h1 class="hero__title">
+            Web Sitenizi Sadece Yayına Almayın, <span class="hero__title-accent">Yönetilebilir</span> Bir Dijital Altyapıya Dönüştürün.
+          </h1>
+          <p class="hero__subtitle">
+            CoreWeb; işletmeler için özel tasarımlı, hızlı açılan, SEO uyumlu ve müşteri paneliyle yönetilebilir kurumsal web siteleri geliştirir.
+          </p>
+          <div class="hero__ctas">
+            <a href="#contact" class="btn btn--primary">Projemi Planlayalım</a>
+            <a href="#panel" class="btn btn--secondary">CoreWeb Paneli İncele</a>
+          </div>
+        </div>
+        
+        <div class="marquee-wrapper" aria-hidden="true">
+          <div class="marquee">
+            <span class="marquee__item">ÖZEL TASARIM • HAFIF KOD MIMARISI • VERCEL EDGE DISTRIBUTION • MÜŞTERİ PANELİ • GÜVENLİ FORM ALTYAPISI • SPAM KORUMASI • </span>
+            <span class="marquee__item">ÖZEL TASARIM • HAFIF KOD MIMARISI • VERCEL EDGE DISTRIBUTION • MÜŞTERİ PANELİ • GÜVENLİ FORM ALTYAPISI • SPAM KORUMASI • </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Problem Section -->
+      <section class="problem" id="problem">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-header__tag">Mevcut Durum</span>
+            <h2 class="section-header__title">Geleneksel Çözümlerin Sınırları</h2>
+          </div>
+          <div class="problem__grid">
+            <div class="problem-card">
+              <h3 class="problem-card__title">Performans ve Hız Sorunları</h3>
+              <p class="problem-card__desc">
+                Hazır şablonlarla kurulan birçok web sitesi, zamanla eklenen eklentiler ve kod yığınları nedeniyle ağırlaşır. Bu durum yavaş yükleme sürelerine yol açarak ziyaretçi ve potansiyel müşteri kaybına neden olur.
+              </p>
+            </div>
+            <div class="problem-card">
+              <h3 class="problem-card__title">Yönetim ve Güncelleme Zorluğu</h3>
+              <p class="problem-card__desc">
+                Karmaşık yönetim panelleri, teknik bilgiye sahip olmayan kullanıcılar için sitenin güncellenmesini zorlaştırır. Basit bir metin veya görsel değişimi bile sürekli dış desteğe bağımlılık yaratır.
+              </p>
+            </div>
+            <div class="problem-card">
+              <h3 class="problem-card__title">Şablon ve Uyum Sınırları</h3>
+              <p class="problem-card__desc">
+                Hazır şablon yapıları, işletmenizin kendine has kimliğini ve iş süreçlerini yansıtmaktan uzaktır. Zamanla değişen ve büyüyen ihtiyaçlarınıza tam uyum sağlayamaz.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Solution Section -->
+      <section class="solution" id="solution">
+        <div class="container">
+          <div class="solution__wrapper">
+            <div class="solution__content">
+              <span class="section-header__tag section-header__tag--alt">Yeni Yaklaşım</span>
+              <h2 class="solution__title">CoreWeb Gücü: İşletmenize Özel Dijital Altyapı</h2>
+              <p class="solution__desc">
+                CoreWeb, hazır şablonların ve eklenti bağımlılıklarının sınırlarını ortadan kaldırır. İşletmenizin hedefleri ve sektörel dinamikleri doğrultusunda, tamamen size özel tasarlanmış, hafif ve ölçeklenebilir bir web altyapısı sunar.
+              </p>
+              <ul class="solution__list">
+                <li class="solution__item">
+                  <strong>Tam Uyum:</strong> Marka kimliğinize ve iş akışınıza uygun özel arayüz tasarımı.
+                </li>
+                <li class="solution__item">
+                  <strong>Süreklilik:</strong> Eklenti çökmeleri veya sürüm uyuşmazlığı olmadan stabil çalışma.
+                </li>
+                <li class="solution__item">
+                  <strong>Özgürlük:</strong> Yalnızca ihtiyacınız olan modüllerle sadeleştirilmiş yönetim paneli.
+                </li>
+              </ul>
+            </div>
+            <div class="solution__visual">
+              <div class="speed-meter">
+                <div class="speed-meter__circle">
+                  <span class="speed-meter__value">99</span>
+                  <span class="speed-meter__label">Performans</span>
+                </div>
+                <p class="speed-meter__desc">Core Web Vitals Standartlarında Hafif Yapı</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Services Section -->
+      <section class="services" id="services">
+        <div class="container">
+          <div class="section-header section-header--center">
+            <span class="section-header__tag">Neler Yapıyoruz?</span>
+            <h2 class="section-header__title">Mükemmellik Standartlarımız</h2>
+          </div>
+          <div class="services__grid">
+            <article class="service-card">
+              <div class="service-card__icon service-card__icon--design"></div>
+              <h3 class="service-card__title">Özel Arayüz Tasarımı</h3>
+              <p class="service-card__desc">
+                Şablonlardan uzak, tamamen markanıza özel, vektör keskinliğinde ve modern kullanıcı deneyimi (UX) standartlarında arayüz tasarımı.
+              </p>
+            </article>
+            <article class="service-card">
+              <div class="service-card__icon service-card__icon--panel"></div>
+              <h3 class="service-card__title">CoreWeb Kontrol Paneli</h3>
+              <p class="service-card__desc">
+                Web sitenizin içeriklerini, gelen formları ve ayarlarını teknik bilgi gerektirmeden kolayca yönetebileceğiniz size özel yönetim paneli.
+              </p>
+            </article>
+            <article class="service-card">
+              <div class="service-card__icon service-card__icon--seo"></div>
+              <h3 class="service-card__title">Hafif ve SEO Dostu Kod</h3>
+              <p class="service-card__desc">
+                Gereksiz kod blokları barındırmayan hafif mimari. Arama motorları ve yeni nesil YZ arama robotları için optimize edilmiş semantik yapı.
+              </p>
+            </article>
+            <article class="service-card">
+              <div class="service-card__icon service-card__icon--hosting"></div>
+              <h3 class="service-card__title">Hosting ve Koruyucu Bakım</h3>
+              <p class="service-card__desc">
+                Sürekli güncellenen altyapı, güvenli form API entegrasyonu, spam koruması ve yüksek erişilebilirlikli küresel sunucu dağıtımı.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. CoreWeb Panel Tanıtımı -->
+      <section class="panel-section" id="panel">
+        <div class="container">
+          <div class="panel-section__wrapper">
+            <div class="panel-section__info">
+              <span class="section-header__tag">Kontrol Merkezi</span>
+              <h2 class="panel-section__title">Kendi Sitenizin Hakimi Olun</h2>
+              <p class="panel-section__desc">
+                CoreWeb panel, karmaşık teknik detayları geride bırakarak web sitenizin tüm kontrolünü size verir. Gereksiz hiçbir menü barındırmaz, sadece sizin yönetmek istediğiniz alanlara odaklanır.
+              </p>
+              
+              <div class="panel-nav" id="panel-nav">
+                <button class="panel-nav__btn panel-nav__btn--active" data-panel-tab="summary">
+                  <h4>Özet Görünüm</h4>
+                  <p>Sitenizin anlık genel durumu ve ziyaretçi özetleri.</p>
+                </button>
+                <button class="panel-nav__btn" data-panel-tab="leads">
+                  <h4>Gelen Formlar</h4>
+                  <p>Müşteri talepleri ve iletişim formu bildirimleri.</p>
+                </button>
+                <button class="panel-nav__btn" data-panel-tab="security">
+                  <h4>Spam Koruması</h4>
+                  <p>Güvenlik durumu ve spam koruması analitiği.</p>
+                </button>
+              </div>
+            </div>
+            
+            <div class="panel-section__preview">
+              <!-- CSS Mockup Panel Dashboard -->
+              <div class="mock-dashboard">
+                <div class="mock-dashboard__header">
+                  <div class="mock-dashboard__dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="mock-dashboard__title">CoreWeb Panel v1.0</div>
+                </div>
+                <div class="mock-dashboard__body">
+                  <!-- Tab Content: Summary -->
+                  <div class="mock-tab-content mock-tab-content--active" id="mock-tab-summary">
+                    <div class="mock-stats-grid">
+                      <div class="mock-stat-card">
+                        <span class="mock-stat-card__label">Erişilebilirlik</span>
+                        <span class="mock-stat-card__val">%99.99</span>
+                      </div>
+                      <div class="mock-stat-card">
+                        <span class="mock-stat-card__label">Aktif Formlar</span>
+                        <span class="mock-stat-card__val">2 Adet</span>
+                      </div>
+                    </div>
+                    <div class="mock-chart-container">
+                      <span class="mock-chart-container__label">Aylık Ziyaretçi Trendi</span>
+                      <div class="mock-chart">
+                        <div class="mock-chart__bar" style="height: 40%"></div>
+                        <div class="mock-chart__bar" style="height: 60%"></div>
+                        <div class="mock-chart__bar" style="height: 85%"></div>
+                        <div class="mock-chart__bar" style="height: 70%"></div>
+                        <div class="mock-chart__bar" style="height: 95%"></div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Tab Content: Leads -->
+                  <div class="mock-tab-content" id="mock-tab-leads">
+                    <div class="mock-leads-list">
+                      <div class="mock-lead-item">
+                        <div class="mock-lead-item__meta">
+                          <strong>Ahmet Yılmaz</strong>
+                          <span>ahmet@burobig.com</span>
+                        </div>
+                        <span class="mock-badge">Yeni</span>
+                      </div>
+                      <div class="mock-lead-item">
+                        <div class="mock-lead-item__meta">
+                          <strong>Zeynep Kaya</strong>
+                          <span>zeynep@klinik.tr</span>
+                        </div>
+                        <span class="mock-badge mock-badge--gray">Okundu</span>
+                      </div>
+                      <div class="mock-lead-item">
+                        <div class="mock-lead-item__meta">
+                          <strong>Can Demir</strong>
+                          <span>can@lojistik.com</span>
+                        </div>
+                        <span class="mock-badge mock-badge--gray">Okundu</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Tab Content: Security -->
+                  <div class="mock-tab-content" id="mock-tab-security">
+                    <div class="mock-security-status">
+                      <div class="mock-security-status__header">
+                        <span class="mock-icon-shield">🛡️</span>
+                        <div>
+                          <strong>Form Güvenliği Aktif</strong>
+                          <p>Gelişmiş spam koruması devrede.</p>
+                        </div>
+                      </div>
+                      <div class="mock-security-stat">
+                        <span>Engellenen Spam Girişimi</span>
+                        <strong>142 Adet</strong>
+                      </div>
+                      <div class="mock-security-stat">
+                        <span>Ortalama Güven Skoru</span>
+                        <strong>0.9 / 1.0</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Sektörel Çözümler -->
+      <section class="solutions" id="solutions">
+        <div class="container">
+          <div class="section-header section-header--center">
+            <span class="section-header__tag">Sektör Odaklı</span>
+            <h2 class="section-header__title">Sektörünüze Özel Mimari Çözümler</h2>
+          </div>
+          
+          <div class="solutions__tabs-wrapper">
+            <div class="solutions-tabs" id="solutions-tabs-nav">
+              <button class="solutions-tabs__btn solutions-tabs__btn--active" data-sol-tab="furniture">Mobilya ve Üretim Firmaları</button>
+              <button class="solutions-tabs__btn" data-sol-tab="logistics">Lojistik ve Nakliye Firmaları</button>
+              <button class="solutions-tabs__btn" data-sol-tab="corporate">Kurumsal Hizmet Şirketleri</button>
+              <button class="solutions-tabs__btn" data-sol-tab="health">Sağlık ve Klinikler</button>
+              <button class="solutions-tabs__btn" data-sol-tab="construction">İnşaat ve Yapı Firmaları</button>
+              <button class="solutions-tabs__btn" data-sol-tab="b2b">B2B Ürün Katalog Siteleri</button>
+            </div>
+            
+            <div class="solutions-content-box" id="solutions-content-box">
+              <!-- Tab: Furniture -->
+              <div class="sol-tab-pane sol-tab-pane--active" id="sol-tab-furniture">
+                <h3 class="sol-tab-pane__title">Mobilya ve Üretim Firmaları İçin Altyapı</h3>
+                <p class="sol-tab-pane__desc">
+                  Ürün gamınızı ve tasarımlarınızı yüksek hızda yüklenen, yüksek çözünürlüklü ve detaylı katalog yapılarıyla sunuyoruz. Bayilerinize ve müşterilerinize kesintisiz bir görsel deneyim yaşatırken, mobil uyumlu yapımızla fuar ve saha sunumlarında yanınızdayız.
+                </p>
+              </div>
+              
+              <!-- Tab: Logistics -->
+              <div class="sol-tab-pane" id="sol-tab-logistics">
+                <h3 class="sol-tab-pane__title">Lojistik ve Nakliye Firmaları İçin Altyapı</h3>
+                <p class="sol-tab-pane__desc">
+                  Gönderi takibi, fiyat teklif formları ve dinamik bilgi taleplerini güvenli form altyapımızla yönetiyoruz. Spam mesajları filtreleyerek gerçek iş taleplerinin anında yönetim panelinize ulaşmasını sağlıyoruz.
+                </p>
+              </div>
+              
+              <!-- Tab: Corporate -->
+              <div class="sol-tab-pane" id="sol-tab-corporate">
+                <h3 class="sol-tab-pane__title">Kurumsal Hizmet Şirketleri İçin Altyapı</h3>
+                <p class="sol-tab-pane__desc">
+                  Danışmanlık, hukuk ve finansal hizmet sunan şirketler için güvenilirlik ve sade tasarım ön plandadır. Hizmetlerinizi anlatan arama motoru optimizasyonlu sayfalar ve güvenli iletişim kanalları ile dijital itibarınızı en üst düzeye çıkarıyoruz.
+                </p>
+              </div>
+              
+              <!-- Tab: Health -->
+              <div class="sol-tab-pane" id="sol-tab-health">
+                <h3 class="sol-tab-pane__title">Sağlık ve Klinikler İçin Altyapı</h3>
+                <p class="sol-tab-pane__desc">
+                  Tedaviler, hekim kadroları ve klinik olanaklarını sade ve bilgilendirici bir mimariyle sunuyoruz. KVKK / GDPR standartlarına tam uyumlu iletişim kanalları ile hasta gizliliği ve güvenliğini en üst seviyede tutuyoruz.
+                </p>
+              </div>
+              
+              <!-- Tab: Construction -->
+              <div class="sol-tab-pane" id="sol-tab-construction">
+                <h3 class="sol-tab-pane__title">İnşaat ve Yapı Firmaları İçin Altyapı</h3>
+                <p class="sol-tab-pane__desc">
+                  Projelerinizi, teknik detayları ve yüksek çözünürlüklü görselleri sıfır yavaşlama ile sunan bir portföy altyapısı kuruyoruz. Devam eden ve tamamlanan projelerinizin dijital arşivini modern bir arayüzle sergiliyoruz.
+                </p>
+              </div>
+              
+              <!-- Tab: B2B -->
+              <div class="sol-tab-pane" id="sol-tab-b2b">
+                <h3 class="sol-tab-pane__title">B2B Ürün Katalog Siteleri İçin Altyapı</h3>
+                <p class="sol-tab-pane__desc">
+                  Binlerce ürünü, teknik tabloları ve pdf kılavuzları saniyeler içinde arayan ve filtreleyen hafif veri yapıları oluşturuyoruz. Sitenizi gereksiz e-ticaret karmaşıklığından arındırarak hızlı çalışan bir ürün vitrinine dönüştürüyoruz.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Süreç (Process) -->
+      <section class="process" id="process">
+        <div class="container">
+          <div class="section-header section-header--center">
+            <span class="section-header__tag">Nasıl Çalışıyoruz?</span>
+            <h2 class="section-header__title">Fikirden Canlı Altyapıya Sürecimiz</h2>
+          </div>
+          <div class="process__grid">
+            <div class="process-card">
+              <span class="process-card__num">01</span>
+              <h3 class="process-card__title">Analiz & İhtiyaç Belirleme</h3>
+              <p class="process-card__desc">
+                İş süreçlerinizi, hedeflerinizi ve sitenizin üstlenmesi gereken görevleri dinleyerek projeye özel teknik yol haritasını çiziyoruz.
+              </p>
+            </div>
+            <div class="process-card">
+              <span class="process-card__num">02</span>
+              <h3 class="process-card__title">Arayüz Tasarımı & Kodlama</h3>
+              <p class="process-card__desc">
+                Şablonlardan uzak, özgün görsel kimliği tasarlıyor; ardından gereksiz kodlardan arındırılmış temiz bir mimari ile sitenizi inşa ediyoruz.
+              </p>
+            </div>
+            <div class="process-card">
+              <span class="process-card__num">03</span>
+              <h3 class="process-card__title">Performans & Güvenlik Testleri</h3>
+              <p class="process-card__desc">
+                Yayın öncesinde tarayıcı uyumluluğu, Core Web Vitals performans hedefleri ve form güvenliği testlerini tamamlayarak hatasız teslimat sağlıyoruz.
+              </p>
+            </div>
+            <div class="process-card">
+              <span class="process-card__num">04</span>
+              <h3 class="process-card__title">Küresel Dağıtımlı Yayın</h3>
+              <p class="process-card__desc">
+                Sitenizi Vercel Edge Network altyapısına bağlayarak DNS ayarlarını yapıyor ve sıfır kesintili, SSL sertifikalı yayını başlatıyoruz.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. Paketler (Packages) -->
+      <section class="packages" id="packages">
+        <div class="container">
+          <div class="section-header section-header--center">
+            <span class="section-header__tag">Şeffaf Model</span>
+            <h2 class="section-header__title">Hizmet Paketlerimiz</h2>
+          </div>
+          <div class="packages__grid">
+            <!-- Pack 1: Standard (Active) -->
+            <div class="package-card package-card--active">
+              <div class="package-card__header">
+                <h3 class="package-card__name">Standart Paket</h3>
+                <p class="package-card__price">Projenize göre tekliflendirilir</p>
+              </div>
+              <div class="package-card__body">
+                <ul class="package-card__features">
+                  <li>Özel Arayüz Tasarımı</li>
+                  <li>Temiz ve Hızlı Kod Altyapısı</li>
+                  <li>CoreWeb Müşteri Paneli</li>
+                  <li>Vercel Edge Dağıtımlı Hosting</li>
+                  <li>Güvenli Form Altyapısı ve Spam Koruması</li>
+                  <li>Güvenli Form API Altyapısı</li>
+                  <li>SSL Sertifikalı Yayın</li>
+                  <li>1 Yıl Teknik Destek & Bakım</li>
+                </ul>
+                <a href="#contact" class="btn btn--primary btn--full">Projemi Planlayalım</a>
+              </div>
+            </div>
+
+            <!-- Pack 2: Gold (Passive) -->
+            <div class="package-card package-card--disabled">
+              <div class="package-card__header">
+                <span class="package-card__tag">Yakında</span>
+                <h3 class="package-card__name">Gold Paket</h3>
+                <p class="package-card__price">Yakında</p>
+              </div>
+              <div class="package-card__body">
+                <ul class="package-card__features">
+                  <li>Standart Paket Özellikleri</li>
+                  <li>Çoklu Dil (Multilingual) Desteği</li>
+                  <li>Dinamik Blog & Haber Modülü</li>
+                  <li>Gelişmiş SEO Yönetimi</li>
+                  <li>Sosyal Medya Entegrasyonları</li>
+                </ul>
+                <button class="btn btn--secondary btn--full" disabled>Yakında</button>
+              </div>
+            </div>
+
+            <!-- Pack 3: Platinum (Passive) -->
+            <div class="package-card package-card--disabled">
+              <div class="package-card__header">
+                <span class="package-card__tag">Yakında</span>
+                <h3 class="package-card__name">Platinum Paket</h3>
+                <p class="package-card__price">Yakında</p>
+              </div>
+              <div class="package-card__body">
+                <ul class="package-card__features">
+                  <li>Gold Paket Özellikleri</li>
+                  <li>B2B Ürün Katalog Modülü</li>
+                  <li>Gelişmiş Filtreleme Arayüzü</li>
+                  <li>Müşteriye Özel API Entegrasyonları</li>
+                  <li>7/24 Öncelikli Destek Hattı</li>
+                </ul>
+                <button class="btn btn--secondary btn--full" disabled>Yakında</button>
+              </div>
+            </div>
+
+            <!-- Pack 4: Corporate Custom (Passive) -->
+            <div class="package-card package-card--disabled">
+              <div class="package-card__header">
+                <span class="package-card__tag">Talep İle</span>
+                <h3 class="package-card__name">Kurumsal Özel</h3>
+                <p class="package-card__price">Talep ile</p>
+              </div>
+              <div class="package-card__body">
+                <ul class="package-card__features">
+                  <li>Büyük Ölçekli Dijital Altyapı</li>
+                  <li>Özel Veritabanı Entegrasyonları</li>
+                  <li>Maksimum Güvenlik Geliştirmeleri</li>
+                  <li>Çoklu Kiracılı Alt Ağlar</li>
+                  <li>SLA Garantili SLA Bakım Sözleşmesi</li>
+                </ul>
+                <a href="#contact" class="btn btn--secondary btn--full">Talep Edin</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10. Projeler (Projects) -->
+      <section class="projects" id="projects">
+        <div class="container">
+          <div class="section-header section-header--center">
+            <span class="section-header__tag">Neler Ürettik?</span>
+            <h2 class="section-header__title">Geliştirdiğimiz Aktif Altyapılar</h2>
+          </div>
+          <div class="projects__grid">
+            <!-- Project 1: CoreWeb -->
+            <div class="project-card">
+              <div class="project-card__mockup mockup-browser">
+                <div class="mockup-browser__header">
+                  <div class="mockup-browser__dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="mockup-browser__url">coreweb.tr</div>
+                </div>
+                <div class="mockup-browser__body">
+                  <div class="skeleton-page page-coreweb">
+                    <div class="skeleton-line-thick"></div>
+                    <div class="skeleton-line-thin"></div>
+                    <div class="skeleton-grid-2">
+                      <div class="skeleton-block"></div>
+                      <div class="skeleton-block"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-card__content">
+                <h3 class="project-card__title">CoreWeb Resmi Web Sitesi</h3>
+                <p class="project-card__desc">
+                  Şu an incelemekte olduğunuz, sıfır eklenti bağımlılığıyla tasarlanan ve Vercel Edge üzerinde yayınlanan resmi web altyapımız.
+                </p>
+              </div>
+            </div>
+            
+            <!-- Project 2: Burobig -->
+            <div class="project-card">
+              <div class="project-card__mockup mockup-browser">
+                <div class="mockup-browser__header">
+                  <div class="mockup-browser__dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="mockup-browser__url">burobig.com</div>
+                </div>
+                <div class="mockup-browser__body">
+                  <div class="skeleton-page page-burobig">
+                    <div class="skeleton-line-thick"></div>
+                    <div class="skeleton-grid-3">
+                      <div class="skeleton-block"></div>
+                      <div class="skeleton-block"></div>
+                      <div class="skeleton-block"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-card__content">
+                <h3 class="project-card__title">Burobig Ofis Mobilyaları</h3>
+                <p class="project-card__desc">
+                  Üretim grubunu ve lüks ofis koltuklarını listeleyen, yüksek hızlı ürün katalog mimarisi.
+                </p>
+              </div>
+            </div>
+
+            <!-- Project 3: Capilon -->
+            <div class="project-card">
+              <div class="project-card__mockup mockup-browser">
+                <div class="mockup-browser__header">
+                  <div class="mockup-browser__dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="mockup-browser__url">capilon.com.tr</div>
+                </div>
+                <div class="mockup-browser__body">
+                  <div class="skeleton-page page-capilon">
+                    <div class="skeleton-hero-banner"></div>
+                    <div class="skeleton-line-thin"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-card__content">
+                <h3 class="project-card__title">Capilon Mobilya</h3>
+                <p class="project-card__desc">
+                  Kurumsal marka değerini ön plana çıkaran, hızlı görsel yükleme ve sade yönetim paneline sahip kurumsal web sitesi.
+                </p>
+              </div>
+            </div>
+
+            <!-- Project 4: Kreatif Fikirler -->
+            <div class="project-card">
+              <div class="project-card__mockup mockup-browser">
+                <div class="mockup-browser__header">
+                  <div class="mockup-browser__dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="mockup-browser__url">kreatiffikirler.com</div>
+                </div>
+                <div class="mockup-browser__body">
+                  <div class="skeleton-page page-kreatif">
+                    <div class="skeleton-grid-2">
+                      <div class="skeleton-block"></div>
+                      <div class="skeleton-block"></div>
+                    </div>
+                    <div class="skeleton-line-thin"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-card__content">
+                <h3 class="project-card__title">Kreatif Fikirler</h3>
+                <p class="project-card__desc">
+                  Özel hizmet ve vaka çalışmalarını arama motoru dostu semantik yapıyla sunan kurumsal tanıtım sitesi.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11. Güven Alanı (Trust Area) -->
+      <section class="trust" id="trust">
+        <div class="container">
+          <div class="section-header section-header--center">
+            <span class="section-header__tag">Teknik Güvenceler</span>
+            <h2 class="section-header__title">Neden CoreWeb Altyapısı?</h2>
+          </div>
+          <div class="trust__grid">
+            <div class="trust-item">
+              <h3 class="trust-item__title">Hafif Kod Mimarisi</h3>
+              <p class="trust-item__desc">
+                Eklentilerle şişirilmemiş, saf ve temiz kod blokları sayesinde web siteniz her tarayıcıda stabil çalışır.
+              </p>
+            </div>
+            <div class="trust-item">
+              <h3 class="trust-item__title">Mobil Uyum</h3>
+              <p class="trust-item__desc">
+                Cihaz bağımsız, tüm ekran boyutlarına tam uyumlu esnek tasarım yapısı sayesinde kusursuz mobil deneyim.
+              </p>
+            </div>
+            <div class="trust-item">
+              <h3 class="trust-item__title">SSL Destekli Yayın</h3>
+              <p class="trust-item__desc">
+                Otomatik güncellenen SSL sertifikası ile siteniz üzerinden geçen tüm veriler en üst düzeyde şifrelenir.
+              </p>
+            </div>
+            <div class="trust-item">
+              <h3 class="trust-item__title">SEO Uyumlu Yapı</h3>
+              <p class="trust-item__desc">
+                Arama motorları ve anlamsal YZ tarayıcı botları için optimize edilmiş HTML5 etiket düzeni.
+              </p>
+            </div>
+            <div class="trust-item">
+              <h3 class="trust-item__title">Güvenli Form Altyapısı</h3>
+              <p class="trust-item__desc">
+                Gelişmiş spam koruması ve veri filtreleme algoritmalarıyla güvenliği ve iletim kararlılığı sağlanmış form yapıları.
+              </p>
+            </div>
+            <div class="trust-item">
+              <h3 class="trust-item__title">Panel Yönetimi</h3>
+              <p class="trust-item__desc">
+                Sadece işletmenizin ihtiyaç duyduğu alanları yönetebileceğiniz, sadeleştirilmiş müşteri kontrol paneli.
+              </p>
+            </div>
+            <div class="trust-item">
+              <h3 class="trust-item__title">Yayın Öncesi Test Süreci</h3>
+              <p class="trust-item__desc">
+                Yayın öncesinde tarayıcı uyumluluğu, Core Web Vitals performans hedefleri ve form doğrulamaları test edilerek sıfır hata hedeflenir.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12. Final CTA ve İletişim Formu -->
+      <section class="contact" id="contact">
+        <div class="container">
+          <div class="contact__wrapper">
+            <div class="contact__info">
+              <h2 class="contact__title">Hadi, Projenizi Birlikte Planlayalım</h2>
+              <p class="contact__desc">
+                İşletmenizin web altyapısını güçlendirmek ve CoreWeb yönetim paneliyle tanışmak için formu doldurun. Talebiniz doğrultusunda en kısa sürede size dönüş yapalım.
+              </p>
+            </div>
+            
+            <div class="contact__form-box">
+              <form class="contact-form" id="main-contact-form">
+                <div class="form-group">
+                  <label for="form-name" class="form-label">Adınız Soyadınız *</label>
+                  <input type="text" id="form-name" name="name" class="form-input" required placeholder="Örn. Ahmet Yılmaz" />
+                </div>
+                <div class="form-group">
+                  <label for="form-email" class="form-label">E-posta Adresiniz *</label>
+                  <input type="email" id="form-email" name="email" class="form-input" required placeholder="Örn. ahmet@sirket.com" />
+                </div>
+                <div class="form-group">
+                  <label for="form-phone" class="form-label">Telefon Numaranız *</label>
+                  <input type="tel" id="form-phone" name="phone" class="form-input" required placeholder="Örn. 0555 123 45 67" />
+                </div>
+                <div class="form-group">
+                  <label for="form-message" class="form-label">Mesajınız</label>
+                  <textarea id="form-message" name="message" class="form-input form-input--textarea" placeholder="Projeniz hakkında kısa bilgi verin..."></textarea>
+                </div>
+                <div class="form-checkbox">
+                  <input type="checkbox" id="form-kvkk" required />
+                  <label for="form-kvkk">Bilgilerimin talebime dönüş yapılması amacıyla CoreWeb altyapısında işlenmesini kabul ediyorum. *</label>
+                </div>
+                
+                <button type="submit" class="btn btn--primary btn--full">Talebi Gönder</button>
+                <div class="form-message" id="form-status-msg"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 13. Footer -->
+    <footer class="footer">
+      <div class="container footer__container">
+        <div class="footer__brand">
+          <a href="/" class="footer__logo"><img src="/logo.png" alt="CoreWeb Logo" class="logo-img" /></a>
+          <p class="footer__desc">Yönetilebilir web altyapısı sağlayan teknoloji firması.</p>
+        </div>
+        <div class="footer__links">
+          <a href="#services" class="footer__link">Hizmetler</a>
+          <a href="#panel" class="footer__link">Yönetim Paneli</a>
+          <a href="#solutions" class="footer__link">Sektörel Çözümler</a>
+          <a href="#packages" class="footer__link">Paketler</a>
+          <a href="#projects" class="footer__link">Projeler</a>
+        </div>
+      </div>
+      <div class="container footer__bottom">
+        <p>CoreWeb © 2026. Tüm hakları saklıdır. | KVKK Aydınlatma Metni</p>
+      </div>
+    </footer>
+    
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
