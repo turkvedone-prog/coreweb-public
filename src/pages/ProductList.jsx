@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { getActiveProducts } from '../services/publicContentService';
 import { getLocalizedContent } from '../utils/i18nContent';
 import { useSite } from '../layouts/SiteLayout';
@@ -11,6 +11,12 @@ import BurobigProductList from '../themes/burobig/BurobigProductList';
 export default function ProductList() {
   const { tenantMapping, activeLang, settings } = useSite();
   const { tenantId, tenantSlug } = tenantMapping;
+  const location = useLocation();
+
+  const isUstYoneticiPath = location.pathname.endsWith('/ust-yonetici');
+  const isOfisKoltuklariPath = location.pathname.endsWith('/ofis-koltuklari');
+  const isOperasyonelPath = location.pathname.endsWith('/operasyonel-masalar');
+  const isToplantiPath = location.pathname.endsWith('/toplanti-masalari');
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,14 +48,39 @@ export default function ProductList() {
 
   // SEO Update
   useEffect(() => {
+    let title = activeLang === 'tr' ? 'Ürünlerimiz' : 'Our Products';
+    let description = activeLang === 'tr'
+      ? `${companyName} ürün kataloğu, hizmetleri ve detaylı ürün listesi.`
+      : `${companyName} product catalog, services, and detailed product lists.`;
+
+    if (isUstYoneticiPath) {
+      title = activeLang === 'tr' ? 'Üst Yönetici Masaları' : 'Executive Desks';
+      description = activeLang === 'tr'
+        ? 'Bürobig premium üst yönetici masaları koleksiyonu.'
+        : 'Bürobig premium executive desks collection.';
+    } else if (isOfisKoltuklariPath) {
+      title = activeLang === 'tr' ? 'Ofis Koltukları' : 'Office Chairs';
+      description = activeLang === 'tr'
+        ? 'Bürobig ergonomik ve estetik ofis koltukları koleksiyonu.'
+        : 'Bürobig ergonomic and aesthetic office chairs collection.';
+    } else if (isOperasyonelPath) {
+      title = activeLang === 'tr' ? 'Operasyonel Masalar' : 'Operational Desks';
+      description = activeLang === 'tr'
+        ? 'Bürobig modern operasyonel masalar koleksiyonu.'
+        : 'Bürobig modern operational desks collection.';
+    } else if (isToplantiPath) {
+      title = activeLang === 'tr' ? 'Toplantı Masaları' : 'Meeting Tables';
+      description = activeLang === 'tr'
+        ? 'Bürobig şık ve fonksiyonel toplantı masaları koleksiyonu.'
+        : 'Bürobig stylish and functional meeting tables collection.';
+    }
+
     updateSEOMeta({
-      title: activeLang === 'tr' ? 'Ürünlerimiz' : 'Our Products',
-      description: activeLang === 'tr'
-        ? `${companyName} ürün kataloğu, hizmetleri ve detaylı ürün listesi.`
-        : `${companyName} product catalog, services, and detailed product lists.`,
+      title,
+      description,
       companyName
     });
-  }, [activeLang, companyName]);
+  }, [activeLang, companyName, isUstYoneticiPath, isOfisKoltuklariPath, isOperasyonelPath, isToplantiPath]);
 
   const translate = (tr, en) => {
     return activeLang === 'tr' ? tr : en;

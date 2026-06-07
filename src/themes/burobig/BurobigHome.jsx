@@ -87,7 +87,7 @@ export default function BurobigHome() {
                 <span className="hero-subtitle" style={{ fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', color: 'var(--color-accent)', letterSpacing: '2px', display: 'block', marginBottom: '1rem' }}>Yeni Koleksiyon</span>
                 <h1 id="hero-heading">İnka Yönetici<br />Serisi</h1>
                 <p>Prestijli detaylar ve modern çizgilerle üst yönetici alanlarında yeni bir standart.</p>
-                <Link to={getLocalizedPath('/urunler?cat=masalar&sub=ust-yonetici')} className="btn-primary" id="hero-cta-1">Koleksiyonu Keşfet</Link>
+                <Link to={getLocalizedPath('/ust-yonetici')} className="btn-primary" id="hero-cta-1">Koleksiyonu Keşfet</Link>
               </div>
             </div>
 
@@ -143,7 +143,7 @@ export default function BurobigHome() {
             <div className="collections-grid" role="list">
               {/* FEATURED CARD */}
               <article className="collection-card collection-card--featured" role="listitem">
-                <Link to={getLocalizedPath('/urunler?cat=masalar&sub=ust-yonetici')} className="collection-card__link" id="card-makam" aria-label="Makam Takımları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/ust-yonetici')} className="collection-card__link" id="card-makam" aria-label="Makam Takımları koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-makam.png"
@@ -170,7 +170,7 @@ export default function BurobigHome() {
 
               {/* CARD 2 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/urunler?cat=masalar&sub=operasyonel')} className="collection-card__link" id="card-operasyonel" aria-label="Operasyonel Masalar koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/operasyonel-masalar')} className="collection-card__link" id="card-operasyonel" aria-label="Operasyonel Masalar koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-operasyonel.png"
@@ -197,7 +197,7 @@ export default function BurobigHome() {
 
               {/* CARD 3 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/urunler?cat=masalar&sub=toplanti')} className="collection-card__link" id="card-toplanti" aria-label="Toplantı Masaları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/toplanti-masalari')} className="collection-card__link" id="card-toplanti" aria-label="Toplantı Masaları koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-toplanti.png"
@@ -224,7 +224,7 @@ export default function BurobigHome() {
 
               {/* CARD 4 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/urunler?cat=ofis-koltuklari')} className="collection-card__link" id="card-koltuklar" aria-label="Çalışma Koltukları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/ofis-koltuklari')} className="collection-card__link" id="card-koltuklar" aria-label="Çalışma Koltukları koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-koltuklar.png"

@@ -114,6 +114,10 @@ function RouteResolver() {
         <Route path="/haberler/:slug" element={<NewsDetail />} />
         <Route path="/urunler" element={<ProductList />} />
         <Route path="/urunler/:slug" element={<ProductDetail />} />
+        <Route path="/ust-yonetici" element={<ProductList />} />
+        <Route path="/ofis-koltuklari" element={<ProductList />} />
+        <Route path="/operasyonel-masalar" element={<ProductList />} />
+        <Route path="/toplanti-masalari" element={<ProductList />} />
         <Route path="/iletisim" element={<Contact />} />
         <Route path="*" element={<NotFoundSite reason="Sayfa bulunamadı." />} />
       </Routes>

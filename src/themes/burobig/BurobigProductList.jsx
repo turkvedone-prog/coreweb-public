@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
 import BurobigEcoBanner from './BurobigEcoBanner';
 
@@ -8,6 +8,13 @@ export default function BurobigProductList({ products }) {
   const { tenantMapping, activeLang } = useSite();
   const { tenantSlug } = tenantMapping;
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+
+  const isUstYoneticiPath = location.pathname.endsWith('/ust-yonetici');
+  const isOfisKoltuklariPath = location.pathname.endsWith('/ofis-koltuklari');
+  const isOperasyonelPath = location.pathname.endsWith('/operasyonel-masalar');
+  const isToplantiPath = location.pathname.endsWith('/toplanti-masalari');
+  const isCleanPath = isUstYoneticiPath || isOfisKoltuklariPath || isOperasyonelPath || isToplantiPath;
 
   const hostname = window.location.hostname;
   const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
@@ -27,11 +34,20 @@ export default function BurobigProductList({ products }) {
 
   // Determine current active filter tab
   const getActiveTab = () => {
-    if (subParam === 'ust-yonetici' || catParam === 'masalar') {
+    if (isUstYoneticiPath || subParam === 'ust-yonetici') {
       return 'ust-yonetici';
     }
-    if (catParam === 'ofis-koltuklari') {
+    if (isOfisKoltuklariPath || catParam === 'ofis-koltuklari') {
       return 'ofis-koltuklari';
+    }
+    if (isOperasyonelPath || subParam === 'operasyonel') {
+      return 'operasyonel';
+    }
+    if (isToplantiPath || subParam === 'toplanti') {
+      return 'toplanti';
+    }
+    if (catParam === 'masalar') {
+      return 'masalar';
     }
     return 'all';
   };
@@ -57,6 +73,15 @@ export default function BurobigProductList({ products }) {
     if (activeTab === 'ofis-koltuklari') {
       return product.category === 'Ofis Koltuğu';
     }
+    if (activeTab === 'operasyonel') {
+      return product.category === 'Operasyonel Masa';
+    }
+    if (activeTab === 'toplanti') {
+      return product.category === 'Toplantı Masası';
+    }
+    if (activeTab === 'masalar') {
+      return product.category === 'Üst Yönetici Masası' || product.category === 'Operasyonel Masa' || product.category === 'Toplantı Masası';
+    }
     return true; // 'all'
   });
 
@@ -72,6 +97,24 @@ export default function BurobigProductList({ products }) {
       return {
         title: translate('Ofis Koltukları', 'Office Chairs'),
         subtitle: translate('Koltuklar / Ofis Koltukları', 'Chairs / Office Chairs')
+      };
+    }
+    if (activeTab === 'operasyonel') {
+      return {
+        title: translate('Operasyonel Masalar', 'Operational Desks'),
+        subtitle: translate('Masalar / Operasyonel', 'Desks / Operational')
+      };
+    }
+    if (activeTab === 'toplanti') {
+      return {
+        title: translate('Toplantı Masaları', 'Meeting Tables'),
+        subtitle: translate('Masalar / Toplantı', 'Desks / Meeting')
+      };
+    }
+    if (activeTab === 'masalar') {
+      return {
+        title: translate('Tüm Masalar', 'All Desks'),
+        subtitle: translate('Bürobig / Ofis Masaları', 'Bürobig / Office Desks')
       };
     }
     return {
@@ -93,40 +136,42 @@ export default function BurobigProductList({ products }) {
       </section>
 
       {/* Category Tab Filter Bar (Premium UI Enhancement) */}
-      <section className="bg-white border-b border-slate-100 py-6">
-        <div className="max-w-[1440px] mx-auto px-[5%] flex justify-center gap-8">
-          <button
-            onClick={() => handleTabClick('all')}
-            className={`pb-2 text-sm font-medium tracking-wider uppercase transition-colors relative ${
-              activeTab === 'all'
-                ? 'text-[#c9a96e] border-b-2 border-[#c9a96e]'
-                : 'text-slate-400 hover:text-slate-800'
-            }`}
-          >
-            {translate('Tümü', 'All')}
-          </button>
-          <button
-            onClick={() => handleTabClick('ust-yonetici')}
-            className={`pb-2 text-sm font-medium tracking-wider uppercase transition-colors relative ${
-              activeTab === 'ust-yonetici'
-                ? 'text-[#c9a96e] border-b-2 border-[#c9a96e]'
-                : 'text-slate-400 hover:text-slate-800'
-            }`}
-          >
-            {translate('Üst Yönetici Masaları', 'Executive Desks')}
-          </button>
-          <button
-            onClick={() => handleTabClick('ofis-koltuklari')}
-            className={`pb-2 text-sm font-medium tracking-wider uppercase transition-colors relative ${
-              activeTab === 'ofis-koltuklari'
-                ? 'text-[#c9a96e] border-b-2 border-[#c9a96e]'
-                : 'text-slate-400 hover:text-slate-800'
-            }`}
-          >
-            {translate('Ofis Koltukları', 'Office Chairs')}
-          </button>
-        </div>
-      </section>
+      {!isCleanPath && (
+        <section className="bg-white border-b border-slate-100 py-6">
+          <div className="max-w-[1440px] mx-auto px-[5%] flex justify-center gap-8">
+            <button
+              onClick={() => handleTabClick('all')}
+              className={`pb-2 text-sm font-medium tracking-wider uppercase transition-colors relative ${
+                activeTab === 'all'
+                  ? 'text-[#c9a96e] border-b-2 border-[#c9a96e]'
+                  : 'text-slate-400 hover:text-slate-800'
+              }`}
+            >
+              {translate('Tümü', 'All')}
+            </button>
+            <button
+              onClick={() => handleTabClick('ust-yonetici')}
+              className={`pb-2 text-sm font-medium tracking-wider uppercase transition-colors relative ${
+                activeTab === 'ust-yonetici'
+                  ? 'text-[#c9a96e] border-b-2 border-[#c9a96e]'
+                  : 'text-slate-400 hover:text-slate-800'
+              }`}
+            >
+              {translate('Üst Yönetici Masaları', 'Executive Desks')}
+            </button>
+            <button
+              onClick={() => handleTabClick('ofis-koltuklari')}
+              className={`pb-2 text-sm font-medium tracking-wider uppercase transition-colors relative ${
+                activeTab === 'ofis-koltuklari'
+                  ? 'text-[#c9a96e] border-b-2 border-[#c9a96e]'
+                  : 'text-slate-400 hover:text-slate-800'
+              }`}
+            >
+              {translate('Ofis Koltukları', 'Office Chairs')}
+            </button>
+          </div>
+        </section>
+      )}
 
       {/* Product Grid Section */}
       <section className="category-grid-section">

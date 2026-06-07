@@ -90,7 +90,7 @@ export default function BurobigHeader() {
                     <div className="mega-menu__col">
                       <h5 className="mega-menu__title">MASALAR</h5>
                       <ul className="mega-menu__list">
-                        <li><Link to={getLocalizedPath('/urunler?cat=masalar&sub=ust-yonetici')}>Üst Yönetici</Link></li>
+                        <li><Link to={getLocalizedPath('/ust-yonetici')}>Üst Yönetici</Link></li>
                         <li><Link to={getLocalizedPath('/urunler?cat=masalar&sub=yonetici')}>Yönetici</Link></li>
                         <li><Link to={getLocalizedPath('/urunler?cat=masalar&sub=calisma')}>Çalışma</Link></li>
                         <li><Link to={getLocalizedPath('/urunler?cat=masalar&sub=operasyonel')}>Operasyonel</Link></li>
@@ -101,9 +101,9 @@ export default function BurobigHeader() {
                     <div className="mega-menu__col">
                       <h5 className="mega-menu__title">OFİS KOLTUKLARI</h5>
                       <ul className="mega-menu__list">
-                        <li><Link to={getLocalizedPath('/urunler?cat=ofis-koltuklari')}>Yönetici Koltukları</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler?cat=ofis-koltuklari')}>Çalışma Koltukları</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler?cat=ofis-koltuklari')}>Misafir ve Bekleme Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/ofis-koltuklari')}>Yönetici Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/ofis-koltuklari')}>Çalışma Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/ofis-koltuklari')}>Misafir ve Bekleme Koltukları</Link></li>
                       </ul>
                     </div>
                     {/* Koltuklar / Kanepeler */}
