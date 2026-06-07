@@ -82,13 +82,25 @@ async function run() {
       return meta ? meta.getAttribute('content') : null;
     });
 
+    const assetStatus = await page.evaluate(async () => {
+      const img = document.querySelector('.logo__img');
+      if (!img) return 'No logo found';
+      try {
+        const res = await fetch(img.src, { method: 'HEAD' });
+        return res.status === 200 ? '200 OK' : `Status: ${res.status}`;
+      } catch (e) {
+        return `Failed: ${e.message}`;
+      }
+    });
+
     console.log(`- Theme Wrapper (.capilon-theme) Present: ${hasCapilonTheme ? '✅ YES' : '❌ NO'}`);
     console.log(`- Fallback "CoreWeb Dünyasına Hoş Geldiniz" Hidden: ${!isFallbackVisible ? '✅ YES' : '❌ NO (Found fallback text!)'}`);
     console.log(`- Main H1 Heading: "${mainH1}"`);
     console.log(`- Page Title: "${pageTitle}"`);
     console.log(`- Robots Meta tag (Staging noindex): "${robotsMetaCapilon}"`);
+    console.log(`- Logo Asset Loading Status (/assets/capilon/...): "${assetStatus}"`);
 
-    if (!hasCapilonTheme || isFallbackVisible || !mainH1 || !mainH1.includes('Zamanın Ötesinde') || !pageTitle.includes('Capilon') || !robotsMetaCapilon || !robotsMetaCapilon.includes('noindex')) {
+    if (!hasCapilonTheme || isFallbackVisible || !mainH1 || !mainH1.includes('Zamanın Ötesinde') || !pageTitle.includes('Capilon') || !robotsMetaCapilon || !robotsMetaCapilon.includes('noindex') || assetStatus !== '200 OK') {
       console.error('❌ TEST 1 FAILED!');
       testPassed = false;
     } else {
