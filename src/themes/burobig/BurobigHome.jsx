@@ -1,7 +1,19 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useSite } from '../../layouts/SiteLayout';
 import './burobig.css';
 
 export default function BurobigHome() {
+  const { tenantMapping, activeLang } = useSite();
+  const { tenantSlug } = tenantMapping;
+  const hostname = window.location.hostname;
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+
+  const getLocalizedPath = (path) => {
+    const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
+    return `${prefix}${path}`;
+  };
+
   const [activeSlide, setActiveSlide] = useState(0);
   const slideCount = 4;
 
@@ -121,12 +133,12 @@ export default function BurobigHome() {
           <nav className="main-nav" aria-label="Ana Menü">
             <ul role="list">
               <li className="has-dropdown">
-                <a href="#urunler" id="nav-urunler" aria-haspopup="true" aria-expanded="false">
+                <Link to={getLocalizedPath('/urunler')} id="nav-urunler" aria-haspopup="true" aria-expanded="false">
                   Ürünler
                   <svg className="nav__chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
                     <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                   </svg>
-                </a>
+                </Link>
                 {/* Mega Menu */}
                 <div className="mega-menu" aria-label="Ürün Kategorileri">
                   <div className="mega-menu__container">
@@ -134,30 +146,30 @@ export default function BurobigHome() {
                     <div className="mega-menu__col">
                       <h5 className="mega-menu__title">MASALAR</h5>
                       <ul className="mega-menu__list">
-                        <li><a href="#urunler?cat=masalar&sub=ust-yonetici">Üst Yönetici</a></li>
-                        <li><a href="#urunler?cat=masalar&sub=yonetici">Yönetici</a></li>
-                        <li><a href="#urunler?cat=masalar&sub=calisma">Çalışma</a></li>
-                        <li><a href="#urunler?cat=masalar&sub=operasyonel">Operasyonel</a></li>
-                        <li><a href="#urunler?cat=masalar&sub=toplanti">Toplantı</a></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=masalar&sub=ust-yonetici')}>Üst Yönetici</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=masalar&sub=yonetici')}>Yönetici</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=masalar&sub=calisma')}>Çalışma</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=masalar&sub=operasyonel')}>Operasyonel</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=masalar&sub=toplanti')}>Toplantı</Link></li>
                       </ul>
                     </div>
                     {/* Ofis Koltukları */}
                     <div className="mega-menu__col">
                       <h5 className="mega-menu__title">OFİS KOLTUKLARI</h5>
                       <ul className="mega-menu__list">
-                        <li><a href="#urunler?cat=ofis-koltuklari&sub=yonetici-koltuklari">Yönetici Koltukları</a></li>
-                        <li><a href="#urunler?cat=ofis-koltuklari&sub=calisma-koltuklari">Çalışma Koltukları</a></li>
-                        <li><a href="#urunler?cat=ofis-koltuklari&sub=misafir-bekleme">Misafir ve Bekleme Koltukları</a></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=ofis-koltuklari')}>Yönetici Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=ofis-koltuklari')}>Çalışma Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=ofis-koltuklari')}>Misafir ve Bekleme Koltukları</Link></li>
                       </ul>
                     </div>
                     {/* Koltuklar / Kanepeler */}
                     <div className="mega-menu__col">
                       <h5 className="mega-menu__title">KOLTUKLAR / KANEPELER</h5>
                       <ul className="mega-menu__list">
-                        <li><a href="#urunler?cat=koltuklar-kanepeler&sub=koltuklar">Koltuklar</a></li>
-                        <li><a href="#urunler?cat=koltuklar-kanepeler&sub=kanepeler">Kanepeler</a></li>
-                        <li><a href="#urunler?cat=koltuklar-kanepeler&sub=sandalyeler">Sandalyeler</a></li>
-                        <li><a href="#urunler?cat=koltuklar-kanepeler&sub=bekleme-alanlari">Bekleme Alanları</a></li>
+                        <li><Link to={getLocalizedPath('/urunler')}>Koltuklar</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler')}>Kanepeler</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler')}>Sandalyeler</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler')}>Bekleme Alanları</Link></li>
                       </ul>
                     </div>
                   </div>
@@ -231,7 +243,7 @@ export default function BurobigHome() {
                 <span className="hero-subtitle" style={{ fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', color: 'var(--color-accent)', letterSpacing: '2px', display: 'block', marginBottom: '1rem' }}>Yeni Koleksiyon</span>
                 <h1 id="hero-heading">İnka Yönetici<br />Serisi</h1>
                 <p>Prestijli detaylar ve modern çizgilerle üst yönetici alanlarında yeni bir standart.</p>
-                <a href="#urunler?cat=masalar&sub=ust-yonetici" className="btn-primary" id="hero-cta-1">Koleksiyonu Keşfet</a>
+                <Link to={getLocalizedPath('/urunler?cat=masalar&sub=ust-yonetici')} className="btn-primary" id="hero-cta-1">Koleksiyonu Keşfet</Link>
               </div>
             </div>
 
@@ -287,7 +299,7 @@ export default function BurobigHome() {
             <div className="collections-grid" role="list">
               {/* FEATURED CARD */}
               <article className="collection-card collection-card--featured" role="listitem">
-                <a href="#urunler" className="collection-card__link" id="card-makam" aria-label="Makam Takımları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/urunler?cat=masalar&sub=ust-yonetici')} className="collection-card__link" id="card-makam" aria-label="Makam Takımları koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-makam.png"
@@ -309,12 +321,12 @@ export default function BurobigHome() {
                       </span>
                     </div>
                   </div>
-                </a>
+                </Link>
               </article>
 
               {/* CARD 2 */}
               <article className="collection-card" role="listitem">
-                <a href="#urunler" className="collection-card__link" id="card-operasyonel" aria-label="Operasyonel Masalar koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/urunler?cat=masalar&sub=operasyonel')} className="collection-card__link" id="card-operasyonel" aria-label="Operasyonel Masalar koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-operasyonel.png"
@@ -336,12 +348,12 @@ export default function BurobigHome() {
                       </span>
                     </div>
                   </div>
-                </a>
+                </Link>
               </article>
 
               {/* CARD 3 */}
               <article className="collection-card" role="listitem">
-                <a href="#urunler" className="collection-card__link" id="card-toplanti" aria-label="Toplantı Masaları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/urunler?cat=masalar&sub=toplanti')} className="collection-card__link" id="card-toplanti" aria-label="Toplantı Masaları koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-toplanti.png"
@@ -363,12 +375,12 @@ export default function BurobigHome() {
                       </span>
                     </div>
                   </div>
-                </a>
+                </Link>
               </article>
 
               {/* CARD 4 */}
               <article className="collection-card" role="listitem">
-                <a href="#urunler" className="collection-card__link" id="card-koltuklar" aria-label="Çalışma Koltukları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/urunler?cat=ofis-koltuklari')} className="collection-card__link" id="card-koltuklar" aria-label="Çalışma Koltukları koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-koltuklar.png"
@@ -390,12 +402,12 @@ export default function BurobigHome() {
                       </span>
                     </div>
                   </div>
-                </a>
+                </Link>
               </article>
 
               {/* CARD 5 */}
               <article className="collection-card" role="listitem">
-                <a href="#urunler" className="collection-card__link" id="card-bekleme" aria-label="Bekleme Alanları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/urunler')} className="collection-card__link" id="card-bekleme" aria-label="Bekleme Alanları koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-bekleme.png"
@@ -417,7 +429,7 @@ export default function BurobigHome() {
                       </span>
                     </div>
                   </div>
-                </a>
+                </Link>
               </article>
             </div>
           </div>
@@ -433,7 +445,7 @@ export default function BurobigHome() {
             <div className="products-grid">
               {/* Product 1: Elephant */}
               <article className="product-card reveal-up delay-100">
-                <a href="#urunler" className="product-card__link">
+                <Link to={getLocalizedPath('/urunler/elephant')} className="product-card__link">
                   <figure className="product-card__figure">
                     <img src="/assets/burobig/images/product-elephant.png" alt="Elephant Koltuk" className="product-card__img" loading="lazy" />
                   </figure>
@@ -444,12 +456,12 @@ export default function BurobigHome() {
                       <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
                   </div>
-                </a>
+                </Link>
               </article>
 
               {/* Product 2: Vetra */}
               <article className="product-card reveal-up delay-200">
-                <a href="#urunler" className="product-card__link">
+                <Link to={getLocalizedPath('/urunler/vetra')} className="product-card__link">
                   <figure className="product-card__figure">
                     <img src="/assets/burobig/images/product-vetra.png" alt="Vetra Koltuk" className="product-card__img" loading="lazy" />
                   </figure>
@@ -460,12 +472,12 @@ export default function BurobigHome() {
                       <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
                   </div>
-                </a>
+                </Link>
               </article>
 
               {/* Product 3: Luci */}
               <article className="product-card reveal-up delay-300">
-                <a href="#urunler" className="product-card__link">
+                <Link to={getLocalizedPath('/urunler/luci')} className="product-card__link">
                   <figure className="product-card__figure">
                     <img src="/assets/burobig/images/product-luci.png" alt="Luci Koltuk" className="product-card__img" loading="lazy" />
                   </figure>
@@ -476,7 +488,7 @@ export default function BurobigHome() {
                       <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
                   </div>
-                </a>
+                </Link>
               </article>
             </div>
           </div>
@@ -492,7 +504,7 @@ export default function BurobigHome() {
             <div className="awards-grid">
               {/* Award 1: Monolith */}
               <article className="award-card">
-                <a href="#urunler" className="award-card__link">
+                <Link to={getLocalizedPath('/urunler/monolith')} className="award-card__link">
                   <div className="award-card__image-wrapper">
                     <figure className="award-card__figure">
                       <img src="/assets/burobig/images/award_monolith.png" alt="Monolith" loading="lazy" className="award-card__img" />
@@ -505,12 +517,12 @@ export default function BurobigHome() {
                     <h3 className="award-card__title">Monolith</h3>
                     <p className="award-card__subtitle">Tasarım - A. Baki Çelik</p>
                   </div>
-                </a>
+                </Link>
               </article>
 
               {/* Award 2: İnka */}
               <article className="award-card">
-                <a href="#urunler" className="award-card__link">
+                <Link to={getLocalizedPath('/urunler/inka')} className="award-card__link">
                   <div className="award-card__image-wrapper">
                     <figure className="award-card__figure">
                       <img src="/assets/burobig/images/award_inka.png" alt="İnka" loading="lazy" className="award-card__img" />
@@ -523,12 +535,12 @@ export default function BurobigHome() {
                     <h3 className="award-card__title">İnka</h3>
                     <p className="award-card__subtitle">Tasarım - Rıza Özdemir</p>
                   </div>
-                </a>
+                </Link>
               </article>
 
               {/* Award 3: Vetra */}
               <article className="award-card">
-                <a href="#urunler" className="award-card__link">
+                <Link to={getLocalizedPath('/urunler/vetra')} className="award-card__link">
                   <div className="award-card__image-wrapper">
                     <figure className="award-card__figure">
                       <img src="/assets/burobig/images/award_vetra.png" alt="Vetra" loading="lazy" className="award-card__img" />
@@ -541,7 +553,7 @@ export default function BurobigHome() {
                     <h3 className="award-card__title">Vetra</h3>
                     <p className="award-card__subtitle">Tasarım - Y. Emre Pektaş</p>
                   </div>
-                </a>
+                </Link>
               </article>
             </div>
           </div>
@@ -557,7 +569,7 @@ export default function BurobigHome() {
             <div className="blog-grid">
               {/* Blog 1 */}
               <article className="blog-card reveal-up delay-100">
-                <a href="#blog-1" className="blog-card__link">
+                <Link to={getLocalizedPath('/blog')} className="blog-card__link">
                   <figure className="blog-card__figure">
                     <img src="/assets/burobig/images/blog-1.png" alt="Ergonomi Blog" className="blog-card__img" loading="lazy" />
                   </figure>
@@ -571,12 +583,12 @@ export default function BurobigHome() {
                       </svg>
                     </span>
                   </div>
-                </a>
+                </Link>
               </article>
 
               {/* Blog 2 */}
               <article className="blog-card reveal-up delay-200">
-                <a href="#blog-2" className="blog-card__link">
+                <Link to={getLocalizedPath('/blog')} className="blog-card__link">
                   <figure className="blog-card__figure">
                     <img src="/assets/burobig/images/blog-2.png" alt="Estetik Blog" className="blog-card__img" loading="lazy" />
                   </figure>
@@ -590,12 +602,12 @@ export default function BurobigHome() {
                       </svg>
                     </span>
                   </div>
-                </a>
+                </Link>
               </article>
 
               {/* Blog 3 */}
               <article className="blog-card reveal-up delay-300">
-                <a href="#blog-3" className="blog-card__link">
+                <Link to={getLocalizedPath('/blog')} className="blog-card__link">
                   <figure className="blog-card__figure">
                     <img src="/assets/burobig/images/blog-3.png" alt="Doku Blog" className="blog-card__img" loading="lazy" />
                   </figure>
@@ -609,7 +621,7 @@ export default function BurobigHome() {
                       </svg>
                     </span>
                   </div>
-                </a>
+                </Link>
               </article>
             </div>
           </div>

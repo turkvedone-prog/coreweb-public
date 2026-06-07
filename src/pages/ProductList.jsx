@@ -6,6 +6,7 @@ import { useSite } from '../layouts/SiteLayout';
 import { ShoppingBag, ChevronRight } from 'lucide-react';
 import { updateSEOMeta } from '../utils/seo';
 import ImageWithFallback from '../components/ImageWithFallback';
+import BurobigProductList from '../themes/burobig/BurobigProductList';
 
 export default function ProductList() {
   const { tenantMapping, activeLang, settings } = useSite();
@@ -90,6 +91,12 @@ export default function ProductList() {
         </div>
       </div>
     );
+  }
+
+  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
+
+  if (isBurobig) {
+    return <BurobigProductList products={products} />;
   }
 
   return (

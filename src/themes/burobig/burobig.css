@@ -1851,4 +1851,779 @@
     }
 }
 
+
+/* ============================================================
+   BUROBIG DYNAMIC PAGES STYLES (NESTED)
+   ============================================================ */
+
+/* --- category.css start --- */
+/* ============================================================
+   BÜROBİG — category.css
+   Ürün Kategori / Katalog Sayfası Stilleri
+   ============================================================ */
+
+/* Kategori Başlık Alanı */
+.category-hero {
+    background: radial-gradient(circle at 50% 50%, #faf8f5 0%, #ffffff 100%);
+    padding: 200px 5% 90px; /* Top and bottom padding increased by 50px each (Total 100px) */
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
+
+.category-hero__container {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.category-hero__title {
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    font-weight: 400;
+    color: #1a1a1a;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.25rem;
+    font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.category-hero__subtitle {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.category-hero__slogan {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 300;
+    color: #1a1a1a;
+    margin: 0.8rem 0 1.8rem;
+    opacity: 0.8;
+    letter-spacing: 0.5px;
+    font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Ürün Grid Bölümü */
+.category-grid-section {
+    background-color: #ffffff; /* Transparent/solid white background */
+    padding: 110px 0 100px; /* Top padding increased by 50px */
+    width: 100%;
+}
+
+.category-grid-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+/* 1px İnce Sınır Çizgili Modern Grid Yapısı */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px; /* 1px sınır çizgilerini oluşturur */
+    background-color: rgba(0, 0, 0, 0.06); /* Çizgi rengi */
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-sizing: border-box;
+}
+
+/* Ürün Kartı */
+.product-card {
+    position: relative;
+    background-color: #ffffff;
+    padding: 3rem 2.5rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 480px;
+    transition: box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), z-index 0.1s;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.product-card:hover {
+    z-index: 10; /* Gölgelerin komşu kartların üstüne binmesi için */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+}
+
+.product-card__content {
+    text-align: left;
+}
+
+.product-card__title {
+    font-size: 20px;
+    font-weight: 500;
+    color: #1a1a1a;
+    letter-spacing: -0.5px;
+    margin: 0 0 3px 0;
+    font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.product-card__category {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Görsel Alanı */
+.product-card__image-wrapper {
+    width: 100%;
+    height: 250px;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.product-card__image-wrapper img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.product-card:hover .product-card__image-wrapper img {
+    transform: scale(1.06);
+}
+
+/* Tam Kartı Kaplayan Görünmez Link */
+.product-card__link {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+}
+
+/* Premium Kart Ekstraları */
+.product-card__number {
+    position: absolute;
+    top: 3rem;
+    right: 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: #e2e2e2;
+    font-family: var(--font-primary), sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.product-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    width: 100%;
+    position: relative;
+    top: 7px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease;
+}
+
+.product-card:hover .product-card__footer {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.product-card__explore {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Responsive Düzenlemeler */
+@media (max-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .product-card {
+        padding: 2.5rem 2rem 3rem;
+        min-height: 440px;
+    }
+}
+
+@media (max-width: 600px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+    .product-card {
+        padding: 2rem 1.5rem 2.5rem;
+        min-height: 400px;
+    }
+    .category-hero {
+        padding: 130px 5% 30px;
+    }
+}
+
+/* --- category.css end --- */
+
+/* --- product.css start --- */
+/* product.css - Özel Ürün Sayfası Stilleri */
+.product-page {
+    padding-top: 110px; /* 110px header alanını kurtarır */
+    /* Alt boşluk kaldırıldı (gri alan sorunu çözümü) */
+}
+
+/* --- Premium Full-Bleed Hero Showcase --- */
+.product-hero-premium {
+    position: relative;
+    width: 100%;
+    height: 650px; /* Set to exactly 650px height as requested */
+    background-color: #f3f1ec; /* Soft, warm solid stone grey that doesn't tire the eyes */
+    overflow: hidden;
+    padding: 0 5%; /* Matches the padding of the summary section below */
+    box-sizing: border-box;
+}
+
+.product-hero-premium__container {
+    position: relative;
+    width: 100%;
+    max-width: 1440px;
+    height: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    z-index: 2; /* Ensure container and caption overlays sit on top of the background gallery */
+    pointer-events: none; /* Let pointer events pass to the gallery if needed */
+}
+
+.product-premium-gallery {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Place gallery behind text overlay */
+}
+
+.product-premium-gallery .hero-premium-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Fill the entire area completely */
+    object-position: right center; /* Focus on the desk set on the right side of the images */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease-in-out, visibility 0.8s;
+}
+
+.product-premium-gallery .hero-premium-img.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Captions (Title Overlay at bottom left) */
+.product-hero-premium__caption {
+    position: absolute;
+    left: 0; /* Align exactly with the description text's left edge below */
+    bottom: 50px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.hero-premium-title {
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 700;
+    line-height: 0.9;
+    margin: 0 0 0.2rem 0;
+    color: #1a1a1a;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+    font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.hero-premium-subtitle {
+    font-size: clamp(0.9rem, 2vw, 1.25rem);
+    font-weight: 600;
+    color: #1a1a1a; /* Dark charcoal for premium legibility on warm beige/gold backgrounds */
+    opacity: 0.6;
+    margin: 0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.product-hero-designer {
+    position: absolute;
+    right: 0;
+    bottom: 2px; /* Set to exactly 2px above the bottom edge */
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    opacity: 0.55;
+    z-index: 10;
+    pointer-events: auto;
+    font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+
+/* --- Centred Detail Showcase Section --- */
+.product-detail-showcase {
+    background-color: #ffffff;
+    width: 100%;
+    padding: 100px 0 60px; /* 100px top padding matching distance to hero slider */
+    box-sizing: border-box;
+}
+
+.product-detail-showcase__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 5%;
+    display: flex;
+    flex-direction: row; /* Horizontal on desktop */
+    align-items: flex-start;
+    gap: clamp(2rem, 5vw, 4rem);
+    box-sizing: border-box;
+}
+
+/* Detail Gallery Styles */
+.detail-gallery {
+    width: calc(65% + 50px); /* Expanded by 50px */
+    margin-left: -50px; /* Shifted 50px to the left to occupy padding area */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.detail-gallery__main-wrapper {
+    width: 100%;
+    max-width: 1000px; /* Increased to grow the image area */
+    aspect-ratio: 16/9; /* Landscape aspect ratio fits desks perfectly */
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.detail-gallery__main-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply; /* Blends white background images nicely */
+    transition: opacity 0.15s ease-in-out, transform 0.4s ease;
+}
+
+.detail-gallery__thumbs {
+    display: flex;
+    gap: 1rem;
+    justify-content: center; /* Centered thumbnails */
+    flex-wrap: wrap;
+}
+
+.detail-gallery__thumb {
+    width: 80px;
+    height: 80px;
+    padding: 6px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    cursor: pointer;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.4; /* 60% transparent by default */
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.detail-gallery__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+.detail-gallery__thumb:hover,
+.detail-gallery__thumb.active {
+    border-color: #1a1a1a;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transform: translateY(-2px);
+    opacity: 1; /* Fully opaque when active/hovered */
+}
+
+/* Centred Content Styles */
+.detail-showcase__content {
+    width: 35%; /* 1 unit out of 3 */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.detail-showcase__title {
+    font-size: 40px; /* Fixed 40px height as requested */
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 2px 0; /* Reduced margin to bring closer to subtitle */
+    letter-spacing: -0.5px;
+    font-family: 'Playfair Display', Georgia, serif;
+}
+
+.detail-showcase__subtitle {
+    display: block; /* Ensure block display to respect margins */
+    font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: -4px; /* Shifted 4px up */
+    margin-bottom: 50px; /* Shifted description 25px up (from 75px to 50px) */
+}
+
+.detail-showcase__desc {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: #54565A;
+    margin: 0 0 50px 0; /* Exactly 50px gap between description and CTA button */
+}
+
+.detail-showcase__actions {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+    .product-hero-premium {
+        height: 450px;
+    }
+    
+    .product-detail-showcase__container {
+        flex-direction: column;
+        gap: 3rem;
+    }
+    
+    .detail-gallery {
+        width: 100%;
+        margin-left: 0; /* Reset negative margin on mobile/tablet */
+        margin-bottom: 2rem;
+    }
+    
+    .detail-showcase__content {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-hero-premium {
+        height: 380px;
+        padding: 0 5%;
+    }
+    
+    .product-hero-premium__caption {
+        bottom: 20px;
+        left: 0;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .product-hero-designer {
+        bottom: 2px; /* Set to exactly 2px above the bottom edge on mobile */
+        font-size: 0.65rem;
+        letter-spacing: 1.5px;
+    }
+}
+.btn-primary-dark {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.2rem 3rem; /* Daha geniş, yatayda uzun lüks oran */
+    background: #1a1a1a;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    border: 1px solid #1a1a1a;
+    border-radius: 0; /* Keskin mimari hatlar */
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+}
+.btn-primary-dark:hover {
+    background: transparent;
+    color: #1a1a1a;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+.btn-outline {
+    flex: 1 1 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 1rem;
+    background: transparent;
+    color: var(--color-text);
+    border: 1px solid rgba(0,0,0,0.1);
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+.btn-outline:hover {
+    border-color: var(--color-text);
+    background: #f9f9f9;
+}
+
+/* Related Products Carousel */
+.related-products-carousel {
+    padding: 4rem 0 7rem; /* Alt boşluk iyice artırıldı */
+    /* Çizgi kaldırıldı */
+    background: #fff;
+    overflow: hidden;
+}
+.related-carousel-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    margin-bottom: 2.5rem;
+}
+.related-carousel-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    /* Border removed */
+}
+.related-carousel-track {
+    display: flex;
+    width: max-content;
+    animation: scroll 30s linear infinite;
+}
+.related-carousel-track:hover {
+    animation-play-state: paused;
+}
+.carousel-item {
+    display: flex;
+    flex-direction: column;
+    width: 320px;
+    height: 320px;
+    border-right: 1px solid rgba(0,0,0,0.05);
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    padding: 1.5rem;
+    transition: background 0.3s;
+    background: #fff;
+}
+.carousel-item:hover {
+    background: #fafafa;
+}
+.carousel-item-title {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    font-weight: 400;
+    margin-bottom: auto; /* Push image down so titles align perfectly at top */
+}
+.carousel-item img {
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.carousel-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Keyframes scroll moved to top level */
+
+/* Product Details Menu */
+.white-bottom-area {
+    background-color: #ffffff;
+    width: 100%;
+    /* Boşluk kalmaması için padding ekleyebiliriz */
+    padding-top: 1px; 
+}
+.product-details-menu {
+    max-width: 900px; /* Reduced from 1440px to a reasonable, elegant centered width */
+    margin: 0 auto;
+    padding: 3rem 5% 4rem;
+}
+.menu-list {
+    width: 100%; /* Çizgilerin sağa kadar uzaması için tam genişlik verildi */
+}
+.menu-item {
+    display: flex;
+    justify-content: flex-start; /* Sola hizalama */
+    align-items: center;
+    width: 100%;
+    padding: 2rem 0; /* 2.5rem'den 2rem'e daraltıldı */
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.08); /* Sadece alt çizgi, daha zarif */
+    font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; /* SF Font zorunluluğu */
+    font-size: 1.3rem; /* 1.6rem'den 1.3rem'e küçültüldü */
+    font-weight: 400; /* Biraz daha belirgin */
+    color: #1a1a1a;
+    cursor: pointer;
+    text-align: left;
+    transition: padding 0.3s, color 0.3s;
+}
+.menu-item:last-child {
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.menu-item:hover {
+    color: var(--color-accent);
+    padding-left: 1rem; /* Hover olunca hafif sağa kayma (editorial hissi) */
+}
+
+/* Plus / Minus Icon (Animasyonlu ve Küçültülmüş) */
+.acc-toggle-icon {
+    margin-left: auto; /* Sağa yasla */
+    width: 14px; /* 20px'den 14px'e küçüldü */
+    height: 14px;
+    position: relative;
+}
+.acc-toggle-icon::before,
+.acc-toggle-icon::after {
+    content: '';
+    position: absolute;
+    background-color: #1a1a1a;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s;
+}
+.acc-toggle-icon::before {
+    top: 6px; /* (14-2)/2 */
+    left: 0;
+    width: 14px;
+    height: 2px;
+}
+.acc-toggle-icon::after {
+    top: 0;
+    left: 6px; /* (14-2)/2 */
+    width: 2px;
+    height: 14px;
+}
+
+/* Accordion Yapısı */
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.4s ease;
+    opacity: 0;
+    padding: 0 1rem;
+    background: transparent;
+}
+.accordion-content.active {
+    max-height: 3500px; /* İçeriğin kesilmemesi için çok yüksek bir değer */
+    padding: 2.5rem 1rem;
+    opacity: 1;
+}
+.menu-item.accordion-header.active {
+    padding-left: 1rem; /* Aktifken sağda kalır */
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent); /* Alt çizgi de renklenir */
+}
+.menu-item.accordion-header.active .acc-toggle-icon::after {
+    transform: rotate(90deg) scale(0);
+}
+.menu-item.accordion-header.active .acc-toggle-icon::before {
+    background-color: var(--color-accent);
+    transform: rotate(180deg);
+}
+
+/* Drawer Content & Swatches (Accordion içine uyarlandı) */
+.doc-list {
+    list-style: none;
+    padding: 0;
+}
+.doc-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-weight: 300;
+    color: #1a1a1a;
+}
+.doc-list a {
+    color: #1a1a1a;
+    transition: color 0.3s, transform 0.3s;
+}
+.doc-list a:hover {
+    color: var(--color-accent);
+    transform: translateY(2px);
+}
+
+.material-group {
+    margin-bottom: 4rem;
+}
+.material-group h4 {
+    font-size: 1.25rem; /* Ana başlıktan (1.3rem) 1px kadar daha küçük */
+    font-weight: 500; /* Daha belirgin */
+    color: #1a1a1a;   /* Daha koyu ve net */
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    margin-bottom: 2.5rem;
+}
+.swatch-grid {
+    display: flex;
+    flex-wrap: wrap;
+    /* Altın oran (1:1.618) bazlı ferah ama derli toplu boşluklar */
+    gap: 2rem 3.2rem; 
+}
+.swatch-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    cursor: pointer;
+    width: 100px; /* İçeriğin kutu genişliğini aşmamasını sağlar */
+}
+.swatch-color {
+    width: 100px;
+    height: 100px;
+    border-radius: 4px; /* Çok hafif ovallik */
+    /* Yazının kutuya uzaklığı altın orana (1:1.618) göre kısaltıldı */
+    margin-bottom: 0.6rem; 
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.swatch-item:hover .swatch-color {
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+.swatch-item span {
+    font-size: 0.85rem;
+    color: #4a4a4a;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.2px;
+}
+.specs-placeholder p {
+    font-weight: 300;
+    line-height: 1.8;
+    color: #1a1a1a;
+}
+
+
+
+@media (max-width: 1024px) {
+    .product-hero {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- product.css end --- */
+}
+
+/* ============================================================
+   BUROBIG KEYFRAMES (TOP-LEVEL SCOPE)
+   ============================================================ */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+

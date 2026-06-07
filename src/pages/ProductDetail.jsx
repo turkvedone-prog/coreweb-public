@@ -6,6 +6,7 @@ import { useSite } from '../layouts/SiteLayout';
 import { ShoppingBag, ChevronLeft, Download, CheckCircle, AlertCircle } from 'lucide-react';
 import { updateSEOMeta } from '../utils/seo';
 import ImageWithFallback from '../components/ImageWithFallback';
+import BurobigProductDetail from '../themes/burobig/BurobigProductDetail';
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -144,6 +145,12 @@ export default function ProductDetail() {
   const galleryItems = product.gallery 
     ? [...product.gallery].sort((a, b) => (a.order || 0) - (b.order || 0))
     : [];
+
+  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
+
+  if (isBurobig) {
+    return <BurobigProductDetail product={product} />;
+  }
 
   return (
     <div className="bg-slate-50 min-h-screen py-16">
