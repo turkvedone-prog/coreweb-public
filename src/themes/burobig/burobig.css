@@ -1,0 +1,1854 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+
+@keyframes hero-entrance {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scroll-line {
+    0%   { height: 0;    opacity: 0; }
+    50%  { height: 60px; opacity: 1; }
+    100% { height: 60px; opacity: 0; }
+}
+
+
+.burobig-theme {
+
+    /* Critical base styles from index.html */
+    --color-bg-critical: #ffffff;
+    --color-text-critical: #1a1a1a;
+    --color-white-critical: #ffffff;
+    --font-primary-critical: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+    --space-sm-critical: clamp(1rem, 2vw, 1.5rem);
+    --space-md-critical: clamp(2rem, 5vw, 4rem);
+
+    font-family: var(--font-primary, var(--font-primary-critical));
+    color: var(--color-text, var(--color-text-critical));
+    background-color: var(--color-bg, var(--color-bg-critical));
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+
+    /* Reset scoped inside theme */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+
+/* ============================================================
+   PREMIUM MOBİLYA — style.css
+   Mimari: BEM + CSS Custom Properties + Fluid Spacing
+   ============================================================ */
+
+/* --- CSS Değişkenleri (Tema Yönetimi) --- */
+& {
+    --color-bg:       #ffffff;
+    --color-text:     #54565A;
+    --color-text-muted: #8b8e94;
+    --color-white:    #ffffff;
+    --color-accent:   #c9a96e;   /* Altın ton — premium his */
+    --color-border:   rgba(0, 0, 0, 0.08);
+
+    --font-primary: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+
+    /* Akışkan Aralıklar (Fluid Spacing) */
+    --space-xs:  clamp(0.5rem,  1vw,  0.75rem);
+    --space-sm:  clamp(1rem,    2vw,  1.5rem);
+    --space-md:  clamp(2rem,    5vw,  4rem);
+    --space-lg:  clamp(4rem,    8vw,  8rem);
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+
+    --transition-base: 0.3s ease;
+    --shadow-sm: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-md: 0 8px 40px rgba(0,0,0,0.12);
+}
+
+/* --- Erişilebilirlik: Focus Visible (WCAG AA, 10-Foot UI) --- */
+:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 4px;
+}
+
+/* --- Skip to Content (Erişilebilirlik) --- */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    padding: 0.5rem 1rem;
+    background: var(--color-text);
+    color: var(--color-white);
+    text-decoration: none;
+    z-index: 9999;
+    transition: top 0.2s;
+}
+.skip-link:focus { top: 1rem; }
+
+/* ============================================================
+   HEADER — .site-header
+   ============================================================ */
+.site-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 0 5%;
+    height: 110px; /* Increased to 110px as requested */
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s; /* Kayma animasyonu eklendi */
+    background-color: #ffffff; /* Tam beyaz, transparanlık kaldırıldı */
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Aşağı kaydırırken gizlemek için */
+.site-header.hidden {
+    transform: translateY(-100%);
+}
+
+/* Scroll sonrası: daha opak + gölge */
+.site-header.scrolled {
+    background-color: #ffffff;
+    box-shadow: var(--shadow-sm);
+}
+
+/* 3-Kolon Grid: Logo | Nav (merkez) | Utility (sağ) */
+.header-container {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    max-width: 1440px;
+    height: 100%;
+    margin: 0 auto;
+    gap: 2rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+@media (min-width: 901px) {
+    .logo {
+        margin-left: -40px;
+    }
+}
+
+/* --- Logo: SVG Container --- */
+.logo a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: opacity var(--transition-base);
+}
+.logo a:hover { opacity: 0.8; }
+
+.logo__img {
+    display: block;
+    width: auto;
+    height: 44px;
+    max-width: 220px;
+    object-fit: contain;
+    object-position: left center;
+}
+
+/* --- Ana Navigasyon: Merkez hizalı --- */
+.main-nav {
+    display: flex;
+    justify-content: center;
+}
+
+@media (min-width: 901px) {
+    .main-nav {
+        transform: translateX(-40px);
+    }
+}
+
+.main-nav > ul {
+    display: flex;
+    gap: clamp(0.8rem, 2.2vw, 2rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    height: 110px; /* Header yüksekliğine eşitlendi (110px) */
+}
+
+.main-nav > ul > li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.main-nav > ul > li > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 500;
+    font-size: 16px;
+    text-transform: none;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    position: relative;
+    padding: 4px 0;
+    transition: color var(--transition-base);
+}
+
+.main-nav > ul > li > a:hover { color: var(--color-accent); }
+.main-nav > ul > li.has-dropdown:hover > a { color: var(--color-accent); }
+
+/* Dropdown Chevron */
+.nav__chevron {
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+}
+.main-nav > ul > li.has-dropdown:hover > a .nav__chevron {
+    transform: rotate(180deg);
+}
+
+/* --- Mega Menü Tasarımı (Premium 3-Kolon) --- */
+.mega-menu {
+    position: absolute;
+    top: 100%;
+    left: -25px; /* Ürünler'in 25px solundan başlar */
+    transform: translateY(15px);
+    width: 820px; /* Daha kompakt şık genişlik */
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+    border-radius: 4px; /* Zivella gibi keskin ve modern köşeler */
+    padding: 2.2rem 2.5rem; /* Daha derli toplu iç boşluk */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    z-index: 99;
+    pointer-events: none;
+    text-align: left; /* Garanti sol hizalama */
+}
+
+.has-dropdown:hover .mega-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.mega-menu__container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.2rem 2.5rem; /* Satırlar arası 2.2rem, sütunlar arası 2.5rem - daha derli toplu */
+}
+
+.mega-menu__col {
+    display: flex;
+    flex-direction: column;
+}
+
+.mega-menu__title {
+    font-size: 14px; /* Biraz daha zarif ve küçük başlık */
+    font-weight: 600;
+    color: #222222;
+    margin-bottom: 1rem; /* Daha sıkı başlık boşluğu */
+    letter-spacing: 0.3px;
+    border-bottom: 1px solid #eaeaea; /* İnce alt çizgi */
+    padding-bottom: 0.6rem;
+    text-transform: none; /* Zivella gibi doğal yazım */
+}
+
+.mega-menu__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem; /* Daha sıkı satır aralığı */
+}
+
+.mega-menu__list li {
+    display: block;
+    height: auto;
+}
+
+.mega-menu__list a {
+    font-size: 13px; /* Daha zarif yazı boyutu */
+    font-weight: 400;
+    color: #666666; /* Daha okunaklı orta gri */
+    text-decoration: none;
+    transition: color var(--transition-base), transform var(--transition-base);
+    display: inline-block;
+    padding: 0;
+}
+
+.mega-menu__list a:hover {
+    color: var(--color-accent); /* Bürobig gold rengi */
+    transform: translateX(3px); /* Hafif kayma efekti */
+}
+
+
+/* --- Utility Bar: Sağ taraf --- */
+.header-utility {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+
+@media (min-width: 901px) {
+    .header-utility {
+        transform: translateX(30px);
+    }
+}
+
+.utility-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.3rem 0.45rem;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+    text-decoration: none;
+    text-transform: none;
+    letter-spacing: 0.3px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-primary);
+    min-height: 48px;  /* Touch target */
+    transition: color var(--transition-base);
+    white-space: nowrap;
+}
+.utility-link:hover { color: var(--color-accent); }
+
+/* TR dil butonu dropdown'u */
+.utility-dropdown {
+    position: relative;
+    display: inline-block;
+}
+.lang-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--color-white);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 0.5rem 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    min-width: 60px;
+    text-align: center;
+    z-index: 100;
+}
+.utility-dropdown:hover .lang-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+.lang-dropdown-menu a {
+    display: block;
+    padding: 0.4rem 1rem;
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
+}
+.lang-dropdown-menu a:hover {
+    background-color: rgba(0,0,0,0.03);
+    color: var(--color-accent);
+}
+
+/* TR dil butonu: uppercase korunur, bir tık daha kalın */
+.utility-lang {
+    position: relative;
+    padding-left: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.utility-lang::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 14px;
+    width: 1px;
+    background: var(--color-border);
+}
+.utility-link--has-line {
+    position: relative;
+    padding-left: 0.75rem !important;
+}
+.utility-link--has-line::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 14px;
+    width: 1px;
+    background: var(--color-border);
+    transition: opacity var(--transition-base);
+}
+
+#util-shop,
+#util-portal,
+#util-pay {
+    height: 40px;
+    min-height: 40px;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-radius: 2px;
+    transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+#util-shop:hover,
+#util-portal:hover,
+#util-pay:hover {
+    background-color: var(--color-accent);
+    color: var(--color-white);
+}
+
+.utility-link--has-line:hover::before {
+    opacity: 0;
+}
+
+/* Arama & İletişim İkon Butonu */
+.icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Touch Target: Minimum 48x48px (WCAG) */
+    min-width: 40px;
+    min-height: 48px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text);
+    transition: color var(--transition-base), transform var(--transition-base);
+    border-radius: var(--radius-sm);
+    padding: 0 0.4rem;
+}
+.icon-btn:hover {
+    color: var(--color-accent);
+    transform: scale(1.1);
+}
+
+.utility-icon {
+    min-width: 36px;
+    padding: 0;
+}
+
+/* ============================================================
+   HERO SECTION & SLIDER — .hero-section
+   ============================================================ */
+.hero-section {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    background-color: #f4f2ee; /* Soft zemin */
+    overflow: hidden;
+}
+
+.hero-slider {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    align-items: center;
+    padding: 0 5%;
+    z-index: 1;
+}
+
+.hero-slide.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+/* Arka Plan Görseli (Ken Burns Efekti) */
+.hero-slide-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+    will-change: transform;
+    transform: scale(1.05);
+    transition: transform 6s ease-out;
+}
+
+.hero-slide.active .hero-slide-bg {
+    transform: scale(1);
+}
+
+.hero-slide::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0.0) 50%
+    );
+    z-index: -1;
+}
+
+
+
+/* Hero İçerik Alanı */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: #1a1a1a; /* Açık zemin için antrasit renk */
+    max-width: 720px;
+    /* Animasyon: sayfa yüklenince aşağıdan yukarı gelir */
+    animation: hero-entrance 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.2s;
+}
+
+
+
+/* Slider Controls (Noktalar) */
+.slider-controls {
+    position: absolute;
+    bottom: 3rem;
+    left: 5%;
+    z-index: 10;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.slider-dot {
+    width: 32px;
+    height: 2px;
+    background: rgba(0,0,0,0.2); /* Açık zemin için koyu nokta */
+    border: none;
+    cursor: pointer;
+    transition: background var(--transition-base), width var(--transition-base);
+    padding: 0;
+}
+
+.slider-dot.active {
+    background: #1a1a1a;
+    width: 56px;
+}
+
+/* Manifestonun Kalbi: Akışkan Tipografi */
+.hero-content h1, .hero-content h2 {
+    font-size: clamp(2.5rem, 5vw + 1rem, 5.5rem);
+    line-height: 1.05;
+    font-weight: 300;      /* İnce ağırlık — lüks his */
+    letter-spacing: -1px;
+    margin-bottom: 1.5rem;
+}
+
+.hero-content p {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    margin-bottom: 2.5rem;
+    max-width: 460px;
+    opacity: 0.9;
+    font-weight: 300;
+    line-height: 1.7;
+}
+
+/* Minimalist CTA Butonu */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2.5rem;
+    /* Touch Target uyumu */
+    min-height: 48px;
+    background-color: #1a1a1a; /* Açık zemin için siyah buton */
+    color: var(--color-white);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: 2px solid #1a1a1a;
+    transition: transform var(--transition-base),
+                background-color var(--transition-base),
+                color var(--transition-base),
+                border-color var(--transition-base);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    background-color: transparent;
+    color: #1a1a1a;
+    border-color: #1a1a1a;
+}
+
+/* Scroll indicator (CLS'siz süsleme) */
+.hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+    z-index: 2;
+    animation: scroll-line 2s ease-in-out infinite;
+}
+
+
+
+/* ============================================================
+   KOLEKSİYONLAR — CSS Grid Asimetrik Layout
+   ============================================================ */
+.collections-section {
+    background: var(--color-bg);
+    /* Apple/Google stili devasa beyaz alan (whitespace) */
+    padding: clamp(6rem, 10vw, 10rem) 0 clamp(4rem, 8vw, 8rem) 0;
+}
+
+.collections-wrapper {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+/* --- Bölüm Başlığı --- */
+.section-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto auto;
+    align-items: start;
+    margin-bottom: clamp(4rem, 7vw, 6rem); /* Eskisinden daha geniş boşluk */
+    gap: 0.5rem 2rem;
+}
+
+.section-label {
+    grid-column: 1 / -1;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background-color: var(--color-accent);
+}
+
+.section-header h2 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem); /* Daha büyük ve vurucu */
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    color: var(--color-text);
+}
+
+#collections-heading {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 55px;
+    font-weight: 400;
+}
+
+@media (max-width: 768px) {
+    #collections-heading {
+        font-size: clamp(2rem, 8vw, 2.5rem);
+    }
+}
+
+.section-header p {
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    color: var(--color-text-muted);
+    max-width: 380px;
+    line-height: 1.8;
+    align-self: end;
+    padding-bottom: 0.5rem;
+}
+
+/* --- Animasyon Sınıfları (Scroll Reveal) --- */
+.reveal-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Delay modifiers */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+
+/* --- CSS Grid: Asimetrik 3-Kolon, 2-Satır --- */
+/*
+    Yapı:
+    [ FEATURED (2 satır) ] [ KART 2 ] [ KART 3 ]
+    [ FEATURED (2 satır) ] [ KART 4 ] [ KART 5 ]
+*/
+.collections-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    grid-template-rows: repeat(2, clamp(260px, 28vw, 440px));
+    gap: clamp(0.5rem, 1vw, 1rem);
+}
+
+/* --- Koleksiyon Kartı: Temel --- */
+.collection-card {
+    position: relative;
+    overflow: hidden;
+    background: #e8e4df;   /* Görsel yüklenene kadar ton uyumlu placeholder */
+    border-radius: 0;      /* Minimalist, kenarsız */
+}
+
+/* Featured kart: 2 satır kaplar */
+.collection-card--featured {
+    grid-row: span 2;
+}
+
+.collection-card__link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* --- Görsel Container --- */
+.collection-card__figure {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.collection-card__figure img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    /* CLS=0: width/height HTML'de tanımlı, CSS'te override edilmiyor */
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Hover: Görsel içe çekme (Ken Burns tarzı) */
+.collection-card__link:hover .collection-card__figure img,
+.collection-card__link:focus-visible .collection-card__figure img {
+    transform: scale(1.06);
+}
+
+/* --- Overlay: Her zaman altta görünür, hover'da belirginleşir --- */
+.collection-card__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: clamp(1rem, 3vw, 2rem);
+    /* Her durumda tamamen şeffaf arka plan */
+    background: transparent;
+    opacity: 1;
+}
+
+.collection-card__link:hover .collection-card__overlay,
+.collection-card__link:focus-visible .collection-card__overlay {
+    /* Hover'da da arka plan şeffaf kalır */
+    background: transparent;
+}
+
+/* --- Kart İçeriği --- */
+.collection-card__info {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: var(--color-white);
+}
+
+.collection-card__title {
+    /* Merkeze değil, doğal akışta (sol altta) yerleşir */
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    margin: 0 0 0.5rem 0;
+    color: var(--color-white);
+    /* Başlangıçta gizli ve biraz aşağıda */
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    /* Gölgeye gerek yok, alt zemin beyazlaşacak */
+    text-shadow: none;
+    text-align: left;
+    width: 100%;
+    pointer-events: none;
+}
+
+/* Featured kart başlığı daha büyük */
+.collection-card--featured .collection-card__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.collection-card__link:hover .collection-card__title,
+.collection-card__link:focus-visible .collection-card__title {
+    opacity: 1;
+    transform: translateY(0); /* Kendi yerine zarifçe oturur */
+}
+
+/* CTA oku: Her zaman görünür */
+.collection-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 1; /* Artık hep görünür */
+    transform: translateX(0);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    color: var(--color-white);
+}
+
+/* Hover'da sadece minik bir ok kayması olsun */
+.collection-card__link:hover .collection-card__cta,
+.collection-card__link:focus-visible .collection-card__cta {
+    transform: translateX(8px);
+}
+
+/* ============================================================
+   YENİ ÜRÜNLER — .products-section
+   ============================================================ */
+.products-section {
+    background-color: var(--color-white);
+    padding: clamp(8rem, 12vw, 12rem) 0 clamp(4rem, 8vw, 8rem) 0;
+}
+
+.products-wrapper {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.products-header {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.products-header h2 {
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-weight: 500;
+    color: var(--color-text);
+    letter-spacing: -0.3px;
+}
+
+/* 3-Kolon Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2vw, 2rem);
+}
+
+/* Ürün Kartı */
+.product-card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    group: product; /* Pseudo hover state için konseptuel */
+}
+
+/* Görsel Alanı: Açık Gri Fon */
+.product-card__figure {
+    background-color: #f8f8f8;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 0;
+    padding: clamp(1.5rem, 3vw, 3rem);
+    transition: background-color var(--transition-base);
+}
+
+.product-card__link:hover .product-card__figure {
+    background-color: #f0f0f0; /* Hoverda çok hafif koyulaşır */
+}
+
+.product-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Beyaz arkaplanlı stok fotoğrafları dekube edilmiş gibi göstermek için sihirli dokunuş */
+    mix-blend-mode: darken;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.product-card__link:hover .product-card__img {
+    transform: scale(1.05);
+}
+
+/* Alt Bilgi: İsim ve Ok */
+.product-card__info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.25rem;
+    padding: 0 0.25rem;
+}
+
+.product-card__title {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--color-text);
+}
+
+.product-card__arrow {
+    color: var(--color-text-muted);
+    transition: transform var(--transition-base), color var(--transition-base);
+}
+
+.product-card__link:hover .product-card__arrow {
+    transform: translateX(6px);
+    color: var(--color-text);
+}
+
+/* Ürünler Responsive */
+@media (max-width: 900px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+    .product-card__figure {
+        aspect-ratio: 16 / 9; /* Mobilde daha yatay */
+    }
+}
+
+/* ============================================================
+/* ============================================================
+   AWARD WINNING PRODUCTS — .awards-section (Redesigned Capsule Layout)
+   ============================================================ */
+.awards-section {
+    padding: clamp(6rem, 10vw, 10rem) 0;
+    background-color: transparent; /* No background color on ground */
+}
+
+.awards-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.awards-header {
+    text-align: center;
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.awards-section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 55px;
+    font-weight: 400;
+    color: #1c1a1f; /* Elegant almost-black tone */
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+.awards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(2rem, 4vw, 4rem);
+}
+
+/* Card: Simple floating card with centered details and no panels */
+.award-card {
+    text-align: center;
+    position: relative;
+}
+
+.award-card__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* Capsule Image Wrapper */
+.award-card__image-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.award-card__figure {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3; /* Vertical capsule aspect ratio */
+    border-radius: 1000px; /* Perfect capsule/oval container */
+    overflow: hidden;
+    margin: 0;
+    padding: 0; /* Full coverage for lifestyle images */
+    
+    background-color: #eae8eb; /* Fallback background */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1),
+                box-shadow 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.award-card:hover .award-card__figure {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+}
+
+.award-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the capsule completely */
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.award-card:hover .award-card__img {
+    transform: scale(1.06);
+}
+
+/* Circular Badge Overlapping Capsule Curve on Top-Right */
+.award-card__badge {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    z-index: 10;
+    width: 54px;
+    height: 54px;
+    background-color: #232226; /* Dark slate circle badge */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.award-card:hover .award-card__badge {
+    transform: translateY(-8px) scale(1.05) rotate(5deg);
+}
+
+.award-badge-text {
+    font-size: 8px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.8px;
+    text-align: center;
+    line-height: 1.2;
+    padding: 0 4px;
+    text-transform: uppercase;
+}
+
+/* Info: Centered text directly below capsule */
+.award-card__info {
+    margin-top: 2rem;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.award-card:hover .award-card__info {
+    transform: translateY(-4px);
+}
+
+.award-card__title {
+    font-family: var(--font-primary);
+    font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+    font-weight: 500;
+    color: #1c1a1f;
+    margin-bottom: 0.1rem; /* Closer to subtitle */
+    text-transform: none; /* Mixed-case name */
+    letter-spacing: 0.5px;
+}
+
+.award-card__subtitle {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(0.85rem, 1.1vw, 0.9rem);
+    color: #888888;
+    margin: 0;
+    letter-spacing: 0.2px;
+    font-weight: 400;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .awards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .awards-section-title {
+        font-size: 34px;
+    }
+    .awards-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        max-width: 360px;
+        margin: 0 auto;
+    }
+    
+    .award-card__figure {
+        aspect-ratio: 2 / 3;
+    }
+    
+    .award-card__badge {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .award-badge-text {
+        font-size: 7px;
+    }
+}
+
+/* ============================================================
+   BLOG — .blog-section
+   ============================================================ */
+.blog-section {
+    padding: clamp(2rem, 4vw, 4rem) 0 clamp(8rem, 12vw, 12rem) 0;
+}
+
+.blog-wrapper {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.blog-header {
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.blog-header h2 {
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-weight: 500;
+    color: var(--color-text);
+    letter-spacing: -0.3px;
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2vw, 2rem);
+}
+
+.blog-card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.blog-card__figure {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    margin: 0 0 1.5rem 0;
+    background-color: #f4f4f4; /* Görsel yüklenene kadar yer tutucu */
+}
+
+.blog-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.blog-card__link:hover .blog-card__img {
+    transform: scale(1.05);
+}
+
+.blog-card__title {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--color-text);
+    margin-bottom: 1.5rem;
+    min-height: 3rem; /* Uzun başlıklar için eşitlik sağlar */
+}
+
+.blog-card__readmore {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    transition: color var(--transition-base);
+}
+
+.blog-card__readmore svg {
+    transition: transform var(--transition-base);
+}
+
+.blog-card__link:hover .blog-card__readmore {
+    color: var(--color-text);
+}
+
+.blog-card__link:hover .blog-card__readmore svg {
+    transform: translateX(6px);
+}
+
+/* Blog Responsive (Koleksiyonlardaki mantıkla aynı) */
+@media (max-width: 900px) {
+    .blog-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 576px) {
+    .blog-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   BLOG — .blog-section
+   ============================================================ */
+.blog-section {
+    padding: clamp(2rem, 4vw, 4rem) 0 clamp(8rem, 12vw, 12rem) 0;
+}
+
+.blog-wrapper {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.blog-header {
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.blog-header h2 {
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-weight: 500;
+    color: var(--color-text);
+    letter-spacing: -0.3px;
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2vw, 2rem);
+}
+
+.blog-card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.blog-card__figure {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    margin: 0 0 1.5rem 0;
+    background-color: #f4f4f4; /* Görsel yüklenene kadar yer tutucu */
+}
+
+.blog-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.blog-card__link:hover .blog-card__img {
+    transform: scale(1.05);
+}
+
+.blog-card__title {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--color-text);
+    margin-bottom: 1.5rem;
+    min-height: 3rem; /* Uzun başlıklar için eşitlik sağlar */
+}
+
+.blog-card__readmore {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    transition: color var(--transition-base);
+}
+
+.blog-card__readmore svg {
+    transition: transform var(--transition-base);
+}
+
+.blog-card__link:hover .blog-card__readmore {
+    color: var(--color-text);
+}
+
+.blog-card__link:hover .blog-card__readmore svg {
+    transform: translateX(6px);
+}
+
+/* Blog Responsive (Koleksiyonlardaki mantıkla aynı) */
+@media (max-width: 900px) {
+    .blog-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 576px) {
+    .blog-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   FOOTER — .site-footer
+   ============================================================ */
+.site-footer {
+    background-color: #262626; /* Koyu Antrasit */
+    color: #a0a0a0;
+    padding: clamp(4rem, 8vw, 6rem) 0 2rem 0;
+    border-top: none;
+}
+
+.footer-wrapper {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: clamp(2rem, 4vw, 4rem);
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.footer-logo {
+    height: 60px;
+    margin-bottom: 1.5rem;
+}
+
+.brand-col p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    max-width: 340px;
+    color: #e5e5e5;
+    font-weight: 300;
+    letter-spacing: 0.2px;
+}
+
+.footer-col h4 {
+    color: #ffffff; /* Koyu zeminde beyaz başlıklar */
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links a, 
+.footer-contact-link {
+    color: #a0a0a0;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color var(--transition-base);
+    display: block;
+}
+
+.footer-contact-link {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a:hover, 
+.footer-contact-link:hover {
+    color: #ffffff;
+}
+
+/* Bülten (Newsletter) Formu */
+.newsletter-form {
+    display: flex;
+    position: relative;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.newsletter-form input {
+    width: 100%;
+    padding: 12px 40px 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 0.95rem;
+    color: #ffffff;
+    outline: none;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.newsletter-form input::placeholder {
+    color: #888888;
+}
+
+.newsletter-form input:focus {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.newsletter-form button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #a0a0a0;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: color var(--transition-base), transform var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.newsletter-form button:hover {
+    color: #ffffff;
+    transform: translateY(-50%) translateX(3px);
+}
+
+.footer-socials {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.footer-socials a {
+    color: #a0a0a0;
+    transition: color var(--transition-base), transform var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-socials a:hover {
+    color: var(--color-accent);
+    transform: translateY(-3px);
+}
+
+/* Footer Bottom Bar */
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 2rem;
+    font-size: 0.85rem;
+    color: #888888;
+}
+
+.footer-bottom-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.footer-bottom-right {
+    display: flex;
+    align-items: center;
+}
+.footer-agency-logo {
+    height: 28px;
+    width: auto;
+    opacity: 1; /* Original colors by default */
+    transition: transform var(--transition-base);
+}
+.footer-agency-logo:hover {
+    transform: translateY(-2px) scale(1.05); /* Premium hover movement */
+}
+
+.lang-flags {
+    display: flex;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.lang-flags .flag {
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.lang-flags .flag.active,
+.lang-flags .flag:hover {
+    opacity: 1;
+    color: var(--color-text);
+}
+
+.footer-bottom-left strong {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.footer-bottom-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+
+
+.scroll-top-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 1);
+    cursor: pointer;
+    color: #000;
+    transition: all 0.3s ease;
+}
+
+.scroll-top-btn:hover {
+    background: #000;
+    color: #fff;
+}
+
+/* Footer Responsive */
+@media (max-width: 900px) {
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        gap: 2rem;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+    .footer-bottom {
+        align-items: center;
+        text-align: center;
+    }
+    .footer-bottom-left, .footer-bottom-right {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+/* ============================================================
+   WHATSAPP LEAD WIDGET
+   ============================================================ */
+.wa-widget {
+    position: fixed;
+    bottom: 30px;
+    right: 30px; /* Sağa alındı */
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.wa-btn {
+    width: 60px;
+    height: 60px;
+    background-color: #25d366;
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.wa-btn:hover {
+    transform: scale(1.1);
+}
+
+
+/* ============================================================
+   RESPONSIVE — Mobil Menü (Media Query Tabanlı)
+   ============================================================ */
+@media (max-width: 900px) {
+    /* Tablet: Nav + utility gizle, hamburger gelecek */
+    .main-nav { display: none; }
+    .header-utility .utility-link { display: none; }
+
+    .header-container {
+        grid-template-columns: auto 1fr auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        letter-spacing: -0.5px;
+    }
+
+    /* Tablet: 2 kolonlu grid, featured üstte tam genişlik */
+    .collections-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 380px repeat(2, 260px);
+    }
+
+    .collection-card--featured {
+        grid-column: span 2;
+        grid-row: span 1;
+    }
+
+    /* Bölüm başlığı: tek kolon */
+    .section-header {
+        grid-template-columns: 1fr;
+    }
+
+    .section-header p {
+        max-width: 100%;
+    }
+}
+
+/* Mobil: Tamamen dikey yığın */
+@media (max-width: 480px) {
+    .collections-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(5, clamp(220px, 65vw, 320px));
+    }
+
+    .collection-card--featured {
+        grid-column: auto;
+        grid-row: auto;
+    }
+}
+
+/* ============================================================
+   TV & BÜYÜK EKRAN (10-Foot UI)
+   ============================================================ */
+@media (min-width: 1920px) {
+    .header-container,
+    .hero-content {
+        max-width: 1600px;
+    }
+
+    .main-nav a {
+        font-size: 0.95rem;
+    }
+}
+
+/* ============================================================
+   SUSTAINABILITY & ECO SECTION — .eco-section
+   ============================================================ */
+.eco-section {
+    padding-top: 1.25rem;
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 100px;
+    background-color: #ffffff; /* Solid white background */
+    background-image: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.eco-container {
+    max-width: 1240px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 5%;
+    position: relative;
+    z-index: 2;
+}
+
+.eco-card {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+}
+
+.eco-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 2vw, 2rem);
+}
+
+.eco-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #1a1a1a;
+}
+
+.eco-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 2.5vw, 2.2rem);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+    color: #0e2922; /* Dark zümrüt green */
+}
+
+.eco-subtitle {
+    font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+    color: rgba(14, 41, 34, 0.70); /* Breathable dark grey-green text */
+    max-width: 750px;
+    margin: 0 auto;
+    line-height: 1.5;
+    font-weight: 300;
+}
+
+.eco-item {
+    text-align: center;
+    color: #ffffff;
+    background-image: linear-gradient(135deg, rgba(26, 63, 53, 0.92) 0%, rgba(14, 41, 34, 0.96) 100%), url('/assets/burobig/images/eco_card_bg.png');
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(26, 63, 53, 0.15);
+    border-radius: 18px;
+    padding: 2.2rem 1.5rem; /* Spacious padding inside cards */
+    box-shadow: 0 15px 35px rgba(14, 41, 34, 0.12);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+                border-color 0.4s ease,
+                box-shadow 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.eco-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 3px;
+    background: linear-gradient(90deg, #5cff9c, #25d366);
+    border-radius: 0 0 3px 3px;
+    opacity: 0.7;
+    transition: width 0.4s ease, opacity 0.4s ease;
+}
+
+.eco-item:hover::before {
+    width: 60px;
+    opacity: 1;
+}
+
+.eco-item:hover {
+    transform: translateY(-8px);
+    border-color: rgba(92, 255, 156, 0.4);
+    box-shadow: 0 25px 45px rgba(14, 41, 34, 0.2), 0 0 15px rgba(92, 255, 156, 0.15);
+}
+
+.eco-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.85rem;
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.02);
+    transition: transform var(--transition-base),
+                border-color var(--transition-base),
+                background-color var(--transition-base);
+}
+
+.eco-icon-wrapper svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.5;
+}
+
+.eco-item:hover .eco-icon-wrapper {
+    transform: scale(1.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.eco-item-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.3px;
+    color: #ffffff;
+}
+
+.eco-item-text {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.70);
+    font-weight: 300;
+    max-width: 240px;
+    margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .eco-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .eco-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+}
+
+/* ============================================================
+   REDUCED MOTION (Erişilebilirlik)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+}

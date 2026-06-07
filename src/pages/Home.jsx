@@ -4,12 +4,15 @@ import HeroSlider from '../components/HeroSlider';
 import { Mail, Phone, Sparkles, Award, Users } from 'lucide-react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
+import BurobigHome from '../themes/burobig/BurobigHome';
 
 export default function Home() {
   const { tenantMapping, activeLang, settings } = useSite();
   const { tenantId, tenantSlug } = tenantMapping;
   const [sliders, setSliders] = useState([]);
   const [loadingSliders, setLoadingSliders] = useState(true);
+
+  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
 
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
@@ -47,6 +50,10 @@ export default function Home() {
   const translate = (tr, en) => {
     return activeLang === 'tr' ? tr : en;
   };
+
+  if (isBurobig) {
+    return <BurobigHome />;
+  }
 
   return (
     <div className="home-page bg-slate-50 min-h-screen">

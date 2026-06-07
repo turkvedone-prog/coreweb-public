@@ -91,6 +91,18 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
     navigation
   };
 
+  const isBurobig = tenantMapping?.tenantSlug === 'burobig' || tenantMapping?.tenantId === 'TEN-BUROBIG';
+
+  if (isBurobig) {
+    return (
+      <SiteContext.Provider value={contextValue}>
+        <div className="burobig-theme">
+          {children}
+        </div>
+      </SiteContext.Provider>
+    );
+  }
+
   return (
     <SiteContext.Provider value={contextValue}>
       <div className="site-container min-h-screen flex flex-col bg-slate-50 text-slate-800">
