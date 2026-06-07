@@ -93,6 +93,7 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
 
   const isBurobig = tenantMapping?.tenantSlug === 'burobig' || tenantMapping?.tenantId === 'TEN-BUROBIG';
   const isCapilon = tenantMapping?.tenantSlug === 'capilon' || tenantMapping?.tenantId === 'TEN-CAPILON';
+  const isCoreWeb = tenantMapping?.tenantSlug === 'coreweb' || tenantMapping?.tenantId === 'TEN-507';
 
   if (isBurobig) {
     return (
@@ -108,6 +109,16 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
     return (
       <SiteContext.Provider value={contextValue}>
         <div className="capilon-theme">
+          {children}
+        </div>
+      </SiteContext.Provider>
+    );
+  }
+
+  if (isCoreWeb) {
+    return (
+      <SiteContext.Provider value={contextValue}>
+        <div className="coreweb-theme">
           {children}
         </div>
       </SiteContext.Provider>

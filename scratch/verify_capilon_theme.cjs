@@ -150,7 +150,7 @@ async function run() {
     });
 
     const corewebHasGenericContent = await page.evaluate(() => {
-      return document.body.textContent.includes('Biz Kimiz?');
+      return document.body.textContent.includes('Web Sitenizi Sadece Yayına Almayın');
     });
 
     const robotsMetaCoreweb = await page.evaluate(() => {
@@ -159,7 +159,7 @@ async function run() {
     });
 
     console.log(`- Theme Wrapper (.capilon-theme) Absent: ${!corewebHasCapilonTheme ? '✅ YES' : '❌ NO (Capilon theme leaked to CoreWeb!)'}`);
-    console.log(`- Generic "Biz Kimiz?" Section Present: ${corewebHasGenericContent ? '✅ YES' : '❌ NO (CoreWeb generic layout lost!)'}`);
+    console.log(`- CoreWeb Premium Content Present: ${corewebHasGenericContent ? '✅ YES' : '❌ NO (CoreWeb layout lost!)'}`);
     console.log(`- Robots Meta (CoreWeb should be indexable): "${robotsMetaCoreweb}"`);
 
     if (corewebHasCapilonTheme || !corewebHasGenericContent || (robotsMetaCoreweb && robotsMetaCoreweb.includes('noindex'))) {

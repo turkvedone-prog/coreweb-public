@@ -6,6 +6,7 @@ import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
 import BurobigHome from '../themes/burobig/BurobigHome';
 import CapilonHome from '../themes/capilon/CapilonHome';
+import CoreWebHome from '../themes/coreweb/CoreWebHome';
 
 export default function Home() {
   const { tenantMapping, activeLang, settings } = useSite();
@@ -15,11 +16,12 @@ export default function Home() {
 
   const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
   const isCapilon = tenantSlug === 'capilon' || tenantId === 'TEN-CAPILON';
+  const isCoreWeb = tenantSlug === 'coreweb' || tenantId === 'TEN-507';
 
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   useEffect(() => {
-    if (isBurobig || isCapilon) return;
+    if (isBurobig || isCapilon || isCoreWeb) return;
 
     // Dynamic SEO update for homepage
     const homeDescription = activeLang === 'tr'
@@ -32,7 +34,7 @@ export default function Home() {
       image: settings?.logos?.header || settings?.logos?.footer || '',
       companyName: settings?.homeTitle ? '' : companyName
     });
-  }, [activeLang, companyName, settings, isBurobig, isCapilon]);
+  }, [activeLang, companyName, settings, isBurobig, isCapilon, isCoreWeb]);
 
   useEffect(() => {
     if (!tenantId) return;
@@ -61,6 +63,10 @@ export default function Home() {
 
   if (isCapilon) {
     return <CapilonHome />;
+  }
+
+  if (isCoreWeb) {
+    return <CoreWebHome />;
   }
 
   return (

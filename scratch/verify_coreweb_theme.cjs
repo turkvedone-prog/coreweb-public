@@ -56,23 +56,55 @@ async function run() {
 
   try {
     // ----------------------------------------------------
-    // TEST 1: Burobig custom theme renders on /burobig/tr
+    // TEST 1: CoreWeb custom theme renders on /coreweb/tr
     // ----------------------------------------------------
-    console.log('\n🔍 TEST 1: Verifying Burobig customer route (/burobig/tr)...');
-    await page.goto('http://localhost:5173/burobig/tr', { waitUntil: 'networkidle2', timeout: 10000 });
+    console.log('\n🔍 TEST 1: Verifying CoreWeb custom route (/coreweb/tr)...');
+    await page.goto('http://localhost:5173/coreweb/tr', { waitUntil: 'networkidle2', timeout: 10000 });
     await new Promise(r => setTimeout(r, 1000)); // wait for rendering
+
+    const hasCoreWebTheme = await page.evaluate(() => {
+      return document.querySelector('.coreweb-theme') !== null;
+    });
+
+    const isFallbackVisible = await page.evaluate(() => {
+      return document.body.textContent.includes('Biz Kimiz?');
+    });
+
+    const mainH1 = await page.evaluate(() => {
+      const h1 = document.querySelector('.coreweb-theme h1');
+      return h1 ? h1.textContent.trim() : null;
+    });
+
+    const robotsMetaCoreWeb = await page.evaluate(() => {
+      const meta = document.querySelector('meta[name="robots"]');
+      return meta ? meta.getAttribute('content') : null;
+    });
+
+    console.log(`- Theme Wrapper (.coreweb-theme) Present: ${hasCoreWebTheme ? '✅ YES' : '❌ NO'}`);
+    console.log(`- Fallback "Biz Kimiz?" Section Hidden: ${!isFallbackVisible ? '✅ YES' : '❌ NO (Found fallback text!)'}`);
+    console.log(`- Main H1 Heading: "${mainH1}"`);
+    console.log(`- Robots Meta tag (CoreWeb should be indexable): "${robotsMetaCoreWeb}"`);
+
+    if (!hasCoreWebTheme || isFallbackVisible || !mainH1 || !mainH1.includes('Web Sitenizi Sadece Yayına Almayın') || (robotsMetaCoreWeb && robotsMetaCoreWeb.includes('noindex'))) {
+      console.error('❌ TEST 1 FAILED!');
+      testPassed = false;
+    } else {
+      console.log('✅ TEST 1 PASSED.');
+    }
+
+    // ----------------------------------------------------
+    // TEST 2: Burobig custom theme renders on /burobig/tr
+    // ----------------------------------------------------
+    console.log('\n🔍 TEST 2: Verifying Burobig route (/burobig/tr) for regression...');
+    await page.goto('http://localhost:5173/burobig/tr', { waitUntil: 'networkidle2', timeout: 10000 });
+    await new Promise(r => setTimeout(r, 1000));
 
     const hasBurobigTheme = await page.evaluate(() => {
       return document.querySelector('.burobig-theme') !== null;
     });
 
-    const isFallbackVisible = await page.evaluate(() => {
-      return document.body.textContent.includes('CoreWeb Dünyasına Hoş Geldiniz');
-    });
-
-    const mainH1 = await page.evaluate(() => {
-      const h1 = document.querySelector('.burobig-theme h1');
-      return h1 ? h1.textContent.trim() : null;
+    const burobigHasCoreWebTheme = await page.evaluate(() => {
+      return document.querySelector('.coreweb-theme') !== null;
     });
 
     const robotsMetaBurobig = await page.evaluate(() => {
@@ -81,42 +113,10 @@ async function run() {
     });
 
     console.log(`- Theme Wrapper (.burobig-theme) Present: ${hasBurobigTheme ? '✅ YES' : '❌ NO'}`);
-    console.log(`- Fallback "CoreWeb Dünyasına Hoş Geldiniz" Hidden: ${!isFallbackVisible ? '✅ YES' : '❌ NO (Found fallback text!)'}`);
-    console.log(`- Main H1 Heading: "${mainH1}"`);
+    console.log(`- CoreWeb Theme wrapper absent on Burobig: ${!burobigHasCoreWebTheme ? '✅ YES' : '❌ NO (CoreWeb theme leaked to Burobig!)'}`);
     console.log(`- Robots Meta tag (Staging noindex): "${robotsMetaBurobig}"`);
 
-    if (!hasBurobigTheme || isFallbackVisible || !mainH1 || !mainH1.includes('İnka') || !robotsMetaBurobig || !robotsMetaBurobig.includes('noindex')) {
-      console.error('❌ TEST 1 FAILED!');
-      testPassed = false;
-    } else {
-      console.log('✅ TEST 1 PASSED.');
-    }
-
-    // ----------------------------------------------------
-    // TEST 2: CoreWeb template remains generic on /coreweb/tr
-    // ----------------------------------------------------
-    console.log('\n🔍 TEST 2: Verifying CoreWeb route (/coreweb/tr) for regression...');
-    await page.goto('http://localhost:5173/coreweb/tr', { waitUntil: 'networkidle2', timeout: 10000 });
-    await new Promise(r => setTimeout(r, 1000));
-
-    const corewebHasBurobigTheme = await page.evaluate(() => {
-      return document.querySelector('.burobig-theme') !== null;
-    });
-
-    const corewebHasGenericContent = await page.evaluate(() => {
-      return document.body.textContent.includes('Web Sitenizi Sadece Yayına Almayın');
-    });
-
-    const robotsMetaCoreweb = await page.evaluate(() => {
-      const meta = document.querySelector('meta[name="robots"]');
-      return meta ? meta.getAttribute('content') : null;
-    });
-
-    console.log(`- Theme Wrapper (.burobig-theme) Absent: ${!corewebHasBurobigTheme ? '✅ YES' : '❌ NO (Burobig theme leaked to CoreWeb!)'}`);
-    console.log(`- CoreWeb Premium Content Present: ${corewebHasGenericContent ? '✅ YES' : '❌ NO (CoreWeb layout lost!)'}`);
-    console.log(`- Robots Meta (CoreWeb should be indexable): "${robotsMetaCoreweb}"`);
-
-    if (corewebHasBurobigTheme || !corewebHasGenericContent || (robotsMetaCoreweb && robotsMetaCoreweb.includes('noindex'))) {
+    if (!hasBurobigTheme || burobigHasCoreWebTheme || !robotsMetaBurobig || !robotsMetaBurobig.includes('noindex')) {
       console.error('❌ TEST 2 FAILED!');
       testPassed = false;
     } else {
@@ -124,14 +124,18 @@ async function run() {
     }
 
     // ----------------------------------------------------
-    // TEST 3: Capilon template remains placeholder on /capilon/tr
+    // TEST 3: Capilon custom theme renders on /capilon/tr
     // ----------------------------------------------------
-    console.log('\n🔍 TEST 3: Verifying Capilon route (/capilon/tr)...');
+    console.log('\n🔍 TEST 3: Verifying Capilon route (/capilon/tr) for regression...');
     await page.goto('http://localhost:5173/capilon/tr', { waitUntil: 'networkidle2', timeout: 10000 });
     await new Promise(r => setTimeout(r, 1000));
 
-    const capilonHasBurobigTheme = await page.evaluate(() => {
-      return document.querySelector('.burobig-theme') !== null;
+    const hasCapilonTheme = await page.evaluate(() => {
+      return document.querySelector('.capilon-theme') !== null;
+    });
+
+    const capilonHasCoreWebTheme = await page.evaluate(() => {
+      return document.querySelector('.coreweb-theme') !== null;
     });
 
     const robotsMetaCapilon = await page.evaluate(() => {
@@ -139,10 +143,11 @@ async function run() {
       return meta ? meta.getAttribute('content') : null;
     });
 
-    console.log(`- Burobig Theme wrapper absent on Capilon: ${!capilonHasBurobigTheme ? '✅ YES' : '❌ NO (Burobig theme leaked to Capilon!)'}`);
+    console.log(`- Theme Wrapper (.capilon-theme) Present: ${hasCapilonTheme ? '✅ YES' : '❌ NO'}`);
+    console.log(`- CoreWeb Theme wrapper absent on Capilon: ${!capilonHasCoreWebTheme ? '✅ YES' : '❌ NO (CoreWeb theme leaked to Capilon!)'}`);
     console.log(`- Robots Meta tag (Staging noindex): "${robotsMetaCapilon}"`);
 
-    if (capilonHasBurobigTheme || !robotsMetaCapilon || !robotsMetaCapilon.includes('noindex')) {
+    if (!hasCapilonTheme || capilonHasCoreWebTheme || !robotsMetaCapilon || !robotsMetaCapilon.includes('noindex')) {
       console.error('❌ TEST 3 FAILED!');
       testPassed = false;
     } else {
@@ -162,6 +167,14 @@ async function run() {
       console.log('✅ TEST 4 PASSED.');
     }
 
+    // Capture screenshot of CoreWeb
+    console.log('\n📸 Capturing screenshot of CoreWeb theme...');
+    await page.goto('http://localhost:5173/coreweb/tr', { waitUntil: 'networkidle2', timeout: 10000 });
+    await new Promise(r => setTimeout(r, 1500));
+    const screenshotPath = path.resolve(CWD, 'verify_coreweb_preview.png');
+    await page.screenshot({ path: screenshotPath });
+    console.log(`📸 Screenshot saved to: ${screenshotPath}`);
+
   } catch (err) {
     console.error('❌ Smoke test failed with error:', err);
     testPassed = false;
@@ -173,7 +186,7 @@ async function run() {
     devServer.kill('SIGINT');
     
     if (testPassed) {
-      console.log('\n🎉 ALL SMOKE TESTS COMPLETED SUCCESSFULLY!');
+      console.log('\n🎉 ALL COREWEB SMOKE TESTS COMPLETED SUCCESSFULLY!');
       process.exit(0);
     } else {
       console.error('\n❌ SOME SMOKE TESTS FAILED!');
