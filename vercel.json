@@ -1,4 +1,17 @@
 {
+  "redirects": [
+    {
+      "source": "/tr",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.coreweb.tr"
+        }
+      ],
+      "destination": "https://www.coreweb.tr",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

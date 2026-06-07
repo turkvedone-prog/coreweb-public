@@ -46,24 +46,40 @@ function RouteResolver() {
           const enabledLangs = mapping.enabledLanguages || ['tr'];
           const defaultLang = mapping.defaultLanguage || 'tr';
 
-          if (urlLang && enabledLangs.includes(urlLang)) {
-            setResolvedLang(urlLang);
-          } else {
-            // Redirect to default language
-            const newSegments = [...pathSegments];
-            if (urlLang && !enabledLangs.includes(urlLang)) {
-              newSegments[langIndex] = defaultLang;
-            } else if (!urlLang || (isLocalOrPortal && newSegments.length < 2)) {
-              if (isLocalOrPortal) {
-                // Ensure slug is first, then lang
-                newSegments[0] = params.tenantSlug;
-                newSegments[1] = defaultLang;
-              } else {
-                newSegments[0] = defaultLang;
-              }
+          const isOfficialDomain = hostname === 'www.coreweb.tr' || hostname === 'coreweb.tr';
+          const isCoreWeb = mapping.tenantSlug === 'coreweb' || mapping.tenantId === 'TEN-507';
+
+          if (isCoreWeb && isOfficialDomain) {
+            // Clean URL behavior for CoreWeb official domain in production
+            const isExactTr = pathSegments.length === 1 && pathSegments[0] === 'tr';
+            if (isExactTr) {
+              // Redirect www.coreweb.tr/tr -> www.coreweb.tr
+              navigate('/', { replace: true });
+            } else {
+              // Serve tr directly on root path / or other paths without language segment prefix
+              setResolvedLang(defaultLang);
             }
-            const redirectPath = '/' + newSegments.join('/');
-            navigate(redirectPath, { replace: true });
+          } else {
+            // Original logic for other tenants or preview CoreWeb environments
+            if (urlLang && enabledLangs.includes(urlLang)) {
+              setResolvedLang(urlLang);
+            } else {
+              // Redirect to default language
+              const newSegments = [...pathSegments];
+              if (urlLang && !enabledLangs.includes(urlLang)) {
+                newSegments[langIndex] = defaultLang;
+              } else if (!urlLang || (isLocalOrPortal && newSegments.length < 2)) {
+                if (isLocalOrPortal) {
+                  // Ensure slug is first, then lang
+                  newSegments[0] = params.tenantSlug;
+                  newSegments[1] = defaultLang;
+                } else {
+                  newSegments[0] = defaultLang;
+                }
+              }
+              const redirectPath = '/' + newSegments.join('/');
+              navigate(redirectPath, { replace: true });
+            }
           }
         }
       } catch (err) {

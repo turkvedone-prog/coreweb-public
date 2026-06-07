@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { getCompanySettings, getNavigation } from '../services/publicContentService';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -20,6 +21,46 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
   const [settings, setSettings] = useState(null);
   const [navigation, setNavigation] = useState([]);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+
+  // Dynamic canonical link meta for CoreWeb
+  useEffect(() => {
+    if (!tenantMapping) return;
+
+    const isCoreWeb = tenantMapping.tenantSlug === 'coreweb' || tenantMapping.tenantId === 'TEN-507';
+
+    let canonicalTag = document.querySelector('link[rel="canonical"]');
+
+    if (isCoreWeb) {
+      if (!canonicalTag) {
+        canonicalTag = document.createElement('link');
+        canonicalTag.setAttribute('rel', 'canonical');
+        document.head.appendChild(canonicalTag);
+      }
+      // Remove trailing slash and /tr or /tr/ prefix from path for canonical tag
+      let cleanPath = location.pathname;
+      if (cleanPath === '/tr' || cleanPath === '/tr/') {
+        cleanPath = '';
+      } else if (cleanPath.startsWith('/tr/')) {
+        cleanPath = cleanPath.substring(3);
+      }
+      if (cleanPath === '/') {
+        cleanPath = '';
+      }
+      canonicalTag.setAttribute('href', `https://www.coreweb.tr${cleanPath}`);
+    } else {
+      if (canonicalTag) {
+        canonicalTag.remove();
+      }
+    }
+
+    return () => {
+      const tag = document.querySelector('link[rel="canonical"]');
+      if (tag) {
+        tag.remove();
+      }
+    };
+  }, [tenantMapping, location.pathname]);
 
   // Dynamic robots noindex meta for staging subdomains
   useEffect(() => {
