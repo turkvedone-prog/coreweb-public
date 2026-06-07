@@ -4,6 +4,8 @@ import { getCompanySettings, getNavigation } from '../services/publicContentServ
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import LoadingState from '../components/LoadingState';
+import BurobigHeader from '../themes/burobig/BurobigHeader';
+import BurobigFooter from '../themes/burobig/BurobigFooter';
 
 const SiteContext = createContext(null);
 
@@ -146,7 +148,9 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
     return (
       <SiteContext.Provider value={contextValue}>
         <div className="burobig-theme">
+          <BurobigHeader />
           {children}
+          <BurobigFooter />
         </div>
       </SiteContext.Provider>
     );
