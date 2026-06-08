@@ -46,7 +46,7 @@ export default function CapilonCollectionsPage() {
     {
       id: 'yemek-odalari',
       title: translate('YEMEK ODALARI', 'DINING ROOMS'),
-      img: '/assets/capilon/images/product_dining_1779477859352.png',
+      img: '/assets/capilon/images/cat_armchair_warm.png',
       desc: translate(
         'Sıcak paylaşımlar ve estetik detaylarla harmanlanan modern yemek odası tasarımları.',
         'Modern dining room designs blended with warm gatherings and aesthetic details.'
@@ -55,16 +55,16 @@ export default function CapilonCollectionsPage() {
     {
       id: 'yatak-odalari',
       title: translate('YATAK ODALARI', 'BEDROOMS'),
-      img: '/assets/capilon/images/hero_bedroom_1779477829254.png',
+      img: '/assets/capilon/images/capilon_comfort_series_1779567476232.png',
       desc: translate(
-        'Günün yorgunluğunu geride bırakacağınız dingin, konforlu ve şık uyku alanları.',
+        'Günü yorgunluğunu geride bırakacağınız dingin, konforlu ve şık uyku alanları.',
         'Serene, comfortable and elegant sleeping spaces to leave the day\'s fatigue behind.'
       )
     },
     {
       id: 'koltuk-takimlari',
       title: translate('KOLTUK TAKIMLARI', 'LIVING ROOM SETS'),
-      img: '/assets/capilon/images/product_sofa_1779477845050.png',
+      img: '/assets/capilon/images/premium_craftsmanship_1779572256681.png',
       desc: translate(
         'Maksimum konforu zamansız tasarım çizgileriyle buluşturan premium oturma grupları.',
         'Premium living room sets combining maximum comfort with timeless design lines.'
@@ -73,7 +73,7 @@ export default function CapilonCollectionsPage() {
     {
       id: 'kose-takimlari',
       title: translate('KÖŞE TAKIMLARI', 'CORNER SOFAS'),
-      img: '/assets/capilon/images/cat_corner_sofa_warm.png',
+      img: '/assets/capilon/images/cat_armchair_warm.png',
       desc: translate(
         'Yaşam alanlarınıza fonksiyonellik ve genişlik katan modern köşe koltuk çözümleri.',
         'Modern corner sofa solutions adding functionality and spaciousness to your living spaces.'
@@ -82,7 +82,7 @@ export default function CapilonCollectionsPage() {
     {
       id: 'tv-uniteleri',
       title: translate('TV ÜNİTELERİ', 'TV UNITS'),
-      img: '/assets/capilon/images/cat_tv_unit_warm.png',
+      img: '/assets/capilon/images/capilon_comfort_series_1779567476232.png',
       desc: translate(
         'Salonunuzun düzenini ve tarzını tamamlayan estetik televizyon ünitesi modelleri.',
         'Aesthetic TV unit models that complement the layout and style of your living room.'
@@ -91,7 +91,7 @@ export default function CapilonCollectionsPage() {
     {
       id: 'cocuk-genc-odalari',
       title: translate('ÇOCUK & GENÇ ODALARI', 'KIDS & TEEN ROOMS'),
-      img: '/assets/capilon/images/cat_teen_room_warm.png',
+      img: '/assets/capilon/images/premium_craftsmanship_1779572256681.png',
       desc: translate(
         'Gençlerin dünyasına ilham veren, dinamik ve fonksiyonel çalışma ve yaşam alanları.',
         'Dynamic and functional study and living spaces that inspire the world of youth.'
