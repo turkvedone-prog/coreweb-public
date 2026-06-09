@@ -6,6 +6,7 @@ import { useSite } from '../layouts/SiteLayout';
 import { Calendar, ChevronRight, BookOpen } from 'lucide-react';
 import { updateSEOMeta } from '../utils/seo';
 import ImageWithFallback from '../components/ImageWithFallback';
+import BurobigBlogList from '../themes/burobig/BurobigBlogList';
 
 export default function BlogList() {
   const { tenantMapping, activeLang, settings } = useSite();
@@ -92,6 +93,18 @@ export default function BlogList() {
           <p className="font-semibold">{error}</p>
         </div>
       </div>
+    );
+  }
+
+  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
+
+  if (isBurobig) {
+    return (
+      <BurobigBlogList
+        blogs={blogs}
+        formatDate={formatDate}
+        getLocalizedPath={getLocalizedPath}
+      />
     );
   }
 

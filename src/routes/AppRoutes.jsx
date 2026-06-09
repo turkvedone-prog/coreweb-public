@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useParams, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { detectAndResolveTenant } from '../utils/tenantResolver';
 import SiteLayout from '../layouts/SiteLayout';
 import Home from '../pages/Home';
@@ -11,7 +11,13 @@ import ProductList from '../pages/ProductList';
 import ProductDetail from '../pages/ProductDetail';
 import Contact from '../pages/Contact';
 import CollectionsPage from '../pages/CollectionsPage';
-import LoadingState from '../components/LoadingState';
+import Designers from '../pages/Designers';
+import History from '../pages/History';
+import DesignProcess from '../pages/DesignProcess';
+import Manifesto from '../pages/Manifesto';
+import QualityPolicy from '../pages/QualityPolicy';
+import Sustainability from '../pages/Sustainability';
+import DesignPhilosophy from '../pages/DesignPhilosophy';
 import NotFoundSite from '../components/NotFoundSite';
 
 function RouteResolver() {
@@ -94,7 +100,7 @@ function RouteResolver() {
   }, [params.tenantSlug, location.pathname, hostname, isLocalOrPortal, navigate]);
 
   if (loading) {
-    return <LoadingState />;
+    return null;
   }
 
   if (!tenantMapping) {
@@ -102,7 +108,7 @@ function RouteResolver() {
   }
 
   if (!resolvedLang) {
-    return <LoadingState />;
+    return null;
   }
 
   const isCapilon = tenantMapping?.tenantSlug === 'capilon' || tenantMapping?.tenantId === 'TEN-CAPILON';
@@ -121,6 +127,14 @@ function RouteResolver() {
         <Route path="/ofis-koltuklari" element={<ProductList />} />
         <Route path="/operasyonel-masalar" element={<ProductList />} />
         <Route path="/toplanti-masalari" element={<ProductList />} />
+        <Route path="/tasarimcilar" element={<Designers />} />
+        <Route path="/kurumsal" element={<Navigate to="/hikayemiz" replace />} />
+        <Route path="/hikayemiz" element={<History />} />
+        <Route path="/tasarim-sureci" element={<DesignProcess />} />
+        <Route path="/tasarim-felsefesi" element={<DesignPhilosophy />} />
+        <Route path="/manifesto" element={<Manifesto />} />
+        <Route path="/kalite-politikamiz" element={<QualityPolicy />} />
+        <Route path="/surdurulebilirlik" element={<Sustainability />} />
         <Route path="/iletisim" element={<Contact />} />
         {isCapilon && <Route path="/koleksiyonlar" element={<CollectionsPage />} />}
         <Route path="*" element={<NotFoundSite reason="Sayfa bulunamadı." />} />

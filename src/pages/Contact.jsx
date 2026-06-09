@@ -3,6 +3,7 @@ import { useSite } from '../layouts/SiteLayout';
 import { submitLead } from '../services/apiService';
 import { updateSEOMeta } from '../utils/seo';
 import { loadRecaptchaScript, executeRecaptcha } from '../utils/recaptcha';
+import BurobigContact from '../themes/burobig/BurobigContact';
 import CapilonContact from '../themes/capilon/CapilonContact';
 import { 
   Mail, 
@@ -19,6 +20,7 @@ export default function Contact() {
   const { tenantMapping, activeLang, settings } = useSite();
   const { tenantId, tenantSlug } = tenantMapping;
 
+  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
   const isCapilon = tenantSlug === 'capilon' || tenantId === 'TEN-CAPILON';
 
   // Form State
@@ -55,9 +57,9 @@ export default function Contact() {
         `${companyName} iletişim bilgileri, adres, telefon ve online iletişim formu.`,
         `${companyName} contact information, address, phone number, and online message form.`
       ),
-      companyName
     });
-  }, [activeLang, companyName, translate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeLang, companyName]);
 
   // Load reCAPTCHA script in production
   useEffect(() => {
@@ -211,6 +213,29 @@ export default function Contact() {
   };
 
 
+
+  if (isBurobig) {
+    return (
+      <BurobigContact
+        formData={formData}
+        consentAccepted={consentAccepted}
+        setConsentAccepted={setConsentAccepted}
+        loading={loading}
+        success={success}
+        error={error}
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        companyName={companyName}
+        contact={contact}
+        workingHours={workingHours}
+        translate={translate}
+        mockToken={mockToken}
+        setMockToken={setMockToken}
+        tripHoneypot={tripHoneypot}
+        setTripHoneypot={setTripHoneypot}
+      />
+    );
+  }
 
   if (isCapilon) {
     return (

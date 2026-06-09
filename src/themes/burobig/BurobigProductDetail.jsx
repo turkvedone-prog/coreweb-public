@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect, useState, useRef, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
 import BurobigEcoBanner from './BurobigEcoBanner';
 
@@ -9,7 +9,6 @@ import { getLocalizedContent } from '../../utils/i18nContent';
 export default function BurobigProductDetail({ product }) {
   const { tenantMapping, activeLang } = useSite();
   const { tenantId, tenantSlug } = tenantMapping;
-  const { slug } = useParams();
 
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [activeHeroIdx, setActiveHeroIdx] = useState(0);
@@ -17,6 +16,15 @@ export default function BurobigProductDetail({ product }) {
   const [activeDetailIdx, setActiveDetailIdx] = useState(0);
   const [openAccordion, setOpenAccordion] = useState(null); // 'docs', 'materials', 'specs'
   const detailImgRef = useRef(null);
+
+  // Storing information from previous renders to adjust state on product change without useEffect
+  const [prevProduct, setPrevProduct] = useState(product);
+  if (product.slug !== prevProduct.slug) {
+    setPrevProduct(product);
+    setActiveDetailImage(product.coverImageUrl || '');
+    setActiveDetailIdx(0);
+    setActiveHeroIdx(0);
+  }
 
   const hostname = window.location.hostname;
   const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
@@ -31,15 +39,17 @@ export default function BurobigProductDetail({ product }) {
   };
 
   // Determine Hero image slider list
-  const heroImages = product.slug === 'inka'
-    ? ['/assets/burobig/images/Deneme 001-1.webp', '/assets/burobig/images/Deneme 002-1.webp']
-    : (product.gallery && product.gallery.length > 0 
-       ? product.gallery.map(img => img.url)
-       : [product.coverImageUrl || '']);
+  const heroImages = useMemo(() => {
+    return product.slug === 'inka'
+      ? ['/assets/burobig/images/Deneme 001-1.webp', '/assets/burobig/images/Deneme 002-1.webp']
+      : (product.gallery && product.gallery.length > 0 
+         ? product.gallery.map(img => img.url)
+         : [product.coverImageUrl || '']);
+  }, [product]);
 
   // Determine Detail gallery thumbnails (cover image + gallery images)
   const detailGallery = product.gallery && product.gallery.length > 0
-    ? [product.coverImageUrl, ...product.gallery.map(img => img.url)].filter(Boolean)
+    ? Array.from(new Set([product.coverImageUrl, ...product.gallery.map(img => img.url)])).filter(Boolean)
     : [product.coverImageUrl].filter(Boolean);
 
   // Fetch Related Products
@@ -60,12 +70,21 @@ export default function BurobigProductDetail({ product }) {
     fetchRelated();
   }, [tenantId, product.slug, activeLang]);
 
-  // Set default detail image on product change
-  useEffect(() => {
-    setActiveDetailImage(product.coverImageUrl || '');
-    setActiveDetailIdx(0);
-    setActiveHeroIdx(0);
-  }, [product]);
+  // Handle Detail image thumbnail click with fade transition
+  const handleDetailImageChange = (src, idx) => {
+    const mainImg = detailImgRef.current;
+    if (mainImg) {
+      mainImg.style.opacity = '0.3';
+      setTimeout(() => {
+        setActiveDetailImage(src);
+        setActiveDetailIdx(idx);
+        mainImg.style.opacity = '1';
+      }, 150);
+    } else {
+      setActiveDetailImage(src);
+      setActiveDetailIdx(idx);
+    }
+  };
 
   // Auto-cycle Hero slider (every 8 seconds)
   useEffect(() => {
@@ -85,22 +104,6 @@ export default function BurobigProductDetail({ product }) {
     }, 8000);
     return () => clearInterval(interval);
   }, [detailGallery, activeDetailIdx]);
-
-  // Handle Detail image thumbnail click with fade transition
-  const handleDetailImageChange = (src, idx) => {
-    const mainImg = detailImgRef.current;
-    if (mainImg) {
-      mainImg.style.opacity = '0.3';
-      setTimeout(() => {
-        setActiveDetailImage(src);
-        setActiveDetailIdx(idx);
-        mainImg.style.opacity = '1';
-      }, 150);
-    } else {
-      setActiveDetailImage(src);
-      setActiveDetailIdx(idx);
-    }
-  };
 
   // Toggle Accordion section
   const toggleAccordion = (section) => {

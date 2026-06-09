@@ -14,11 +14,6 @@ export default function BurobigHeader() {
     return `${prefix}${path}`;
   };
 
-  const getLocalizedSectionPath = (section) => {
-    const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
-    return `${prefix}${section}`;
-  };
-
   // Safe header scroll event listener with animation frames and cleanup
   useEffect(() => {
     const header = document.getElementById('site-header');
@@ -50,7 +45,7 @@ export default function BurobigHeader() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const logoUrl = settings?.logos?.header || "/assets/burobig/images/burobig-logo-dark%201.png";
+  const logoUrl = settings?.logos?.header || "/assets/burobig/images/Burobig%20Logo%20Siyah.svg";
 
   return (
     <>
@@ -116,13 +111,49 @@ export default function BurobigHeader() {
                         <li><Link to={getLocalizedPath('/urunler')}>Bekleme Alanları</Link></li>
                       </ul>
                     </div>
+                    {/* Depolama Sistemleri */}
+                    <div className="mega-menu__col">
+                      <h5 className="mega-menu__title">DEPOLAMA SİSTEMLERİ</h5>
+                      <ul className="mega-menu__list">
+                        <li><Link to={getLocalizedPath('/urunler?cat=depolama-sistemleri&sub=kesonlar')}>Kesonlar</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=depolama-sistemleri&sub=dolaplar')}>Dolaplar</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=depolama-sistemleri&sub=kitaplik-raf')}>Kitaplık ve Raf Sistemleri</Link></li>
+                      </ul>
+                    </div>
+                    {/* Tamamlayıcılar */}
+                    <div className="mega-menu__col">
+                      <h5 className="mega-menu__title">TAMAMLAYICILAR</h5>
+                      <ul className="mega-menu__list">
+                        <li><Link to={getLocalizedPath('/urunler?cat=tamamlayicilar&sub=sehpalar')}>Sehpalar</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=tamamlayicilar&sub=puflar')}>Puflar</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=tamamlayicilar&sub=askiliklar')}>Askılıklar</Link></li>
+                        <li><Link to={getLocalizedPath('/urunler?cat=tamamlayicilar&sub=elektrifikasyon')}>Elektrifikasyon</Link></li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </li>
-              <li><a href={getLocalizedSectionPath('#kurumsal')} id="nav-kurumsal">Kurumsal</a></li>
-              <li><a href={getLocalizedSectionPath('#tasarimcilar')} id="nav-tasarimcilar">Tasarımcılar</a></li>
+              <li className="has-dropdown">
+                <Link to={getLocalizedPath('/hikayemiz')} id="nav-kurumsal" aria-haspopup="true" aria-expanded="false">
+                  Kurumsal
+                  <svg className="nav__chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                    <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </Link>
+                <div className="dropdown-menu" aria-label="Kurumsal Alt Menüsü">
+                  <ul className="dropdown-list">
+                    <li><Link to={getLocalizedPath('/hikayemiz')}>Hikayemiz</Link></li>
+                    <li><Link to={getLocalizedPath('/tasarim-sureci')}>Tasarım Süreci</Link></li>
+                    <li><Link to={getLocalizedPath('/manifesto')}>Manifesto</Link></li>
+                    <li><Link to={getLocalizedPath('/tasarim-felsefesi')}>Tasarım Felsefesi</Link></li>
+                    <li><Link to={getLocalizedPath('/kalite-politikamiz')}>Kalite Politikamız</Link></li>
+                    <li><Link to={getLocalizedPath('/surdurulebilirlik')}>Sürdürülebilirlik</Link></li>
+                  </ul>
+                </div>
+              </li>
+              <li><Link to={getLocalizedPath('/tasarimcilar')} id="nav-tasarimcilar">Tasarımcılar</Link></li>
               <li><Link to={getLocalizedPath('/blog')} id="nav-blog">Blog</Link></li>
-              <li><a href={getLocalizedSectionPath('#iletisim')} id="nav-iletisim">İletişim</a></li>
+              <li><Link to={getLocalizedPath('/iletisim')} id="nav-iletisim">İletişim</Link></li>
             </ul>
           </nav>
 
