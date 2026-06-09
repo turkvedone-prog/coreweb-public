@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Roboto:wght@300;400;500;700&display=swap');
 
 
 @keyframes hero-entrance {
@@ -2712,12 +2712,12 @@
     flex-direction: column;
 }
 .monthly-subtitle {
-    color: #0f2545; /* Gece Mavisi */
+    color: #414042; /* Gece Mavisi */
     font-size: 1rem;
     margin-bottom: 0.3rem;
 }
 .monthly-title {
-    color: #0f2545; /* Gece Mavisi */
+    color: #414042; /* Gece Mavisi */
     font-size: 1.4rem;
     font-weight: 700;
     margin-bottom: 0.8rem;
@@ -2739,11 +2739,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #0f2545; /* Gece Mavisi */
+    color: #414042; /* Gece Mavisi */
     transition: all 0.3s ease;
 }
 .monthly-card:hover .action-btn {
-    background-color: #0f2545;
+    background-color: #414042;
     color: #ffffff;
 }
 
@@ -2852,7 +2852,7 @@
     top: 20px;
     left: 20px;
     background: #ffffff;
-    color: #0f2545;
+    color: #414042;
     padding: 6px 12px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -2885,7 +2885,7 @@
 .blog-read-more {
     display: inline-flex;
     align-items: center;
-    color: #0f2545;
+    color: #414042;
     font-weight: 600;
     text-decoration: none;
     font-size: 0.9rem;
@@ -3236,7 +3236,7 @@
     font-family: var(--font-secondary);
 }
 .subscribe-form button {
-    background-color: #0f2545; /* Gece mavisi */
+    background-color: #414042; /* Gece mavisi */
     color: #ffffff;
     border: none;
     padding: 0 2.5rem;
@@ -3422,7 +3422,7 @@
 .manifesto-container {
     max-width: 1300px;
     margin: 0 auto;
-    background-color: #0f2545; /* Koyu Gece Mavisi */
+    background-color: #414042; /* Koyu Gece Mavisi */
     border-radius: 24px;
     display: flex;
     flex-direction: column;
@@ -3452,7 +3452,7 @@
     left: 2rem;
     width: 140px;
     height: 140px;
-    background-color: #0f2545; /* very dark blue */
+    background-color: #414042; /* very dark blue */
     border: 2px solid #c5a880; /* gold border */
     border-radius: 50%;
     display: flex;
@@ -3595,7 +3595,7 @@
 .manifesto-action-btn {
     display: flex;
     align-items: center;
-    background-color: #0f2545;
+    background-color: #414042;
     color: #ffffff;
     text-decoration: none;
     font-weight: 700;
@@ -3856,7 +3856,7 @@
 
 /* HOVER EFFECTS */
 .mega-category-item:hover {
-    background-color: #0f2545; /* Gece mavisi zemin */
+    background-color: #414042; /* Gece mavisi zemin */
 }
 .mega-category-item:hover .mega-cat-img {
     background-color: rgba(255, 255, 255, 0.05); /* Transparent/dark for the image box */
@@ -3955,7 +3955,7 @@
 
 /* Hover Effect: Background turns midnight blue, Image fades out, Text slides up and fades in */
 .mega-category-item:hover .mega-cat-img {
-    background-color: #0f2545 !important;
+    background-color: #414042 !important;
 }
 .mega-category-item:hover img {
     opacity: 0 !important;
@@ -4452,8 +4452,8 @@ header:has(.nav-list li.has-mega-menu:hover) .mega-menu-backdrop {
 .pf-btn {
     display: inline-block;
     padding: 1rem 2.8rem;
-    border: 2px solid #0f2545; /* Capilon Gece Mavisi */
-    color: #0f2545;
+    border: 2px solid #414042; /* Capilon Gece Mavisi */
+    color: #414042;
     background-color: transparent;
     font-size: 0.95rem;
     font-weight: 700;
@@ -4462,7 +4462,7 @@ header:has(.nav-list li.has-mega-menu:hover) .mega-menu-backdrop {
     transition: all 0.3s ease;
 }
 .pf-btn:hover {
-    background-color: #0f2545;
+    background-color: #414042;
     color: #ffffff;
 }
 
@@ -5708,5 +5708,86 @@ header:has(.nav-list li.has-mega-menu:hover) .mega-menu-backdrop {
     transform: translateY(-1px);
 }
 
+/* ============================================================
+   FAZ 13-8A HOMEPAGE MIGRATION & REFINEMENTS OVERRIDES
+   ============================================================ */
+.capilon-theme {
+    /* Scoped variables overrides */
+    & {
+        --color-text: #414042;
+    }
 
+    /* Kurumsal Noto Serif Display Bölüm Başlıkları Override */
+    .quick-categories-header h2,
+    .pc-header h2,
+    .monthly-header h2,
+    .section-header h2,
+    .blog-header h2,
+    .blog-section-header h2,
+    .blog-hero-title,
+    .newsletter-text h2,
+    .manifesto-header h2,
+    .comfort-content h2,
+    .contact-header h2,
+    .consultation-title,
+    .category-hero-content h1,
+    .category-hero-content h2,
+    .hero-content h1,
+    .hero-content h2 {
+        font-family: 'Noto Serif Display', serif !important;
+    }
 
+    /* Asymmetric Grid White-Background Text Blocks */
+    .pc-bg-orange {
+        background-color: #ffffff !important;
+    }
+    .pc-bg-orange h3 {
+        color: #414042 !important;
+        font-family: 'Noto Serif Display', serif !important;
+    }
+    .pc-bg-orange p {
+        color: #414042 !important;
+    }
+
+    .pc-bg-anthracite {
+        background-color: #ffffff !important;
+    }
+    .pc-bg-anthracite h3 {
+        color: #f58220 !important;
+        font-family: 'Noto Serif Display', serif !important;
+    }
+    .pc-bg-anthracite p {
+        color: #f58220 !important;
+    }
+
+    /* Scrolled Header Compact Mode & Transitions */
+    .site-header-solid {
+        transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .main-header-row {
+        transition: height 0.3s ease;
+    }
+    .header-brand .capilon-logo-link img {
+        transition: height 0.3s ease;
+    }
+    .main-nav-row .nav-list {
+        transition: height 0.3s ease;
+    }
+
+    .site-header-solid.scrolled {
+        background-color: rgba(255, 255, 255, 0.98) !important;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    }
+    .site-header-solid.scrolled .main-header-row {
+        height: 65px;
+    }
+    .site-header-solid.scrolled .logo__img {
+        height: 40px !important;
+    }
+    .site-header-solid.scrolled .main-nav-row .nav-list {
+        height: 40px;
+    }
+}

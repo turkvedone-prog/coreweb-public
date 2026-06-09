@@ -7,6 +7,9 @@ import BurobigHeader from '../themes/burobig/BurobigHeader';
 import BurobigFooter from '../themes/burobig/BurobigFooter';
 import CapilonHeader from '../themes/capilon/CapilonHeader';
 import CapilonFooter from '../themes/capilon/CapilonFooter';
+import BurcKaplamaHeader from '../themes/burckaplama/BurcKaplamaHeader';
+import BurcKaplamaFooter from '../themes/burckaplama/BurcKaplamaFooter';
+import '../themes/burckaplama/burckaplama.css';
 
 const SiteContext = createContext(null);
 
@@ -151,6 +154,7 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
   const isBurobig = tenantMapping?.tenantSlug === 'burobig' || tenantMapping?.tenantId === 'TEN-BUROBIG';
   const isCapilon = tenantMapping?.tenantSlug === 'capilon' || tenantMapping?.tenantId === 'TEN-CAPILON';
   const isCoreWeb = tenantMapping?.tenantSlug === 'coreweb' || tenantMapping?.tenantId === 'TEN-507';
+  const isBurcKaplama = tenantMapping?.tenantSlug === 'burckaplama' || tenantMapping?.tenantId === 'TEN-BURCKAPLAMA';
 
   if (isBurobig) {
     return (
@@ -171,6 +175,18 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
           <CapilonHeader />
           {children}
           <CapilonFooter />
+        </div>
+      </SiteContext.Provider>
+    );
+  }
+
+  if (isBurcKaplama) {
+    return (
+      <SiteContext.Provider value={contextValue}>
+        <div className="burckaplama-theme">
+          <BurcKaplamaHeader />
+          {children}
+          <BurcKaplamaFooter />
         </div>
       </SiteContext.Provider>
     );

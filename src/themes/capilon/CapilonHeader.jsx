@@ -119,7 +119,7 @@ export default function CapilonHeader() {
           <div className="utility-right">
             <a href="tel:+903123790333" className="whatsapp-link">
               <Phone size={14} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
-              0.312 379 0 333
+              0312 379 03 33
             </a>
             <Link to={getLocalizedPath('/iletisim')}>{translate('İletişim', 'Contact')}</Link>
             <div className="lang-dropdown-wrapper">

@@ -260,9 +260,9 @@ export default function CapilonHome() {
               <img src="/assets/capilon/images/hero_bedroom_1779477829254.png" alt="Yatak Odaları" />
               <div className="pc-overlay"><span>{translate('Yatak Odaları', 'Bedrooms')}</span></div>
             </a>
-            <div className="pc-item pc-text-block pc-bg-beige" style={{ height: '250px' }}>
-              <h3>CAPILON</h3>
-              <p>{translate('Yeni konseptimiz, standart formlardan daha sade ve çok daha şık bir dille yorumlandı.', 'Our new concept is interpreted in a simpler and much more stylish language than standard forms.')}</p>
+            <div className="pc-item pc-text-block pc-bg-anthracite" style={{ height: '250px' }}>
+              <h3>{translate('Konfor', 'Comfort')}</h3>
+              <p>{translate('Eşsiz rahatlık ve modern konforu yaşam alanlarınıza taşıyan, bedeninizi ve ruhunuzu dinlendiren tasarımlar.', 'Designs that bring unique ease and modern comfort to your living spaces, resting your body and soul.')}</p>
             </div>
           </div>
           <div className="pc-col">
@@ -276,8 +276,8 @@ export default function CapilonHome() {
             </a>
           </div>
           <div className="pc-col">
-            <div className="pc-item pc-text-block pc-bg-blue" style={{ height: '250px' }}>
-              <h3>MODERN</h3>
+            <div className="pc-item pc-text-block pc-bg-orange" style={{ height: '250px' }}>
+              <h3>{translate('Modern', 'Modern')}</h3>
               <p>{translate('Estetik ve fonksiyonelliğin birleştiği, evinizi saran yepyeni bir tasarım çizgisi.', 'A brand new design line that surrounds your home, where aesthetics and functionality merge.')}</p>
             </div>
             <a href="#genc" className="pc-item" style={{ height: '500px' }}>

@@ -113,7 +113,7 @@ export default function CapilonFooter() {
               <Link to={getLocalizedPath('/iletisim')} className="footer-contact-btn">{translate('İletişim', 'Contact')}</Link>
               <a href="tel:+903123790333" className="footer-contact-btn tel-btn">
                 <Phone size={16} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
-                0.312 379 0 333
+                0312 379 03 33
               </a>
             </div>
           </div>

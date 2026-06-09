@@ -65,8 +65,8 @@ export default function CapilonContact({
                 <div className="info-item-text">
                   <h4>{translate('Telefon Numarası', 'Phone Number')}</h4>
                   <p>
-                    <strong>{translate('Fabrika & Showroom:', 'Factory & Showroom:')}</strong>{' '}
-                    <a href="tel:+903123790333">0.312 379 0 333</a>
+                    <strong>{translate('Müşteri İlişkileri & Fabrika:', 'Customer Relations & Factory:')}</strong>{' '}
+                    <a href="tel:+903123790333">0312 379 03 33</a>
                   </p>
                 </div>
               </div>
