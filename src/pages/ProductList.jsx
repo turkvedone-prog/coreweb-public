@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getActiveProducts } from '../services/publicContentService';
 import { getLocalizedContent } from '../utils/i18nContent';
@@ -6,8 +6,7 @@ import { useSite } from '../layouts/SiteLayout';
 import { ShoppingBag, ChevronRight } from 'lucide-react';
 import { updateSEOMeta } from '../utils/seo';
 import ImageWithFallback from '../components/ImageWithFallback';
-import BurobigProductList from '../themes/burobig/BurobigProductList';
-import BurcKaplamaProductList from '../themes/burckaplama/BurcKaplamaProductList';
+import themeRegistry from '../themes/themeRegistry';
 
 export default function ProductList() {
   const { tenantMapping, activeLang, settings } = useSite();
@@ -125,15 +124,14 @@ export default function ProductList() {
     );
   }
 
-  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
-  const isBurcKaplama = tenantSlug === 'burckaplama' || tenantId === 'TEN-BURCKAPLAMA';
-
-  if (isBurobig) {
-    return <BurobigProductList products={products} />;
-  }
-
-  if (isBurcKaplama) {
-    return <BurcKaplamaProductList products={products} />;
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.ProductList) {
+    const DynamicProductList = theme.ProductList;
+    return (
+      <Suspense fallback={null}>
+        <DynamicProductList products={products} />
+      </Suspense>
+    );
   }
 
   return (

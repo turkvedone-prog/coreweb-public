@@ -1,18 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
-import BurobigHistory from '../themes/burobig/BurobigHistory';
-import BurcKaplamaHistory from '../themes/burckaplama/BurcKaplamaHistory';
-import CapilonHistory from '../themes/capilon/CapilonHistory';
 import NotFoundSite from '../components/NotFoundSite';
+import themeRegistry from '../themes/themeRegistry';
 
 export default function History() {
   const { tenantMapping, activeLang, settings } = useSite();
-  const { tenantId, tenantSlug } = tenantMapping;
-  
-  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
-  const isBurcKaplama = tenantSlug === 'burckaplama' || tenantId === 'TEN-BURCKAPLAMA';
-  const isCapilon = tenantSlug === 'capilon' || tenantId === 'TEN-CAPILON';
+  const { tenantSlug } = tenantMapping;
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   useEffect(() => {
@@ -28,16 +22,14 @@ export default function History() {
     });
   }, [activeLang, companyName]);
 
-  if (isCapilon) {
-    return <CapilonHistory />;
-  }
-
-  if (isBurobig) {
-    return <BurobigHistory />;
-  }
-
-  if (isBurcKaplama) {
-    return <BurcKaplamaHistory />;
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.History) {
+    const DynamicHistory = theme.History;
+    return (
+      <Suspense fallback={null}>
+        <DynamicHistory />
+      </Suspense>
+    );
   }
 
   return (

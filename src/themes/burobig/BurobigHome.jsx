@@ -82,7 +82,17 @@ export default function BurobigHome() {
           <div className="hero-slider" id="hero-slider">
             {/* Slide 1 */}
             <div className={`hero-slide ${activeSlide === 0 ? 'active' : ''}`}>
-              <div className="hero-slide-bg" style={{ backgroundImage: "url('/assets/burobig/images/inka_yonetici_slider_bg.png')" }}></div>
+              <img
+                src="/assets/burobig/images/inka_yonetici_slider_bg.png"
+                alt="İnka Yönetici Serisi"
+                className="hero-slide-bg"
+                width="1920"
+                height="1080"
+                style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                fetchPriority="high"
+                loading="eager"
+                decoding="sync"
+              />
               <div className="hero-content">
                 <span className="hero-subtitle" style={{ fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', color: 'var(--color-accent)', letterSpacing: '2px', display: 'block', marginBottom: '1rem' }}>Yeni Koleksiyon</span>
                 <h1 id="hero-heading">İnka Yönetici<br />Serisi</h1>

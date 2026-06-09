@@ -1,14 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
-import BurobigDesignPhilosophy from '../themes/burobig/BurobigDesignPhilosophy';
 import NotFoundSite from '../components/NotFoundSite';
+import themeRegistry from '../themes/themeRegistry';
 
 export default function DesignPhilosophy() {
   const { tenantMapping, activeLang, settings } = useSite();
-  const { tenantId, tenantSlug } = tenantMapping;
-  
-  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
+  const { tenantSlug } = tenantMapping;
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   useEffect(() => {
@@ -24,8 +22,14 @@ export default function DesignPhilosophy() {
     });
   }, [activeLang, companyName]);
 
-  if (isBurobig) {
-    return <BurobigDesignPhilosophy />;
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.DesignPhilosophy) {
+    const DynamicDesignPhilosophy = theme.DesignPhilosophy;
+    return (
+      <Suspense fallback={null}>
+        <DynamicDesignPhilosophy />
+      </Suspense>
+    );
   }
 
   return (

@@ -1,14 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
-import BurobigDesignProcess from '../themes/burobig/BurobigDesignProcess';
 import NotFoundSite from '../components/NotFoundSite';
+import themeRegistry from '../themes/themeRegistry';
 
 export default function DesignProcess() {
   const { tenantMapping, activeLang, settings } = useSite();
-  const { tenantId, tenantSlug } = tenantMapping;
-  
-  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
+  const { tenantSlug } = tenantMapping;
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   useEffect(() => {
@@ -24,8 +22,14 @@ export default function DesignProcess() {
     });
   }, [activeLang, companyName]);
 
-  if (isBurobig) {
-    return <BurobigDesignProcess />;
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.DesignProcess) {
+    const DynamicDesignProcess = theme.DesignProcess;
+    return (
+      <Suspense fallback={null}>
+        <DynamicDesignProcess />
+      </Suspense>
+    );
   }
 
   return (

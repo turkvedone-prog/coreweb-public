@@ -1,11 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { submitLead } from '../services/apiService';
 import { updateSEOMeta } from '../utils/seo';
 import { loadRecaptchaScript, executeRecaptcha } from '../utils/recaptcha';
-import BurobigContact from '../themes/burobig/BurobigContact';
-import CapilonContact from '../themes/capilon/CapilonContact';
-import BurcKaplamaContact from '../themes/burckaplama/BurcKaplamaContact';
+import themeRegistry from '../themes/themeRegistry';
 import { 
   Mail, 
   Phone, 
@@ -19,11 +17,7 @@ import {
 
 export default function Contact() {
   const { tenantMapping, activeLang, settings } = useSite();
-  const { tenantId, tenantSlug } = tenantMapping;
-
-  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
-  const isCapilon = tenantSlug === 'capilon' || tenantId === 'TEN-CAPILON';
-  const isBurcKaplama = tenantSlug === 'burckaplama' || tenantId === 'TEN-BURCKAPLAMA';
+  const { tenantSlug } = tenantMapping;
 
   // Form State
   const [formData, setFormData] = useState({
@@ -215,74 +209,30 @@ export default function Contact() {
     }
   };
 
-
-
-  if (isBurobig) {
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.Contact) {
+    const DynamicContact = theme.Contact;
     return (
-      <BurobigContact
-        formData={formData}
-        consentAccepted={consentAccepted}
-        setConsentAccepted={setConsentAccepted}
-        loading={loading}
-        success={success}
-        error={error}
-        handleSubmit={handleSubmit}
-        handleChange={handleChange}
-        companyName={companyName}
-        contact={contact}
-        workingHours={workingHours}
-        translate={translate}
-        mockToken={mockToken}
-        setMockToken={setMockToken}
-        tripHoneypot={tripHoneypot}
-        setTripHoneypot={setTripHoneypot}
-      />
-    );
-  }
-
-  if (isCapilon) {
-    return (
-      <CapilonContact
-        formData={formData}
-        consentAccepted={consentAccepted}
-        setConsentAccepted={setConsentAccepted}
-        loading={loading}
-        success={success}
-        error={error}
-        handleSubmit={handleSubmit}
-        handleChange={handleChange}
-        companyName={companyName}
-        contact={contact}
-        workingHours={workingHours}
-        translate={translate}
-        mockToken={mockToken}
-        setMockToken={setMockToken}
-        tripHoneypot={tripHoneypot}
-        setTripHoneypot={setTripHoneypot}
-      />
-    );
-  }
-
-  if (isBurcKaplama) {
-    return (
-      <BurcKaplamaContact
-        formData={formData}
-        consentAccepted={consentAccepted}
-        setConsentAccepted={setConsentAccepted}
-        loading={loading}
-        success={success}
-        error={error}
-        handleSubmit={handleSubmit}
-        handleChange={handleChange}
-        companyName={companyName}
-        contact={contact}
-        workingHours={workingHours}
-        translate={translate}
-        mockToken={mockToken}
-        setMockToken={setMockToken}
-        tripHoneypot={tripHoneypot}
-        setTripHoneypot={setTripHoneypot}
-      />
+      <Suspense fallback={null}>
+        <DynamicContact
+          formData={formData}
+          consentAccepted={consentAccepted}
+          setConsentAccepted={setConsentAccepted}
+          loading={loading}
+          success={success}
+          error={error}
+          handleSubmit={handleSubmit}
+          handleChange={handleChange}
+          companyName={companyName}
+          contact={contact}
+          workingHours={workingHours}
+          translate={translate}
+          mockToken={mockToken}
+          setMockToken={setMockToken}
+          tripHoneypot={tripHoneypot}
+          setTripHoneypot={setTripHoneypot}
+        />
+      </Suspense>
     );
   }
 

@@ -20,6 +20,7 @@ import Sustainability from '../pages/Sustainability';
 import DesignPhilosophy from '../pages/DesignPhilosophy';
 import Stores from '../pages/Stores';
 import NotFoundSite from '../components/NotFoundSite';
+import themeRegistry from '../themes/themeRegistry';
 
 function RouteResolver() {
   const params = useParams();
@@ -112,7 +113,8 @@ function RouteResolver() {
     return null;
   }
 
-  const isCapilon = tenantMapping?.tenantSlug === 'capilon' || tenantMapping?.tenantId === 'TEN-CAPILON';
+  const theme = themeRegistry[tenantMapping?.tenantSlug];
+  const hasCollections = !!theme?.CollectionsPage;
 
   return (
     <SiteLayout tenantMapping={tenantMapping} activeLang={resolvedLang}>
@@ -138,8 +140,8 @@ function RouteResolver() {
         <Route path="/surdurulebilirlik" element={<Sustainability />} />
         <Route path="/iletisim" element={<Contact />} />
         <Route path="/magazalarimiz" element={<Stores />} />
-        {isCapilon && <Route path="/koleksiyonlar" element={<CollectionsPage />} />}
-        {isCapilon && <Route path="/koleksiyonlar/:slug" element={<CollectionsPage />} />}
+        {hasCollections && <Route path="/koleksiyonlar" element={<CollectionsPage />} />}
+        {hasCollections && <Route path="/koleksiyonlar/:slug" element={<CollectionsPage />} />}
         <Route path="*" element={<NotFoundSite reason="Sayfa bulunamadı." />} />
       </Routes>
     </SiteLayout>

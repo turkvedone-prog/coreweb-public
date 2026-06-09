@@ -1,14 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
-import BurobigDesigners from '../themes/burobig/BurobigDesigners';
 import NotFoundSite from '../components/NotFoundSite';
+import themeRegistry from '../themes/themeRegistry';
 
 export default function Designers() {
   const { tenantMapping, activeLang, settings } = useSite();
-  const { tenantId, tenantSlug } = tenantMapping;
-  
-  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
+  const { tenantSlug } = tenantMapping;
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   useEffect(() => {
@@ -24,8 +22,14 @@ export default function Designers() {
     });
   }, [activeLang, companyName]);
 
-  if (isBurobig) {
-    return <BurobigDesigners />;
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.Designers) {
+    const DynamicDesigners = theme.Designers;
+    return (
+      <Suspense fallback={null}>
+        <DynamicDesigners />
+      </Suspense>
+    );
   }
 
   // Fallback for non-Burobig tenants

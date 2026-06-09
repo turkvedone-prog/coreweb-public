@@ -1,19 +1,31 @@
+import { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSite } from '../layouts/SiteLayout';
-import CapilonCollectionsPage from '../themes/capilon/CapilonCollectionsPage';
-import CapilonCategoryDetail from '../themes/capilon/CapilonCategoryDetail';
 import NotFoundSite from '../components/NotFoundSite';
+import themeRegistry from '../themes/themeRegistry';
 
 export default function CollectionsPage() {
   const { slug } = useParams();
   const { tenantMapping } = useSite();
-  const isCapilon = tenantMapping?.tenantSlug === 'capilon' || tenantMapping?.tenantId === 'TEN-CAPILON';
-
-  if (isCapilon) {
-    if (slug) {
-      return <CapilonCategoryDetail />;
+  
+  const theme = themeRegistry[tenantMapping?.tenantSlug];
+  if (theme) {
+    if (slug && theme.CategoryDetail) {
+      const DynamicCategoryDetail = theme.CategoryDetail;
+      return (
+        <Suspense fallback={null}>
+          <DynamicCategoryDetail />
+        </Suspense>
+      );
     }
-    return <CapilonCollectionsPage />;
+    if (!slug && theme.CollectionsPage) {
+      const DynamicCollectionsPage = theme.CollectionsPage;
+      return (
+        <Suspense fallback={null}>
+          <DynamicCollectionsPage />
+        </Suspense>
+      );
+    }
   }
 
   return <NotFoundSite reason="Sayfa bulunamadı." />;

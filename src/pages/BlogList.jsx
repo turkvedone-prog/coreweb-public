@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { getPublishedBlogs } from '../services/publicContentService';
 import { getLocalizedContent } from '../utils/i18nContent';
@@ -6,8 +6,7 @@ import { useSite } from '../layouts/SiteLayout';
 import { Calendar, ChevronRight, BookOpen } from 'lucide-react';
 import { updateSEOMeta } from '../utils/seo';
 import ImageWithFallback from '../components/ImageWithFallback';
-import BurobigBlogList from '../themes/burobig/BurobigBlogList';
-import CapilonBlogList from '../themes/capilon/CapilonBlogList';
+import themeRegistry from '../themes/themeRegistry';
 
 export default function BlogList() {
   const { tenantMapping, activeLang, settings } = useSite();
@@ -101,22 +100,18 @@ export default function BlogList() {
     );
   }
 
-  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
-
-  if (isBurobig) {
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.BlogList) {
+    const DynamicBlogList = theme.BlogList;
     return (
-      <BurobigBlogList
-        blogs={blogs}
-        formatDate={formatDate}
-        getLocalizedPath={getLocalizedPath}
-      />
+      <Suspense fallback={null}>
+        <DynamicBlogList
+          blogs={blogs}
+          formatDate={formatDate}
+          getLocalizedPath={getLocalizedPath}
+        />
+      </Suspense>
     );
-  }
-
-  const isCapilon = tenantSlug === 'capilon' || tenantId === 'TEN-CAPILON';
-
-  if (isCapilon) {
-    return <CapilonBlogList />;
   }
 
   return (

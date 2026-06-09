@@ -1,14 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
-import BurobigSustainability from '../themes/burobig/BurobigSustainability';
 import NotFoundSite from '../components/NotFoundSite';
+import themeRegistry from '../themes/themeRegistry';
 
 export default function Sustainability() {
   const { tenantMapping, activeLang, settings } = useSite();
-  const { tenantId, tenantSlug } = tenantMapping;
-  
-  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
+  const { tenantSlug } = tenantMapping;
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   useEffect(() => {
@@ -24,8 +22,14 @@ export default function Sustainability() {
     });
   }, [activeLang, companyName]);
 
-  if (isBurobig) {
-    return <BurobigSustainability />;
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.Sustainability) {
+    const DynamicSustainability = theme.Sustainability;
+    return (
+      <Suspense fallback={null}>
+        <DynamicSustainability />
+      </Suspense>
+    );
   }
 
   return (

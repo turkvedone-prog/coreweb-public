@@ -49,7 +49,7 @@ export default function CoreWebHeader() {
     <header className="header">
       <div className="header__container">
         <a href="/" className="header__logo" aria-label="CoreWeb Anasayfa" onClick={(e) => handleSmoothScroll(e, '#hero')}>
-          <img src="/logo.png" alt="CoreWeb Logo" className="logo-img" />
+          <img src="/logo.png" alt="CoreWeb Logo" className="logo-img" fetchpriority="high" loading="eager" />
         </a>
         <button 
           className="header__toggle" 

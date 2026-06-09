@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getActiveProductBySlug } from '../services/publicContentService';
 import { getLocalizedContent } from '../utils/i18nContent';
@@ -6,9 +6,7 @@ import { useSite } from '../layouts/SiteLayout';
 import { ShoppingBag, ChevronLeft, Download, CheckCircle, AlertCircle } from 'lucide-react';
 import { updateSEOMeta } from '../utils/seo';
 import ImageWithFallback from '../components/ImageWithFallback';
-import BurobigProductDetail from '../themes/burobig/BurobigProductDetail';
-import CapilonProductDetail from '../themes/capilon/CapilonProductDetail';
-import BurcKaplamaProductDetail from '../themes/burckaplama/BurcKaplamaProductDetail';
+import themeRegistry from '../themes/themeRegistry';
 import { burcKaplamaData } from '../themes/burckaplama/burcKaplamaData';
 
 export default function ProductDetail() {
@@ -133,10 +131,14 @@ export default function ProductDetail() {
     );
   }
 
-  const isCapilon = tenantSlug === 'capilon' || tenantId === 'TEN-CAPILON';
-
-  if (isCapilon) {
-    return <CapilonProductDetail key={slug} product={product} />;
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.ProductDetail) {
+    const DynamicProductDetail = theme.ProductDetail;
+    return (
+      <Suspense fallback={null}>
+        <DynamicProductDetail key={slug} product={product} />
+      </Suspense>
+    );
   }
 
   if (error || !product) {
@@ -173,16 +175,7 @@ export default function ProductDetail() {
     ? [...product.gallery].sort((a, b) => (a.order || 0) - (b.order || 0))
     : [];
 
-  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
-  const isBurcKaplama = tenantSlug === 'burckaplama' || tenantId === 'TEN-BURCKAPLAMA';
 
-  if (isBurobig) {
-    return <BurobigProductDetail product={product} />;
-  }
-
-  if (isBurcKaplama) {
-    return <BurcKaplamaProductDetail product={product} />;
-  }
 
   return (
     <div className="bg-slate-50 min-h-screen py-16">

@@ -1,14 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
-import CapilonStores from '../themes/capilon/CapilonStores';
 import NotFoundSite from '../components/NotFoundSite';
+import themeRegistry from '../themes/themeRegistry';
 
 export default function Stores() {
   const { tenantMapping, activeLang, settings } = useSite();
-  const { tenantId, tenantSlug } = tenantMapping;
-  
-  const isCapilon = tenantSlug === 'capilon' || tenantId === 'TEN-CAPILON';
+  const { tenantSlug } = tenantMapping;
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   useEffect(() => {
@@ -24,8 +22,14 @@ export default function Stores() {
     });
   }, [activeLang, companyName]);
 
-  if (isCapilon) {
-    return <CapilonStores />;
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.Stores) {
+    const DynamicStores = theme.Stores;
+    return (
+      <Suspense fallback={null}>
+        <DynamicStores />
+      </Suspense>
+    );
   }
 
   return (

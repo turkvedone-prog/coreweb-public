@@ -1,14 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
-import BurobigManifesto from '../themes/burobig/BurobigManifesto';
 import NotFoundSite from '../components/NotFoundSite';
+import themeRegistry from '../themes/themeRegistry';
 
 export default function Manifesto() {
   const { tenantMapping, activeLang, settings } = useSite();
-  const { tenantId, tenantSlug } = tenantMapping;
-  
-  const isBurobig = tenantSlug === 'burobig' || tenantId === 'TEN-BUROBIG';
+  const { tenantSlug } = tenantMapping;
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   useEffect(() => {
@@ -24,8 +22,14 @@ export default function Manifesto() {
     });
   }, [activeLang, companyName]);
 
-  if (isBurobig) {
-    return <BurobigManifesto />;
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.Manifesto) {
+    const DynamicManifesto = theme.Manifesto;
+    return (
+      <Suspense fallback={null}>
+        <DynamicManifesto />
+      </Suspense>
+    );
   }
 
   return (

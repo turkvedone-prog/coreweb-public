@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getPublishedBlogBySlug } from '../services/publicContentService';
 import { getLocalizedContent } from '../utils/i18nContent';
@@ -6,7 +6,7 @@ import { useSite } from '../layouts/SiteLayout';
 import { Calendar, ChevronLeft, BookOpen, AlertCircle } from 'lucide-react';
 import { updateSEOMeta } from '../utils/seo';
 import ImageWithFallback from '../components/ImageWithFallback';
-import CapilonBlogDetail from '../themes/capilon/CapilonBlogDetail';
+import themeRegistry from '../themes/themeRegistry';
 
 export default function BlogDetail() {
   const { slug } = useParams();
@@ -109,10 +109,14 @@ export default function BlogDetail() {
     );
   }
 
-  const isCapilon = tenantSlug === 'capilon' || tenantId === 'TEN-CAPILON';
-
-  if (isCapilon) {
-    return <CapilonBlogDetail />;
+  const theme = themeRegistry[tenantSlug];
+  if (theme?.BlogDetail) {
+    const DynamicBlogDetail = theme.BlogDetail;
+    return (
+      <Suspense fallback={null}>
+        <DynamicBlogDetail />
+      </Suspense>
+    );
   }
 
   if (error || !blog) {
