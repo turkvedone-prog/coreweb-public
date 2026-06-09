@@ -5018,6 +5018,8 @@ header:has(.nav-list li.has-mega-menu:hover) .mega-menu-backdrop {
     align-items: flex-start;
     gap: 12px;
     margin-top: 10px;
+    width: auto;
+    height: auto;
 }
 .capilon-theme .form-checkbox input {
     margin-top: 4px;

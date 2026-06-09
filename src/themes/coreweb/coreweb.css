@@ -1711,6 +1711,8 @@
     line-height: 1.4;
     cursor: pointer;
     user-select: none;
+    width: auto;
+    height: auto;
   }
 
   .form-checkbox input {
