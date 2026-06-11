@@ -24,10 +24,16 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-  // Scroll to top on route change for Capilon tenant
+  // Scroll to top on route change for Capilon tenant (with a small timeout to account for async page rendering)
   useEffect(() => {
     if (tenantMapping?.tenantSlug === 'capilon') {
-      window.scrollTo(0, 0);
+      window.scrollTo(0, 0); // Scroll immediately
+      
+      const timer = setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 100); // Scroll again after render settles
+      
+      return () => clearTimeout(timer);
     }
   }, [location.pathname, tenantMapping?.tenantSlug]);
 
