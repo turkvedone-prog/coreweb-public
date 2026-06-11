@@ -24,6 +24,13 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
+  // Scroll to top on route change for Capilon tenant
+  useEffect(() => {
+    if (tenantMapping?.tenantSlug === 'capilon') {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname, tenantMapping?.tenantSlug]);
+
   // Dynamic canonical link meta for CoreWeb
   useEffect(() => {
     if (!tenantMapping) return;
@@ -147,6 +154,19 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
   };
 
   const tenantSlug = tenantMapping?.tenantSlug;
+  const isAnasayfa = location.pathname.endsWith('/anasayfa') || location.pathname.endsWith('/anasayfa/');
+  if (isAnasayfa) {
+    return (
+      <SiteContext.Provider value={contextValue}>
+        <div className={`${tenantSlug}-theme`}>
+          <Suspense fallback={null}>
+            {children}
+          </Suspense>
+        </div>
+      </SiteContext.Provider>
+    );
+  }
+
   const theme = themeRegistry[tenantSlug];
 
   if (theme) {
@@ -155,13 +175,19 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
     return (
       <SiteContext.Provider value={contextValue}>
         <div className={`${tenantSlug}-theme`}>
+          {DynamicHeader && (
+            <Suspense fallback={null}>
+              <DynamicHeader />
+            </Suspense>
+          )}
           <Suspense fallback={null}>
-            {DynamicHeader && <DynamicHeader />}
+            {children}
           </Suspense>
-          {children}
-          <Suspense fallback={null}>
-            {DynamicFooter && <DynamicFooter />}
-          </Suspense>
+          {DynamicFooter && (
+            <Suspense fallback={null}>
+              <DynamicFooter />
+            </Suspense>
+          )}
         </div>
       </SiteContext.Provider>
     );
