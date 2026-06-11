@@ -7999,4 +7999,9 @@ header:has(.nav-list li.has-mega-menu:hover) .mega-menu-backdrop {
     opacity: 1;
 }
 
+/* Google reCAPTCHA Badge Hide */
+.grecaptcha-badge {
+    visibility: hidden !important;
+}
+
 
