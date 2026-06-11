@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState } from 'react';
 import { getSliders } from '../services/publicContentService';
 import HeroSlider from '../components/HeroSlider';
 import { Mail, Phone, Sparkles, Award, Users } from 'lucide-react';
@@ -56,11 +56,7 @@ export default function Home() {
   const theme = themeRegistry[tenantSlug];
   if (theme?.Home) {
     const DynamicHome = theme.Home;
-    return (
-      <Suspense fallback={null}>
-        <DynamicHome />
-      </Suspense>
-    );
+    return <DynamicHome />;
   }
 
   return (

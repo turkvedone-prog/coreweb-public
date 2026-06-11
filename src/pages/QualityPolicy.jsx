@@ -1,4 +1,4 @@
-import { useEffect, Suspense } from 'react';
+import { useEffect } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
 import NotFoundSite from '../components/NotFoundSite';
@@ -25,11 +25,7 @@ export default function QualityPolicy() {
   const theme = themeRegistry[tenantSlug];
   if (theme?.QualityPolicy) {
     const DynamicQualityPolicy = theme.QualityPolicy;
-    return (
-      <Suspense fallback={null}>
-        <DynamicQualityPolicy />
-      </Suspense>
-    );
+    return <DynamicQualityPolicy />;
   }
 
   return (

@@ -1,4 +1,4 @@
-import { useEffect, Suspense } from 'react';
+import { useEffect } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
 import NotFoundSite from '../components/NotFoundSite';
@@ -25,11 +25,7 @@ export default function Manifesto() {
   const theme = themeRegistry[tenantSlug];
   if (theme?.Manifesto) {
     const DynamicManifesto = theme.Manifesto;
-    return (
-      <Suspense fallback={null}>
-        <DynamicManifesto />
-      </Suspense>
-    );
+    return <DynamicManifesto />;
   }
 
   return (

@@ -1,4 +1,4 @@
-import { useEffect, Suspense } from 'react';
+import { useEffect } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
 import NotFoundSite from '../components/NotFoundSite';
@@ -25,11 +25,7 @@ export default function History() {
   const theme = themeRegistry[tenantSlug];
   if (theme?.History) {
     const DynamicHistory = theme.History;
-    return (
-      <Suspense fallback={null}>
-        <DynamicHistory />
-      </Suspense>
-    );
+    return <DynamicHistory />;
   }
 
   return (

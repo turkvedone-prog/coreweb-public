@@ -3,6 +3,20 @@ import { doc, getDoc, collection, query, where, getDocs, orderBy } from 'firebas
 
 export async function getCompanySettings(tenantId) {
   if (!tenantId) return null;
+  if (tenantId === 'TEN-VIOLA' && import.meta.env.DEV) {
+    return {
+      companyName: 'Viola Mobilya',
+      logos: {
+        header: '',
+        footer: ''
+      },
+      contact: {
+        phone: '+90 224 123 45 67',
+        email: 'info@violamobilya.com.tr',
+        address: 'İnegöl, Bursa'
+      }
+    };
+  }
   try {
     const docRef = doc(db, 'tenants', tenantId, 'settings', 'company');
     const docSnap = await getDoc(docRef);
@@ -18,6 +32,9 @@ export async function getCompanySettings(tenantId) {
 
 export async function getSliders(tenantId) {
   if (!tenantId) return [];
+  if (tenantId === 'TEN-VIOLA' && import.meta.env.DEV) {
+    return [];
+  }
   try {
     const slidersRef = collection(db, 'tenants', tenantId, 'sliders');
     const q = query(
@@ -39,6 +56,13 @@ export async function getSliders(tenantId) {
 
 export async function getNavigation(tenantId) {
   if (!tenantId) return [];
+  if (tenantId === 'TEN-VIOLA' && import.meta.env.DEV) {
+    return [
+      { id: '1', title: 'Ana Sayfa', targetUrl: '/' },
+      { id: '2', title: 'Ürünler', targetUrl: '/urunler' },
+      { id: '3', title: 'İletişim', targetUrl: '/iletisim' }
+    ];
+  }
   try {
     const navRef = collection(db, 'tenants', tenantId, 'navigation');
     const querySnapshot = await getDocs(navRef);
@@ -159,6 +183,19 @@ export async function getPublishedNewsBySlug(tenantId, slug, activeLang) {
 
 export async function getActiveProducts(tenantId) {
   if (!tenantId) return [];
+  if (tenantId === 'TEN-VIOLA' && import.meta.env.DEV) {
+    return [
+      {
+        id: 'prod-beta',
+        slug: 'beta',
+        title: 'Beta',
+        category: 'ÜST YÖNETİCİ GRUBU',
+        coverImageUrl: '/assets/viola/images/beta_main.png',
+        status: 'active',
+        order: 1
+      }
+    ];
+  }
   try {
     const productsRef = collection(db, 'tenants', tenantId, 'products');
     let q;
@@ -198,6 +235,25 @@ export async function getActiveProducts(tenantId) {
 
 export async function getActiveProductBySlug(tenantId, slug, activeLang) {
   if (!tenantId || !slug) return null;
+  if (tenantId === 'TEN-VIOLA' && slug === 'beta' && import.meta.env.DEV) {
+    return {
+      id: 'prod-beta',
+      slug: 'beta',
+      title: 'Beta',
+      category: 'ÜST YÖNETİCİ GRUBU',
+      summary: 'Beta Yönetici Masası, modern ve şık tasarımıyla profesyonel ofis ortamlarına estetik bir dokunuş katıyor.',
+      coverImageUrl: '/assets/viola/images/beta_main.png',
+      gallery: [
+        { id: 'img-1', url: '/assets/viola/images/beta_main.png', order: 1 },
+        { id: 'img-2', url: '/assets/viola/images/product-lenta-2.png', order: 2 },
+        { id: 'img-3', url: '/assets/viola/images/product-lenta-3.png', order: 3 }
+      ],
+      description: 'Beta Yönetici Masası, modern ve şık tasarımıyla profesyonel ofis ortamlarına estetik bir dokunuş katıyor. Zarif detayları ve ergonomik yapısıyla hem işlevsellik hem de konfor sunar. Yüksek kaliteli malzemelerle üretilmiş olan bu masa, dayanıklılığı ve uzun ömürlü kullanımı garanti eder. Yönetici ofisleri için özel olarak tasarlanmış olan Beta, prestij ve profesyonellik simgesi olarak öne çıkıyor.',
+      technicalDetails: 'Beta Teknik Ölçüler (PDF) ve Montaj Kılavuzu mimari veriler sekmesindedir.',
+      status: 'active',
+      order: 1
+    };
+  }
   try {
     const products = await getActiveProducts(tenantId);
     const product = products.find((item) => {

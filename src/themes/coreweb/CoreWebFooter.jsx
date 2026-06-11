@@ -21,7 +21,7 @@ export default function CoreWebFooter() {
       <div className="container footer__container">
         <div className="footer__brand">
           <a href="/" className="footer__logo" aria-label="CoreWeb Anasayfa" onClick={(e) => handleSmoothScroll(e, '#hero')}>
-            <img src="/logo.png" alt="CoreWeb Logo" className="logo-img" />
+            <img src="/assets/coreweb/logo.png" alt="CoreWeb Logo" className="logo-img" />
           </a>
           <p className="footer__desc">Kurumlar için özel tasarımlı, yüksek performanslı ve sürdürülebilir yönetilebilir web altyapıları sağlayan teknoloji sağlayıcısı.</p>
         </div>

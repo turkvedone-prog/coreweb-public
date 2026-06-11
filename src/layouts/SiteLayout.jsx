@@ -37,48 +37,47 @@ export default function SiteLayout({ children, tenantMapping, activeLang }) {
     }
   }, [location.pathname, tenantMapping?.tenantSlug]);
 
-  // Dynamic canonical link meta for CoreWeb
+  // Generic canonical URL for any tenant with a custom production domain
   useEffect(() => {
     if (!tenantMapping) return;
 
-    const isCoreWeb = tenantMapping.tenantSlug === 'coreweb' || tenantMapping.tenantId === 'TEN-507';
+    const productionDomain = tenantMapping.customDomain;
+    if (!productionDomain) {
+      // No custom domain configured — remove any existing canonical tag
+      const existingTag = document.querySelector('link[rel="canonical"]');
+      if (existingTag) existingTag.remove();
+      return;
+    }
 
     let canonicalTag = document.querySelector('link[rel="canonical"]');
-
-    if (isCoreWeb) {
-      if (!canonicalTag) {
-        canonicalTag = document.createElement('link');
-        canonicalTag.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalTag);
-      }
-      // Remove trailing slash and /tr or /tr/ prefix from path for canonical tag
-      let cleanPath = location.pathname;
-      if (cleanPath.startsWith('/coreweb/tr')) {
-        cleanPath = cleanPath.substring(11);
-      } else if (cleanPath.startsWith('/coreweb')) {
-        cleanPath = cleanPath.substring(8);
-      }
-      
-      if (cleanPath === '/tr' || cleanPath === '/tr/') {
-        cleanPath = '';
-      } else if (cleanPath.startsWith('/tr/')) {
-        cleanPath = cleanPath.substring(3);
-      }
-      if (cleanPath === '/') {
-        cleanPath = '';
-      }
-      canonicalTag.setAttribute('href', `https://www.coreweb.tr${cleanPath}`);
-    } else {
-      if (canonicalTag) {
-        canonicalTag.remove();
-      }
+    if (!canonicalTag) {
+      canonicalTag = document.createElement('link');
+      canonicalTag.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalTag);
     }
+
+    // Strip dev/staging URL prefixes (e.g. /:tenantSlug/:lang/)
+    const defaultLang = tenantMapping.defaultLanguage || 'tr';
+    let cleanPath = location.pathname;
+
+    // Strip lang segment if it matches default lang (for clean canonical URLs)
+    if (cleanPath === `/${defaultLang}` || cleanPath === `/${defaultLang}/`) {
+      cleanPath = '';
+    } else if (cleanPath.startsWith(`/${defaultLang}/`)) {
+      cleanPath = cleanPath.substring(defaultLang.length + 1);
+    }
+    if (cleanPath === '/') cleanPath = '';
+
+    // Use www. prefix for canonical domain
+    const canonicalBase = productionDomain.startsWith('www.')
+      ? `https://${productionDomain}`
+      : `https://www.${productionDomain}`;
+
+    canonicalTag.setAttribute('href', `${canonicalBase}${cleanPath || '/'}`);
 
     return () => {
       const tag = document.querySelector('link[rel="canonical"]');
-      if (tag) {
-        tag.remove();
-      }
+      if (tag) tag.remove();
     };
   }, [tenantMapping, location.pathname]);
 

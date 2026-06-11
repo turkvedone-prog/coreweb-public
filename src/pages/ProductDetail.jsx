@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getActiveProductBySlug } from '../services/publicContentService';
 import { getLocalizedContent } from '../utils/i18nContent';
@@ -7,7 +7,7 @@ import { ShoppingBag, ChevronLeft, Download, CheckCircle, AlertCircle } from 'lu
 import { updateSEOMeta } from '../utils/seo';
 import ImageWithFallback from '../components/ImageWithFallback';
 import themeRegistry from '../themes/themeRegistry';
-import { burcKaplamaData } from '../themes/burckaplama/burcKaplamaData';
+
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -20,7 +20,7 @@ export default function ProductDetail() {
   const [activeImage, setActiveImage] = useState('');
 
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   const translate = (tr, en) => {
@@ -40,27 +40,9 @@ export default function ProductDetail() {
           setProduct(localized);
           setActiveImage(localized.coverImageUrl || '');
         } else {
-          if (tenantSlug === 'burckaplama') {
-            const mockSvc = burcKaplamaData.services.find(s => s.slug === slug || s.id === slug);
-            if (mockSvc) {
-              setProduct(mockSvc);
-              setActiveImage('');
-              setLoading(false);
-              return;
-            }
-          }
           setError(activeLang === 'tr' ? 'Aradığınız ürün bulunamadı.' : 'The product you are looking for could not be found.');
         }
       } catch (err) {
-        if (tenantSlug === 'burckaplama') {
-          const mockSvc = burcKaplamaData.services.find(s => s.slug === slug || s.id === slug);
-          if (mockSvc) {
-            setProduct(mockSvc);
-            setActiveImage('');
-            setLoading(false);
-            return;
-          }
-        }
         console.error('Error fetching product detail:', err);
         setError(activeLang === 'tr' ? 'Ürün yüklenirken bir hata oluştu.' : 'An error occurred while loading the product.');
       } finally {
@@ -69,7 +51,7 @@ export default function ProductDetail() {
     };
 
     fetchProductDetail();
-  }, [tenantId, slug, activeLang, tenantSlug]);
+  }, [tenantId, slug, activeLang]);
 
   // SEO Update
   useEffect(() => {
@@ -134,11 +116,7 @@ export default function ProductDetail() {
   const theme = themeRegistry[tenantSlug];
   if (theme?.ProductDetail) {
     const DynamicProductDetail = theme.ProductDetail;
-    return (
-      <Suspense fallback={null}>
-        <DynamicProductDetail key={slug} product={product} />
-      </Suspense>
-    );
+    return <DynamicProductDetail key={slug} product={product} />;
   }
 
   if (error || !product) {

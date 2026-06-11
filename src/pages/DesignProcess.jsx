@@ -1,4 +1,4 @@
-import { useEffect, Suspense } from 'react';
+import { useEffect } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
 import NotFoundSite from '../components/NotFoundSite';
@@ -25,11 +25,7 @@ export default function DesignProcess() {
   const theme = themeRegistry[tenantSlug];
   if (theme?.DesignProcess) {
     const DynamicDesignProcess = theme.DesignProcess;
-    return (
-      <Suspense fallback={null}>
-        <DynamicDesignProcess />
-      </Suspense>
-    );
+    return <DynamicDesignProcess />;
   }
 
   return (

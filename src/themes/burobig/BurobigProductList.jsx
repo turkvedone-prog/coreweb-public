@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
+import { updateSEOMeta } from '../../utils/seo';
 
 
 export default function BurobigProductList({ products }) {
@@ -15,7 +17,7 @@ export default function BurobigProductList({ products }) {
   const isCleanPath = isUstYoneticiPath || isOfisKoltuklariPath || isOperasyonelPath || isToplantiPath;
 
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
 
   const catParam = searchParams.get('cat');
   const subParam = searchParams.get('sub');
@@ -122,6 +124,43 @@ export default function BurobigProductList({ products }) {
   };
 
   const { title, subtitle } = getPageMeta();
+
+  useEffect(() => {
+    let seoTitle = title;
+    let seoDesc = translate(
+      'Bürobig premium ofis mobilyaları ve ürün kataloğu.',
+      'Bürobig premium office furniture and product catalog.'
+    );
+
+    if (isUstYoneticiPath) {
+      seoDesc = translate(
+        'Bürobig premium üst yönetici masaları koleksiyonu.',
+        'Bürobig premium executive desks collection.'
+      );
+    } else if (isOfisKoltuklariPath) {
+      seoDesc = translate(
+        'Bürobig ergonomik ve estetik ofis koltukları koleksiyonu.',
+        'Bürobig ergonomic and aesthetic office chairs collection.'
+      );
+    } else if (isOperasyonelPath) {
+      seoDesc = translate(
+        'Bürobig modern operasyonel masalar koleksiyonu.',
+        'Bürobig modern operational desks collection.'
+      );
+    } else if (isToplantiPath) {
+      seoDesc = translate(
+        'Bürobig şık ve fonksiyonel toplantı masaları koleksiyonu.',
+        'Bürobig stylish and functional meeting tables collection.'
+      );
+    }
+
+    updateSEOMeta({
+      title: seoTitle,
+      description: seoDesc,
+      companyName: 'Bürobig'
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeLang, title, isUstYoneticiPath, isOfisKoltuklariPath, isOperasyonelPath, isToplantiPath]);
 
   return (
     <main className="category-page">

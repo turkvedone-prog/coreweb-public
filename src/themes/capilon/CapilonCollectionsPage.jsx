@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
-import { ChevronRight, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { updateSEOMeta } from '../../utils/seo';
 
 export default function CapilonCollectionsPage() {
@@ -9,7 +9,7 @@ export default function CapilonCollectionsPage() {
   const { tenantSlug } = tenantMapping;
 
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
 
   const getLocalizedPath = (path) => {
     const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;

@@ -17,7 +17,7 @@ export default function NewsDetail() {
   const [error, setError] = useState(null);
 
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   const translate = (tr, en) => {

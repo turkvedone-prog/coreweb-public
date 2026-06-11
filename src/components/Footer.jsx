@@ -139,7 +139,7 @@ export default function Footer() {
   const workingHours = settings?.workingHours || {};
 
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
 
   const translate = (tr, en) => {
     return activeLang === 'tr' ? tr : en;

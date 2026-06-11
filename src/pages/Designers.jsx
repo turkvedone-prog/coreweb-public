@@ -1,4 +1,4 @@
-import { useEffect, Suspense } from 'react';
+import { useEffect } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
 import NotFoundSite from '../components/NotFoundSite';
@@ -25,14 +25,10 @@ export default function Designers() {
   const theme = themeRegistry[tenantSlug];
   if (theme?.Designers) {
     const DynamicDesigners = theme.Designers;
-    return (
-      <Suspense fallback={null}>
-        <DynamicDesigners />
-      </Suspense>
-    );
+    return <DynamicDesigners />;
   }
 
-  // Fallback for non-Burobig tenants
+  // Fallback for non-matching tenants
   return (
     <NotFoundSite reason={activeLang === 'tr' ? 'Bu sayfa bu site için kullanılabilir değil.' : 'This page is not available for this site.'} />
   );

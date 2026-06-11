@@ -7,7 +7,7 @@ export default function BurobigFooter() {
   const { tenantSlug } = tenantMapping;
   
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
 
   const getLocalizedPath = (path) => {
     const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
@@ -100,7 +100,7 @@ export default function BurobigFooter() {
             </div>
             <div className="footer-bottom-right">
               <a href="https://www.coreweb.tr/" target="_blank" rel="noopener noreferrer" aria-label="CoreWeb">
-                <img src="/assets/burobig/images/CoreWeb_Logo.svg" alt="CoreWeb Logo" className="footer-agency-logo" />
+                <img src="/assets/coreweb/coreweb-logo-dark.svg" alt="CoreWeb Logo" className="footer-agency-logo" />
               </a>
               <button onClick={scrollToTop} className="scroll-top-btn" aria-label="Yukarı Git">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

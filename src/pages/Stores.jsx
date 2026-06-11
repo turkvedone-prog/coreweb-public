@@ -1,4 +1,4 @@
-import { useEffect, Suspense } from 'react';
+import { useEffect } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { updateSEOMeta } from '../utils/seo';
 import NotFoundSite from '../components/NotFoundSite';
@@ -7,6 +7,7 @@ import themeRegistry from '../themes/themeRegistry';
 export default function Stores() {
   const { tenantMapping, activeLang, settings } = useSite();
   const { tenantSlug } = tenantMapping;
+  
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   useEffect(() => {
@@ -25,11 +26,7 @@ export default function Stores() {
   const theme = themeRegistry[tenantSlug];
   if (theme?.Stores) {
     const DynamicStores = theme.Stores;
-    return (
-      <Suspense fallback={null}>
-        <DynamicStores />
-      </Suspense>
-    );
+    return <DynamicStores />;
   }
 
   return (

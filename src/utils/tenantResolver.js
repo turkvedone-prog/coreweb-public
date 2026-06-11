@@ -2,7 +2,7 @@ import { resolveTenantBySlug, resolveTenantByDomain, resolveTenantBySubdomain } 
 
 export async function detectAndResolveTenant(pathSlug) {
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
   const isSubdomain = hostname.endsWith('.coreweb.tr') && hostname !== 'coreweb.tr' && hostname !== 'www.coreweb.tr';
 
   try {

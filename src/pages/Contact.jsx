@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { useSite } from '../layouts/SiteLayout';
 import { submitLead } from '../services/apiService';
 import { updateSEOMeta } from '../utils/seo';
@@ -213,26 +213,24 @@ export default function Contact() {
   if (theme?.Contact) {
     const DynamicContact = theme.Contact;
     return (
-      <Suspense fallback={null}>
-        <DynamicContact
-          formData={formData}
-          consentAccepted={consentAccepted}
-          setConsentAccepted={setConsentAccepted}
-          loading={loading}
-          success={success}
-          error={error}
-          handleSubmit={handleSubmit}
-          handleChange={handleChange}
-          companyName={companyName}
-          contact={contact}
-          workingHours={workingHours}
-          translate={translate}
-          mockToken={mockToken}
-          setMockToken={setMockToken}
-          tripHoneypot={tripHoneypot}
-          setTripHoneypot={setTripHoneypot}
-        />
-      </Suspense>
+      <DynamicContact
+        formData={formData}
+        consentAccepted={consentAccepted}
+        setConsentAccepted={setConsentAccepted}
+        loading={loading}
+        success={success}
+        error={error}
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        companyName={companyName}
+        contact={contact}
+        workingHours={workingHours}
+        translate={translate}
+        mockToken={mockToken}
+        setMockToken={setMockToken}
+        tripHoneypot={tripHoneypot}
+        setTripHoneypot={setTripHoneypot}
+      />
     );
   }
 

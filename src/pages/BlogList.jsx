@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPublishedBlogs } from '../services/publicContentService';
 import { getLocalizedContent } from '../utils/i18nContent';
@@ -12,20 +12,19 @@ export default function BlogList() {
   const { tenantMapping, activeLang, settings } = useSite();
   const { tenantId, tenantSlug } = tenantMapping;
   
+  const theme = themeRegistry[tenantSlug];
+
   const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(tenantSlug !== 'capilon');
+  const [loading, setLoading] = useState(!theme?.BlogList || !!theme?.fetchBlogs);
   const [error, setError] = useState(null);
 
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   useEffect(() => {
     if (!tenantId) return;
-
-    if (tenantSlug === 'capilon') {
-      return;
-    }
+    if (theme?.BlogList && !theme?.fetchBlogs) return;
 
     const fetchBlogs = async () => {
       setLoading(true);
@@ -35,14 +34,16 @@ export default function BlogList() {
         setBlogs(localizedBlogs);
       } catch (err) {
         console.error('Error fetching blogs:', err);
-        setError(activeLang === 'tr' ? 'Blog yazıları yüklenirken bir hata oluştu.' : 'An error occurred while loading blog posts.');
+        if (!theme?.BlogList) {
+          setError(activeLang === 'tr' ? 'Blog yazıları yüklenirken bir hata oluştu.' : 'An error occurred while loading blog posts.');
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchBlogs();
-  }, [tenantId, activeLang, tenantSlug]);
+  }, [tenantId, activeLang, tenantSlug, theme]);
 
   // SEO Update
   useEffect(() => {
@@ -100,17 +101,15 @@ export default function BlogList() {
     );
   }
 
-  const theme = themeRegistry[tenantSlug];
+
   if (theme?.BlogList) {
     const DynamicBlogList = theme.BlogList;
     return (
-      <Suspense fallback={null}>
-        <DynamicBlogList
-          blogs={blogs}
-          formatDate={formatDate}
-          getLocalizedPath={getLocalizedPath}
-        />
-      </Suspense>
+      <DynamicBlogList
+        blogs={blogs}
+        formatDate={formatDate}
+        getLocalizedPath={getLocalizedPath}
+      />
     );
   }
 

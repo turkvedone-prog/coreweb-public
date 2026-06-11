@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getPublishedBlogBySlug } from '../services/publicContentService';
 import { getLocalizedContent } from '../utils/i18nContent';
@@ -13,12 +13,14 @@ export default function BlogDetail() {
   const { tenantMapping, activeLang, settings } = useSite();
   const { tenantId, tenantSlug } = tenantMapping;
 
+  const theme = themeRegistry[tenantSlug];
+
   const [blog, setBlog] = useState(null);
-  const [loading, setLoading] = useState(tenantSlug !== 'capilon');
+  const [loading, setLoading] = useState(!theme?.BlogDetail);
   const [error, setError] = useState(null);
 
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
   const companyName = settings?.companyName || tenantSlug || 'CoreWeb';
 
   const translate = (tr, en) => {
@@ -27,10 +29,7 @@ export default function BlogDetail() {
 
   useEffect(() => {
     if (!tenantId || !slug) return;
-
-    if (tenantSlug === 'capilon') {
-      return;
-    }
+    if (theme?.BlogDetail) return;
 
     const fetchBlogDetail = async () => {
       setLoading(true);
@@ -52,7 +51,7 @@ export default function BlogDetail() {
     };
 
     fetchBlogDetail();
-  }, [tenantId, slug, activeLang, tenantSlug]);
+  }, [tenantId, slug, activeLang, tenantSlug, theme]);
 
   // SEO Update
   useEffect(() => {
@@ -109,14 +108,10 @@ export default function BlogDetail() {
     );
   }
 
-  const theme = themeRegistry[tenantSlug];
+
   if (theme?.BlogDetail) {
     const DynamicBlogDetail = theme.BlogDetail;
-    return (
-      <Suspense fallback={null}>
-        <DynamicBlogDetail />
-      </Suspense>
-    );
+    return <DynamicBlogDetail />;
   }
 
   if (error || !blog) {

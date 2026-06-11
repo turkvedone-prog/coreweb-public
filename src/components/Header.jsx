@@ -10,7 +10,7 @@ export default function Header({ settings, navigation, tenantMapping, activeLang
   const [logoError, setLogoError] = useState(false);
 
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
 
   const enabledLangs = tenantMapping?.enabledLanguages || ['tr'];
 

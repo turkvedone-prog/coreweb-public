@@ -80,6 +80,19 @@ async function executeMappingQuery(field, value) {
 
 export async function resolveTenantBySlug(slug) {
   if (!slug) return null;
+  if (slug === 'viola' && import.meta.env.DEV) {
+    return {
+      tenantId: 'TEN-VIOLA',
+      tenantSlug: 'viola',
+      defaultLanguage: 'tr',
+      enabledLanguages: ['tr'],
+      themeKey: 'viola',
+      customDomain: null,
+      subdomain: 'viola.coreweb.tr',
+      publishStatus: 'preview',
+      isStaging: true
+    };
+  }
   const cached = getCachedMapping('slug_' + slug);
   if (cached) return cached;
 
@@ -140,6 +153,19 @@ export async function resolveTenantByDomain(hostname) {
 
 export async function resolveTenantBySubdomain(hostname) {
   if (!hostname) return null;
+  if ((hostname === 'viola.coreweb.tr' || hostname.startsWith('viola.')) && import.meta.env.DEV) {
+    return {
+      tenantId: 'TEN-VIOLA',
+      tenantSlug: 'viola',
+      defaultLanguage: 'tr',
+      enabledLanguages: ['tr'],
+      themeKey: 'viola',
+      customDomain: null,
+      subdomain: 'viola.coreweb.tr',
+      publishStatus: 'preview',
+      isStaging: true
+    };
+  }
   const cached = getCachedMapping('subdomain_' + hostname);
   if (cached) return cached;
 

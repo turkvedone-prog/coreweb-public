@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useParams, useLocation, useNavigate, Navi
 import { detectAndResolveTenant } from '../utils/tenantResolver';
 import SiteLayout from '../layouts/SiteLayout';
 import Home from '../pages/Home';
+import Anasayfa from '../pages/Anasayfa';
 import BlogList from '../pages/BlogList';
 import BlogDetail from '../pages/BlogDetail';
 import NewsList from '../pages/NewsList';
@@ -22,6 +23,13 @@ import Stores from '../pages/Stores';
 import NotFoundSite from '../components/NotFoundSite';
 import themeRegistry from '../themes/themeRegistry';
 
+// Registered Tenants:
+// - burobig (Bürobig)
+// - capilon (Capilon)
+// - burckaplama (Burç Kaplama)
+// - viola (Viola Mobilya)
+// - coreweb (CoreWeb Official)
+
 function RouteResolver() {
   const params = useParams();
   const location = useLocation();
@@ -31,7 +39,7 @@ function RouteResolver() {
   const [resolvedLang, setResolvedLang] = useState(null);
 
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
 
   useEffect(() => {
     let slug = null;
@@ -55,40 +63,24 @@ function RouteResolver() {
           const enabledLangs = mapping.enabledLanguages || ['tr'];
           const defaultLang = mapping.defaultLanguage || 'tr';
 
-          const isOfficialDomain = hostname === 'www.coreweb.tr' || hostname === 'coreweb.tr';
-          const isCoreWeb = mapping.tenantSlug === 'coreweb' || mapping.tenantId === 'TEN-507';
-
-          if (isCoreWeb && isOfficialDomain) {
-            // Clean URL behavior for CoreWeb official domain in production
-            const isExactTr = pathSegments.length === 1 && pathSegments[0] === 'tr';
-            if (isExactTr) {
-              // Redirect www.coreweb.tr/tr -> www.coreweb.tr
-              navigate('/', { replace: true });
-            } else {
-              // Serve tr directly on root path / or other paths without language segment prefix
-              setResolvedLang(defaultLang);
-            }
+          if (urlLang && enabledLangs.includes(urlLang)) {
+            setResolvedLang(urlLang);
           } else {
-            // Original logic for other tenants or preview CoreWeb environments
-            if (urlLang && enabledLangs.includes(urlLang)) {
-              setResolvedLang(urlLang);
-            } else {
-              // Redirect to default language
-              const newSegments = [...pathSegments];
-              if (urlLang && !enabledLangs.includes(urlLang)) {
-                newSegments[langIndex] = defaultLang;
-              } else if (!urlLang || (isLocalOrPortal && newSegments.length < 2)) {
-                if (isLocalOrPortal) {
-                  // Ensure slug is first, then lang
-                  newSegments[0] = params.tenantSlug;
-                  newSegments[1] = defaultLang;
-                } else {
-                  newSegments[0] = defaultLang;
-                }
+            // Redirect to default language
+            const newSegments = [...pathSegments];
+            if (urlLang && !enabledLangs.includes(urlLang)) {
+              newSegments[langIndex] = defaultLang;
+            } else if (!urlLang || (isLocalOrPortal && newSegments.length < 2)) {
+              if (isLocalOrPortal) {
+                // Ensure slug is first, then lang
+                newSegments[0] = params.tenantSlug;
+                newSegments[1] = defaultLang;
+              } else {
+                newSegments[0] = defaultLang;
               }
-              const redirectPath = '/' + newSegments.join('/');
-              navigate(redirectPath, { replace: true });
             }
+            const redirectPath = '/' + newSegments.join('/');
+            navigate(redirectPath, { replace: true });
           }
         }
       } catch (err) {
@@ -113,35 +105,49 @@ function RouteResolver() {
     return null;
   }
 
-  const theme = themeRegistry[tenantMapping?.tenantSlug];
-  const hasCollections = !!theme?.CollectionsPage;
+  const tenantSlug = tenantMapping?.tenantSlug;
 
   return (
     <SiteLayout tenantMapping={tenantMapping} activeLang={resolvedLang}>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/blog" element={<BlogList />} />
-        <Route path="/blog/:slug" element={<BlogDetail />} />
-        <Route path="/haberler" element={<NewsList />} />
-        <Route path="/haberler/:slug" element={<NewsDetail />} />
-        <Route path="/urunler" element={<ProductList />} />
-        <Route path="/urunler/:slug" element={<ProductDetail />} />
-        <Route path="/ust-yonetici" element={<ProductList />} />
-        <Route path="/ofis-koltuklari" element={<ProductList />} />
-        <Route path="/operasyonel-masalar" element={<ProductList />} />
-        <Route path="/toplanti-masalari" element={<ProductList />} />
-        <Route path="/tasarimcilar" element={<Designers />} />
-        <Route path="/kurumsal" element={<Navigate to="/hikayemiz" replace />} />
-        <Route path="/hikayemiz" element={<History />} />
-        <Route path="/tasarim-sureci" element={<DesignProcess />} />
-        <Route path="/tasarim-felsefesi" element={<DesignPhilosophy />} />
-        <Route path="/manifesto" element={<Manifesto />} />
-        <Route path="/kalite-politikamiz" element={<QualityPolicy />} />
-        <Route path="/surdurulebilirlik" element={<Sustainability />} />
-        <Route path="/iletisim" element={<Contact />} />
-        <Route path="/magazalarimiz" element={<Stores />} />
-        {hasCollections && <Route path="/koleksiyonlar" element={<CollectionsPage />} />}
-        {hasCollections && <Route path="/koleksiyonlar/:slug" element={<CollectionsPage />} />}
+        
+        {tenantSlug !== 'burckaplama' && (
+          <>
+            <Route path="/anasayfa" element={<Anasayfa />} />
+            <Route path="/blog" element={<BlogList />} />
+            <Route path="/blog/:slug" element={<BlogDetail />} />
+            <Route path="/haberler" element={<NewsList />} />
+            <Route path="/haberler/:slug" element={<NewsDetail />} />
+            <Route path="/urunler" element={<ProductList />} />
+            <Route path="/urunler/:slug" element={<ProductDetail />} />
+            {tenantSlug === 'burobig' && (
+              <>
+                <Route path="/ust-yonetici" element={<ProductList />} />
+                <Route path="/ofis-koltuklari" element={<ProductList />} />
+                <Route path="/operasyonel-masalar" element={<ProductList />} />
+                <Route path="/toplanti-masalari" element={<ProductList />} />
+              </>
+            )}
+            <Route path="/tasarimcilar" element={<Designers />} />
+            <Route path="/kurumsal" element={<Navigate to="/hikayemiz" replace />} />
+            <Route path="/hikayemiz" element={<History />} />
+            <Route path="/tasarim-sureci" element={<DesignProcess />} />
+            <Route path="/tasarim-felsefesi" element={<DesignPhilosophy />} />
+            <Route path="/manifesto" element={<Manifesto />} />
+            <Route path="/kalite-politikamiz" element={<QualityPolicy />} />
+            <Route path="/surdurulebilirlik" element={<Sustainability />} />
+            <Route path="/iletisim" element={<Contact />} />
+            <Route path="/magazalarimiz" element={<Stores />} />
+            {themeRegistry[tenantSlug]?.Collections && (
+              <>
+                <Route path="/koleksiyonlar" element={<CollectionsPage />} />
+                <Route path="/koleksiyonlar/:slug" element={<CollectionsPage />} />
+              </>
+            )}
+          </>
+        )}
+        
         <Route path="*" element={<NotFoundSite reason="Sayfa bulunamadı." />} />
       </Routes>
     </SiteLayout>
@@ -150,7 +156,7 @@ function RouteResolver() {
 
 export default function AppRoutes() {
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
 
   return (
     <BrowserRouter>

@@ -9,7 +9,7 @@ export default function BurobigHome() {
   const { tenantMapping, activeLang } = useSite();
   const { tenantSlug } = tenantMapping;
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
 
   const getLocalizedPath = (path) => {
     const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
@@ -423,12 +423,12 @@ export default function BurobigHome() {
             <div className="blog-grid">
               {/* Blog 1 */}
               <article className="blog-card reveal-up delay-100">
-                <Link to={getLocalizedPath('/blog')} className="blog-card__link">
+                <Link to={getLocalizedPath('/blog/gelecegin-calisma-alanlari-hibrit-ofisler')} className="blog-card__link">
                   <figure className="blog-card__figure">
-                    <img src="/assets/burobig/images/blog-1.png" alt="Ergonomi Blog" className="blog-card__img" loading="lazy" />
+                    <img src="/assets/burobig/images/blog-1.png" alt="Geleceğin Çalışma Alanları: Hibrit Ofisler" className="blog-card__img" loading="lazy" />
                   </figure>
                   <div className="blog-card__content">
-                    <h3 className="blog-card__title">Geleceğin Çalışma Alanları:<br />Hibrit Ofislerde Verimlilik Sırları</h3>
+                    <h3 className="blog-card__title">Geleceğin Çalışma Alanları:<br />Hibrit Ofisler</h3>
                     <span className="blog-card__readmore">
                       Hemen İncele{' '}
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
@@ -442,12 +442,12 @@ export default function BurobigHome() {
 
               {/* Blog 2 */}
               <article className="blog-card reveal-up delay-200">
-                <Link to={getLocalizedPath('/blog')} className="blog-card__link">
+                <Link to={getLocalizedPath('/blog/ofislerde-isik-ve-ergonomi-yonetimi')} className="blog-card__link">
                   <figure className="blog-card__figure">
-                    <img src="/assets/burobig/images/blog-2.png" alt="Estetik Blog" className="blog-card__img" loading="lazy" />
+                    <img src="/assets/burobig/images/blog-2.png" alt="Ofislerde Işık ve Ergonomi Yönetimi" className="blog-card__img" loading="lazy" />
                   </figure>
                   <div className="blog-card__content">
-                    <h3 className="blog-card__title">Yönetici Odalarında Yeni Dönem:<br />Konfor ve Prestiji Birleştiren Detaylar</h3>
+                    <h3 className="blog-card__title">Ofislerde Işık ve<br />Ergonomi Yönetimi</h3>
                     <span className="blog-card__readmore">
                       Hemen İncele{' '}
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
@@ -461,12 +461,12 @@ export default function BurobigHome() {
 
               {/* Blog 3 */}
               <article className="blog-card reveal-up delay-300">
-                <Link to={getLocalizedPath('/blog')} className="blog-card__link">
+                <Link to={getLocalizedPath('/blog/sessiz-odaklanma-akustik-panel-cozumleri')} className="blog-card__link">
                   <figure className="blog-card__figure">
-                    <img src="/assets/burobig/images/blog-3.png" alt="Doku Blog" className="blog-card__img" loading="lazy" />
+                    <img src="/assets/burobig/images/blog-3.png" alt="Sessiz Odaklanma: Akustik Panel Çözümleri" className="blog-card__img" loading="lazy" />
                   </figure>
                   <div className="blog-card__content">
-                    <h3 className="blog-card__title">Kumaşın Dili:<br />Premium Ofis Mobilyalarında Doku Seçimi</h3>
+                    <h3 className="blog-card__title">Sessiz Odaklanma:<br />Akustik Panel Çözümleri</h3>
                     <span className="blog-card__readmore">
                       Hemen İncele{' '}
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">

@@ -12,7 +12,7 @@ export default function CapilonFooter() {
   };
 
   const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'coreweb.tr' || hostname.endsWith('.vercel.app');
+  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
 
   const getLocalizedPath = (path) => {
     const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
@@ -130,8 +130,8 @@ export default function CapilonFooter() {
           </div>
           <div className="footer-signature" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <a href="https://www.coreweb.tr" target="_blank" className="footer-coreweb-link" rel="noopener noreferrer">
-              <img src="/assets/capilon/images/CoreWeb_Logo_02_Disi.svg" className="coreweb-logo logo-disi" alt="CoreWeb" />
-              <img src="/assets/capilon/images/CoreWeb_Logo_01.svg" className="coreweb-logo logo-color" alt="CoreWeb" />
+              <img src="/assets/coreweb/coreweb-logo-white.svg" className="coreweb-logo logo-disi" alt="CoreWeb" />
+              <img src="/assets/coreweb/coreweb-logo-color.svg" className="coreweb-logo logo-color" alt="CoreWeb" />
             </a>
             <button onClick={scrollToTop} className="scroll-top-btn" aria-label={translate('Yukarı Git', 'Scroll to Top')}>
               <ChevronUp size={18} />
