@@ -1,10 +1,14 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
-import BurobigHeader from '../BurobigHeader';
-import BurobigFooter from '../BurobigFooter';
+import { getCompanySettings, getNavigation } from '../services/publicContentService';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+
+import themeRegistry from '../themes/themeRegistry';
 
 const SiteContext = createContext(null);
 
+/* eslint-disable-next-line react-refresh/only-export-components */
 export function useSite() {
   const context = useContext(SiteContext);
   if (!context) {
@@ -13,27 +17,201 @@ export function useSite() {
   return context;
 }
 
-export default function SiteLayout({ children, activeLang }) {
-  const tenantMapping = {
-    tenantId: 'TEN-BUROBIG',
-    tenantSlug: 'burobig',
-    defaultLanguage: 'tr',
-    enabledLanguages: ['tr', 'en']
-  };
-
+export default function SiteLayout({ children, tenantMapping, activeLang }) {
+  const { tenantId } = tenantMapping;
+  const [settings, setSettings] = useState(null);
+  const [navigation, setNavigation] = useState([]);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
+  // Scroll to top on route change for Capilon tenant (with a small timeout to account for async page rendering)
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+    if (tenantMapping?.tenantSlug === 'capilon') {
+      window.scrollTo(0, 0); // Scroll immediately
+      
+      const timer = setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 100); // Scroll again after render settles
+      
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname, tenantMapping?.tenantSlug]);
+
+  // Generic canonical URL for any tenant with a custom production domain
+  useEffect(() => {
+    if (!tenantMapping) return;
+
+    const productionDomain = tenantMapping.customDomain;
+    if (!productionDomain) {
+      // No custom domain configured — remove any existing canonical tag
+      const existingTag = document.querySelector('link[rel="canonical"]');
+      if (existingTag) existingTag.remove();
+      return;
+    }
+
+    let canonicalTag = document.querySelector('link[rel="canonical"]');
+    if (!canonicalTag) {
+      canonicalTag = document.createElement('link');
+      canonicalTag.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalTag);
+    }
+
+    // Strip dev/staging URL prefixes (e.g. /:tenantSlug/:lang/)
+    const defaultLang = tenantMapping.defaultLanguage || 'tr';
+    let cleanPath = location.pathname;
+
+    // Strip lang segment if it matches default lang (for clean canonical URLs)
+    if (cleanPath === `/${defaultLang}` || cleanPath === `/${defaultLang}/`) {
+      cleanPath = '';
+    } else if (cleanPath.startsWith(`/${defaultLang}/`)) {
+      cleanPath = cleanPath.substring(defaultLang.length + 1);
+    }
+    if (cleanPath === '/') cleanPath = '';
+
+    // Use www. prefix for canonical domain
+    const canonicalBase = productionDomain.startsWith('www.')
+      ? `https://${productionDomain}`
+      : `https://www.${productionDomain}`;
+
+    canonicalTag.setAttribute('href', `${canonicalBase}${cleanPath || '/'}`);
+
+    return () => {
+      const tag = document.querySelector('link[rel="canonical"]');
+      if (tag) tag.remove();
+    };
+  }, [tenantMapping, location.pathname]);
+
+  // Dynamic robots noindex meta for staging subdomains
+  useEffect(() => {
+    if (!tenantMapping) return;
+    
+    const hostname = window.location.hostname;
+    const isCoreMainDomain = hostname === 'coreweb.tr' || hostname === 'www.coreweb.tr';
+    const isStagingSubdomain = hostname.endsWith('.coreweb.tr') && 
+                               hostname !== 'coreweb.tr' && 
+                               hostname !== 'www.coreweb.tr' && 
+                               hostname !== 'panel.coreweb.tr';
+                               
+    const isPreviewOrStaging = tenantMapping.publishStatus === 'preview' || 
+                               tenantMapping.isStaging === true;
+                               
+    const shouldNoIndex = !isCoreMainDomain && (isStagingSubdomain || isPreviewOrStaging);
+
+    let robotsTag = document.querySelector('meta[name="robots"]');
+    
+    if (shouldNoIndex) {
+      if (!robotsTag) {
+        robotsTag = document.createElement('meta');
+        robotsTag.setAttribute('name', 'robots');
+        document.head.appendChild(robotsTag);
+      }
+      robotsTag.setAttribute('content', 'noindex, nofollow, noarchive');
+      console.log('[SEO] Staging domain or preview state detected. Dynamic noindex applied.');
+    } else {
+      if (robotsTag) {
+        const content = robotsTag.getAttribute('content');
+        if (content && (content.includes('noindex') || content.includes('nofollow'))) {
+          robotsTag.remove();
+          console.log('[SEO] Production domain detected. Dynamic noindex removed.');
+        }
+      }
+    }
+  }, [tenantMapping]);
+
+  // Synchronize HTML lang attribute with activeLang for correct local casing rules (e.g. Turkish i -> İ)
+  useEffect(() => {
+    if (activeLang) {
+      document.documentElement.lang = activeLang;
+    }
+  }, [activeLang]);
+
+  useEffect(() => {
+    if (!tenantId) return;
+
+    const fetchLayoutData = async () => {
+      setLoading(true);
+      try {
+        const [settingsData, navigationData] = await Promise.all([
+          getCompanySettings(tenantId),
+          getNavigation(tenantId)
+        ]);
+        setSettings(settingsData);
+        setNavigation(navigationData);
+      } catch (error) {
+        console.error('Error fetching layout data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLayoutData();
+  }, [tenantId]);
+
+  if (loading) {
+    return null;
+  }
+
+  const contextValue = {
+    tenantMapping,
+    activeLang,
+    settings,
+    navigation
+  };
+
+  const tenantSlug = tenantMapping?.tenantSlug;
+  const isAnasayfa = location.pathname.endsWith('/anasayfa') || location.pathname.endsWith('/anasayfa/');
+  if (isAnasayfa) {
+    return (
+      <SiteContext.Provider value={contextValue}>
+        <div className={`${tenantSlug}-theme`}>
+          <Suspense fallback={null}>
+            {children}
+          </Suspense>
+        </div>
+      </SiteContext.Provider>
+    );
+  }
+
+  const theme = themeRegistry[tenantSlug];
+
+  if (theme) {
+    const DynamicHeader = theme.Header;
+    const DynamicFooter = theme.Footer;
+    return (
+      <SiteContext.Provider value={contextValue}>
+        <div className={`${tenantSlug}-theme`}>
+          {DynamicHeader && (
+            <Suspense fallback={null}>
+              <DynamicHeader />
+            </Suspense>
+          )}
+          <Suspense fallback={null}>
+            {children}
+          </Suspense>
+          {DynamicFooter && (
+            <Suspense fallback={null}>
+              <DynamicFooter />
+            </Suspense>
+          )}
+        </div>
+      </SiteContext.Provider>
+    );
+  }
 
   return (
-    <SiteContext.Provider value={{ tenantMapping, activeLang }}>
-      <BurobigHeader />
-      <main id="main-content">
-        {children}
-      </main>
-      <BurobigFooter />
+    <SiteContext.Provider value={contextValue}>
+      <div className="site-container min-h-screen flex flex-col bg-slate-50 text-slate-800">
+        <Header 
+          settings={settings} 
+          navigation={navigation} 
+          tenantMapping={tenantMapping} 
+          activeLang={activeLang} 
+        />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Footer />
+      </div>
     </SiteContext.Provider>
   );
 }
