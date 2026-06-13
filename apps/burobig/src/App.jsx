@@ -18,6 +18,22 @@ import BurobigDesignPhilosophy from './BurobigDesignPhilosophy';
 import BurobigManifesto from './BurobigManifesto';
 import BurobigQualityPolicy from './BurobigQualityPolicy';
 import BurobigSustainability from './BurobigSustainability';
+import { getActiveProductBySlug } from '../../services/publicContentService';
+
+// Demo ürün — Firebase'den veri gelmezse gösterilir
+const DEMO_PRODUCT = {
+  slug: 'inka',
+  title: 'Inka Yönetici Masaı',
+  category: 'Üst Yönetici Masaı',
+  coverImageUrl: '/assets/burobig/images/inka_main.png',
+  gallery: [
+    { url: '/assets/burobig/images/inka_main.png' },
+    { url: '/assets/burobig/images/inka_detail_1.png' },
+  ],
+  description_tr: 'Doğadan ilham alan yenilikçi çizgilerle, geleçeğin premium ofis orta mına uygun Inka yönetici masaı.',
+  description_en: 'Inka executive desk, inspired by nature with innovative lines.',
+};
+
 
 // ─── Blog Page Wrapper (fetches blogs from Firebase) ─────────────────────────
 function BurobigBlogPage() {
@@ -85,7 +101,26 @@ function BurobigProductPage() {
   return <BurobigProductList products={products} />;
 }
 
-// ─── Language Wrapper (Outlet pattern) ───────────────────────────────────────
+// ─── Product Detail Page Wrapper (fetches product by slug) ──────────────────
+function BurobigProductDetailPage() {
+  const { slug } = useParams();
+  const { tenantMapping, activeLang } = useSite();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getActiveProductBySlug(tenantMapping.tenantId, slug, activeLang)
+      .then((data) => setProduct(data || DEMO_PRODUCT))
+      .catch(() => setProduct(DEMO_PRODUCT))
+      .finally(() => setLoading(false));
+  }, [slug, activeLang, tenantMapping.tenantId]);
+
+  if (loading) return <div style={{ padding: '4rem', textAlign: 'center' }}>Yükleniyor...</div>;
+  if (!product) return <div style={{ padding: '4rem', textAlign: 'center' }}>Ürün bulunamadı.</div>;
+
+  return <BurobigProductDetail product={product} />;
+}
+
 function BurobigLangWrapper() {
   const { lang } = useParams();
   const navigate = useNavigate();
@@ -169,7 +204,7 @@ export default function App() {
           <Route index element={<BurobigHome />} />
           <Route path="blog" element={<BurobigBlogPage />} />
           <Route path="urunler" element={<BurobigProductPage />} />
-          <Route path="urunler/:slug" element={<BurobigProductDetail />} />
+          <Route path="urunler/:slug" element={<BurobigProductDetailPage />} />
           <Route path="ust-yonetici" element={<BurobigProductPage />} />
           <Route path="ofis-koltuklari" element={<BurobigProductPage />} />
           <Route path="operasyonel-masalar" element={<BurobigProductPage />} />
