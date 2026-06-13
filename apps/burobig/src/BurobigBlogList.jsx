@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, BookOpen } from 'lucide-react';
 
-export default function BurobigBlogList({ blogs, formatDate, getLocalizedPath }) {
+export default function BurobigBlogList({ blogs = [], formatDate, getLocalizedPath }) {
   const categories = ['Hepsi', 'Tasarım', 'Trendler', 'Mekan Kurgusu', 'Sürdürülebilirlik'];
   const [selectedCategory, setSelectedCategory] = useState('Hepsi');
 

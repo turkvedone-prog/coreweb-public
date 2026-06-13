@@ -19,6 +19,22 @@ import BurobigManifesto from './BurobigManifesto';
 import BurobigQualityPolicy from './BurobigQualityPolicy';
 import BurobigSustainability from './BurobigSustainability';
 
+// ─── Blog Page Wrapper (provides required props to BurobigBlogList) ──────────
+function BurobigBlogPage() {
+  const { activeLang } = useSite();
+  const getLocalizedPath = (path) => `/${activeLang}${path}`;
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    try {
+      return new Date(dateStr).toLocaleDateString(activeLang === 'tr' ? 'tr-TR' : 'en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+    } catch { return dateStr; }
+  };
+  // Blog içeriği gelene kadar boş liste — sayfa çökmez
+  return <BurobigBlogList blogs={[]} formatDate={formatDate} getLocalizedPath={getLocalizedPath} />;
+}
+
 // ─── Language Wrapper (Outlet pattern) ───────────────────────────────────────
 function BurobigLangWrapper() {
   const { lang } = useParams();
@@ -113,7 +129,7 @@ export default function App() {
       <Routes>
         <Route path={langPath} element={<BurobigLangWrapper />}>
           <Route index element={<BurobigHome />} />
-          <Route path="blog" element={<BurobigBlogList />} />
+          <Route path="blog" element={<BurobigBlogPage />} />
           <Route path="urunler" element={<BurobigProductList />} />
           <Route path="urunler/:slug" element={<BurobigProductDetail />} />
           <Route path="ust-yonetici" element={<BurobigProductList />} />
