@@ -35,7 +35,12 @@ export default function App() {
         <ViolaHeader />
         <Routes>
           <Route path="/" element={<ViolaHome />} />
-          <Route path="/urunler/beta" element={<ViolaProductDetail product={betaProduct} />} />
+          {/* Direct product route (new format) */}
+          <Route path="/urunler/:slug" element={<ViolaProductDetail product={betaProduct} />} />
+          {/* Legacy monolith format: /viola/tr/urunler/:slug */}
+          <Route path="/:tenant/:lang/urunler/:slug" element={<ViolaProductDetail product={betaProduct} />} />
+          {/* Lang-only format: /tr/urunler/:slug */}
+          <Route path="/:lang/urunler/:slug" element={<ViolaProductDetail product={betaProduct} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ViolaFooter />
