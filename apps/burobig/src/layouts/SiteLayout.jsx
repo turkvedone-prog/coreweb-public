@@ -30,11 +30,13 @@ export default function SiteLayout({ children, activeLang }) {
 
   return (
     <SiteContext.Provider value={{ tenantMapping, activeLang }}>
-      <BurobigHeader />
-      <main id="main-content">
-        {children}
-      </main>
-      <BurobigFooter />
+      <div className="burobig-theme">
+        <BurobigHeader />
+        <main id="main-content">
+          {children}
+        </main>
+        <BurobigFooter />
+      </div>
     </SiteContext.Provider>
   );
 }
