@@ -106,7 +106,7 @@ export default function App() {
           <Route path="blog" element={<CapilonBlogList />} />
           <Route path="blog/:slug" element={<CapilonBlogDetail />} />
           <Route path="koleksiyonlar" element={<CapilonCollectionsPage />} />
-          <Route path="koleksiyonlar/:slug" element={<CapilonCollectionsPage />} />
+          <Route path="koleksiyonlar/:slug" element={<CapilonCategoryDetail />} />
           <Route path="urunler/:slug" element={<CapilonProductDetail />} />
           <Route path="magazalarimiz" element={<CapilonStores />} />
           <Route path="iletisim" element={<CapilonContactPage />} />

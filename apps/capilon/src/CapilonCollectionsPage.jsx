@@ -6,15 +6,8 @@ import { updateSEOMeta } from '../../utils/seo';
 
 export default function CapilonCollectionsPage() {
   const { tenantMapping, activeLang } = useSite();
-  const { tenantSlug } = tenantMapping;
 
-  const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
-
-  const getLocalizedPath = (path) => {
-    const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
-    return `${prefix}${path}`;
-  };
+  const getLocalizedPath = (path) => `/${activeLang}${path}`;
 
   const translate = (tr, en) => {
     return activeLang === 'tr' ? tr : en;
