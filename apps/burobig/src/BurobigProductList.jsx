@@ -1,10 +1,25 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
 import { updateSEOMeta } from '../../utils/seo';
+import { getActiveProducts } from '../../services/publicContentService';
 
 
-export default function BurobigProductList({ products }) {
+export default function BurobigProductList() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getActiveProducts('burobig');
+        setProducts(data || []);
+      } catch (e) {
+        console.error('Failed to load products:', e);
+        setProducts([]);
+      }
+    };
+    fetchProducts();
+  }, []);
   const { tenantMapping, activeLang } = useSite();
   const { tenantSlug } = tenantMapping;
   const [searchParams, setSearchParams] = useSearchParams();
