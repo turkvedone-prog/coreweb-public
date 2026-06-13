@@ -3,27 +3,33 @@ import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
 import { updateSEOMeta } from '../../utils/seo';
 import { getActiveProducts } from '../../services/publicContentService';
+import { getLocalizedContent } from '../../utils/i18nContent';
 
 
 export default function BurobigProductList() {
+  const { tenantMapping, activeLang } = useSite();
+  const { tenantId, tenantSlug } = tenantMapping;
   const [products, setProducts] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
   useEffect(() => {
+    if (!tenantId) return;
     const fetchProducts = async () => {
       try {
-        const data = await getActiveProducts('burobig');
-        setProducts(data || []);
+        const raw = await getActiveProducts(tenantId);
+        const localized = (raw || [])
+          .map(doc => getLocalizedContent(doc, activeLang))
+          .filter(Boolean);
+        setProducts(localized);
       } catch (e) {
         console.error('Failed to load products:', e);
         setProducts([]);
       }
     };
     fetchProducts();
-  }, []);
-  const { tenantMapping, activeLang } = useSite();
-  const { tenantSlug } = tenantMapping;
-  const [searchParams, setSearchParams] = useSearchParams();
-  const location = useLocation();
+  }, [tenantId, activeLang]);
+
 
   const isUstYoneticiPath = location.pathname.endsWith('/ust-yonetici');
   const isOfisKoltuklariPath = location.pathname.endsWith('/ofis-koltuklari');
