@@ -5,15 +5,9 @@ import './burobig.css';
 
 export default function BurobigHeader() {
   const { tenantMapping, activeLang, settings } = useSite();
-  const { tenantSlug } = tenantMapping;
-  
-  const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
 
-  const getLocalizedPath = (path) => {
-    const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
-    return `${prefix}${path}`;
-  };
+  // Her ortamda /:lang prefix kullan (local = production ile aynı)
+  const getLocalizedPath = (path) => `/${activeLang}${path}`;
 
   // Safe header scroll event listener with animation frames and cleanup
   useEffect(() => {

@@ -6,29 +6,20 @@ import './capilon.css';
 
 export default function CapilonHeader() {
   const { tenantMapping, activeLang } = useSite();
-  const { tenantSlug } = tenantMapping;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
+  // Her ortamda /:lang prefix kullan (local = production ile aynı)
+  const getLocalizedPath = (path) => `/${activeLang}${path}`;
 
-  const getLocalizedPath = (path) => {
-    const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
-    return `${prefix}${path}`;
-  };
-
-  const translate = (tr, en) => {
-    return activeLang === 'tr' ? tr : en;
-  };
+  const translate = (tr, en) => activeLang === 'tr' ? tr : en;
 
   const handleLangChange = (newLang) => {
     if (newLang === activeLang) return;
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    const langIndex = isLocalOrPortal ? 1 : 0;
-    pathSegments[langIndex] = newLang;
+    pathSegments[0] = newLang; // lang her zaman index 0
     navigate('/' + pathSegments.join('/'));
     setLangDropdownOpen(false);
   };
