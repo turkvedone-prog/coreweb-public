@@ -58,6 +58,33 @@ function BurobigBlogPage() {
   return <BurobigBlogList blogs={blogs} formatDate={formatDate} getLocalizedPath={getLocalizedPath} />;
 }
 
+// ─── Product Page Wrapper (fetches products from Firebase) ───────────────────
+function BurobigProductPage() {
+  const { activeLang } = useSite();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    import('./productService').then(({ getActiveProducts }) => {
+      getActiveProducts()
+        .then(raw => {
+          // Dil lokalizasyonu
+          const localized = raw.map(p => ({
+            ...p,
+            name: (activeLang === 'tr' ? p.name_tr : p.name_en) || p.name || '',
+            description: (activeLang === 'tr' ? p.description_tr : p.description_en) || p.description || '',
+          }));
+          setProducts(localized);
+        })
+        .catch(() => setProducts([]))
+        .finally(() => setLoading(false));
+    });
+  }, [activeLang]);
+
+  if (loading) return <div style={{ padding: '4rem', textAlign: 'center' }}>Yükleniyor...</div>;
+  return <BurobigProductList products={products} />;
+}
+
 // ─── Language Wrapper (Outlet pattern) ───────────────────────────────────────
 function BurobigLangWrapper() {
   const { lang } = useParams();
@@ -153,12 +180,12 @@ export default function App() {
         <Route path={langPath} element={<BurobigLangWrapper />}>
           <Route index element={<BurobigHome />} />
           <Route path="blog" element={<BurobigBlogPage />} />
-          <Route path="urunler" element={<BurobigProductList />} />
+          <Route path="urunler" element={<BurobigProductPage />} />
           <Route path="urunler/:slug" element={<BurobigProductDetail />} />
-          <Route path="ust-yonetici" element={<BurobigProductList />} />
-          <Route path="ofis-koltuklari" element={<BurobigProductList />} />
-          <Route path="operasyonel-masalar" element={<BurobigProductList />} />
-          <Route path="toplanti-masalari" element={<BurobigProductList />} />
+          <Route path="ust-yonetici" element={<BurobigProductPage />} />
+          <Route path="ofis-koltuklari" element={<BurobigProductPage />} />
+          <Route path="operasyonel-masalar" element={<BurobigProductPage />} />
+          <Route path="toplanti-masalari" element={<BurobigProductPage />} />
           <Route path="tasarimcilar" element={<BurobigDesigners />} />
           <Route path="hikayemiz" element={<BurobigHistory />} />
           <Route path="tasarim-sureci" element={<BurobigDesignProcess />} />
