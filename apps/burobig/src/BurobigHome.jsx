@@ -7,14 +7,7 @@ import BurobigEcoBanner from './BurobigEcoBanner';
 
 export default function BurobigHome() {
   const { tenantMapping, activeLang } = useSite();
-  const { tenantSlug } = tenantMapping;
-  const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
-
-  const getLocalizedPath = (path) => {
-    const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
-    return `${prefix}${path}`;
-  };
+    const getLocalizedPath = (path) => `/${activeLang}${path}`;
 
   const [activeSlide, setActiveSlide] = useState(0);
   const slideCount = 4;

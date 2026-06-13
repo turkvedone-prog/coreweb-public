@@ -25,18 +25,11 @@ export default function BurobigProductDetail({ product }) {
     setActiveDetailIdx(0);
     setActiveHeroIdx(0);
   }
-
-  const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
-
   const translate = (tr, en) => {
     return activeLang === 'tr' ? tr : en;
   };
 
-  const getLocalizedPath = (path) => {
-    const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
-    return `${prefix}${path}`;
-  };
+  const getLocalizedPath = (path) => `/${activeLang}${path}`;
 
   // Determine Hero image slider list
   const heroImages = useMemo(() => {

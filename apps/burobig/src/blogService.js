@@ -1,10 +1,9 @@
-import { db, authReady } from './firebase';
+import { db } from './firebase';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 
 const TENANT_ID = 'TEN-BUROBIG';
 
 export async function getPublishedBlogs() {
-  await authReady; // anonymous auth tamamlanana kadar bekle
   try {
     const blogsRef = collection(db, 'tenants', TENANT_ID, 'blogs');
     let q;

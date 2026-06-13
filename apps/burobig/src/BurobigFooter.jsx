@@ -4,15 +4,7 @@ import './burobig.css';
 
 export default function BurobigFooter() {
   const { tenantMapping, activeLang, settings } = useSite();
-  const { tenantSlug } = tenantMapping;
-  
-  const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
-
-  const getLocalizedPath = (path) => {
-    const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
-    return `${prefix}${path}`;
-  };
+    const getLocalizedPath = (path) => `/${activeLang}${path}`;
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
