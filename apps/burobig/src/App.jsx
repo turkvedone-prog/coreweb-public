@@ -89,20 +89,13 @@ function BurobigProductPage() {
 function BurobigLangWrapper() {
   const { lang } = useParams();
   const navigate = useNavigate();
-
-  const hostname = window.location.hostname;
-  const isLocalOrPortal =
-    hostname === 'localhost' ||
-    hostname === '127.0.0.1' ||
-    hostname.endsWith('.vercel.app');
-
   const enabledLangs = ['tr', 'en'];
 
   useEffect(() => {
     if (!enabledLangs.includes(lang)) {
-      navigate(isLocalOrPortal ? '/burobig/tr' : '/tr', { replace: true });
+      navigate('/tr', { replace: true });
     }
-  }, [lang, isLocalOrPortal, navigate]);
+  }, [lang, navigate]);
 
   if (!enabledLangs.includes(lang)) return null;
 
@@ -166,13 +159,8 @@ function BurobigContactPage() {
 // ─── App ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const hostname = window.location.hostname;
-  const isLocalOrPortal =
-    hostname === 'localhost' ||
-    hostname === '127.0.0.1' ||
-    hostname.endsWith('.vercel.app');
-
-  const langPath = isLocalOrPortal ? '/burobig/:lang' : '/:lang';
-  const defaultRedirect = isLocalOrPortal ? '/burobig/tr' : '/tr';
+  const langPath = '/:lang';
+  const defaultRedirect = '/tr';
 
   return (
     <BrowserRouter>
