@@ -75,6 +75,14 @@ function BurobigBlogPage() {
 }
 
 // ─── Product Page Wrapper (fetches products from Firebase) ───────────────────
+const DEMO_PRODUCTS = [
+  { slug: 'inka',          title: 'Inka Yönetici Masası',  category: 'Üst Yönetici Masası', coverImageUrl: '/assets/burobig/images/inka_main.png' },
+  { slug: 'nero',          title: 'Nero Yönetici Masası',  category: 'Üst Yönetici Masası', coverImageUrl: '/assets/burobig/images/inka_main.png' },
+  { slug: 'atlas-calisma', title: 'Atlas Çalışma Masası',  category: 'Operasyonel Masa',    coverImageUrl: '/assets/burobig/images/inka_main.png' },
+  { slug: 'luna-toplanti', title: 'Luna Toplantı Masası',  category: 'Toplantı Masası',     coverImageUrl: '/assets/burobig/images/inka_main.png' },
+  { slug: 'forma-koltuk',  title: 'Forma Ofis Koltuğu',    category: 'Ofis Koltuğu',        coverImageUrl: '/assets/burobig/images/inka_main.png' },
+];
+
 function BurobigProductPage() {
   const { activeLang } = useSite();
   const [products, setProducts] = useState([]);
@@ -84,15 +92,18 @@ function BurobigProductPage() {
     import('./productService').then(({ getActiveProducts }) => {
       getActiveProducts()
         .then(raw => {
-          // Dil lokalizasyonu
-          const localized = raw.map(p => ({
-            ...p,
-            name: (activeLang === 'tr' ? p.name_tr : p.name_en) || p.name || '',
-            description: (activeLang === 'tr' ? p.description_tr : p.description_en) || p.description || '',
-          }));
-          setProducts(localized);
+          if (raw && raw.length > 0) {
+            const localized = raw.map(p => ({
+              ...p,
+              name: (activeLang === 'tr' ? p.name_tr : p.name_en) || p.name || '',
+              description: (activeLang === 'tr' ? p.description_tr : p.description_en) || p.description || '',
+            }));
+            setProducts(localized);
+          } else {
+            setProducts(DEMO_PRODUCTS);
+          }
         })
-        .catch(() => setProducts([]))
+        .catch(() => setProducts(DEMO_PRODUCTS))
         .finally(() => setLoading(false));
     });
   }, [activeLang]);

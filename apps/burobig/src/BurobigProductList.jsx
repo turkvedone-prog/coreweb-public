@@ -5,8 +5,7 @@ import { updateSEOMeta } from '../../utils/seo';
 
 
 export default function BurobigProductList({ products }) {
-  const { tenantMapping, activeLang } = useSite();
-  const { tenantSlug } = tenantMapping;
+  const { activeLang } = useSite();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
 
@@ -16,9 +15,6 @@ export default function BurobigProductList({ products }) {
   const isToplantiPath = location.pathname.endsWith('/toplanti-masalari');
   const isCleanPath = isUstYoneticiPath || isOfisKoltuklariPath || isOperasyonelPath || isToplantiPath;
 
-  const hostname = window.location.hostname;
-  const isLocalOrPortal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
-
   const catParam = searchParams.get('cat');
   const subParam = searchParams.get('sub');
 
@@ -27,10 +23,7 @@ export default function BurobigProductList({ products }) {
     return activeLang === 'tr' ? tr : en;
   };
 
-  const getLocalizedPath = (path) => {
-    const prefix = isLocalOrPortal ? `/${tenantSlug}/${activeLang}` : `/${activeLang}`;
-    return `${prefix}${path}`;
-  };
+  const getLocalizedPath = (path) => `/${activeLang}${path}`;
 
   // Determine current active filter tab
   const getActiveTab = () => {
