@@ -1,9 +1,10 @@
-import { db } from './firebase';
+import { db, authReady } from './firebase';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 
 const TENANT_ID = 'TEN-BUROBIG';
 
 export async function getActiveProducts() {
+  await authReady; // anonymous auth tamamlanana kadar bekle
   try {
     const productsRef = collection(db, 'tenants', TENANT_ID, 'products');
     let q;

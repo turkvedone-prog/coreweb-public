@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyD7_smZYZ9JSDJq0sBtjdRkSiFaEMQRZos",
@@ -12,4 +13,23 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+export const auth = getAuth(app);
+
+// authReady: anonymous sign-in tamamlanana kadar fetch'leri beklet
+export const authReady = new Promise((resolve) => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    unsubscribe();
+    if (user) {
+      resolve(user);
+    } else {
+      signInAnonymously(auth)
+        .then(resolve)
+        .catch((err) => {
+          console.warn('Anonymous auth failed:', err.code);
+          resolve(null); // auth olmadan da dene
+        });
+    }
+  });
+});
+
 export default app;
