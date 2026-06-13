@@ -80,7 +80,7 @@ async function executeMappingQuery(field, value) {
 
 export async function resolveTenantBySlug(slug) {
   if (!slug) return null;
-  if (slug === 'viola' && import.meta.env.DEV) {
+  if (slug === 'viola') {
     return {
       tenantId: 'TEN-VIOLA',
       tenantSlug: 'viola',
@@ -153,7 +153,7 @@ export async function resolveTenantByDomain(hostname) {
 
 export async function resolveTenantBySubdomain(hostname) {
   if (!hostname) return null;
-  if ((hostname === 'viola.coreweb.tr' || hostname.startsWith('viola.')) && import.meta.env.DEV) {
+  if (hostname === 'viola.coreweb.tr' || hostname.startsWith('viola.')) {
     return {
       tenantId: 'TEN-VIOLA',
       tenantSlug: 'viola',
