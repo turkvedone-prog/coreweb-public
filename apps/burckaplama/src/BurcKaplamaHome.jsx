@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-
+import { useSite } from '../../layouts/SiteLayout';
 import { ArrowRight } from 'lucide-react';
 import './burckaplama.css';
 
 export default function BurcKaplamaHome() {
-  const activeLang = 'tr';
+  const { activeLang } = useSite();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [

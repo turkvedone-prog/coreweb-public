@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-
+import { useSite } from '../../layouts/SiteLayout';
 import './viola.css';
 
 export default function ViolaHome() {
-  const activeLang = 'tr'; const tenantMapping = { tenantSlug: 'viola' };
+  const { tenantMapping, activeLang } = useSite();
   
   // Slider State
   const [activeSlide, setActiveSlide] = useState(0);
@@ -33,8 +33,8 @@ export default function ViolaHome() {
     return () => clearInterval(timer);
   }, [slides.length]);
 
-  // Standalone app — no tenant/lang prefix
-  const prefix = '';
+  const tenantSlug = tenantMapping?.tenantSlug || 'viola';
+  const prefix = `/${tenantSlug}/${activeLang}`;
 
   return (
     <div className="viola-home-page">

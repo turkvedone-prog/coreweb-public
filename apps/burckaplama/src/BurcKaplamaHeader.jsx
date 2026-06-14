@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import { useSite } from '../../layouts/SiteLayout';
 import { Menu, X, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import './burckaplama.css';
 
 export default function BurcKaplamaHeader() {
-  const activeLang = 'tr'; const tenantMapping = { tenantSlug: 'burckaplama' };
+  const { tenantMapping, activeLang } = useSite();
   const { tenantSlug } = tenantMapping;
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -72,8 +72,6 @@ export default function BurcKaplamaHeader() {
     location.pathname === getLocalizedPath('/') || 
     location.pathname === getLocalizedPath('') || 
     location.pathname === '/' ||
-    location.pathname === `/${activeLang}/` ||
-    location.pathname === `/${activeLang}` ||
     location.pathname.endsWith('/anasayfa') ||
     location.pathname.endsWith('/anasayfa/');
 

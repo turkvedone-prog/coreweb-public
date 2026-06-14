@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-
+import { useSite } from '../../layouts/SiteLayout';
 import './viola.css';
 
 export default function ViolaHeader() {
-  const activeLang = 'tr'; const tenantMapping = { tenantSlug: 'viola' };
+  const { activeLang, tenantMapping } = useSite();
   const [scrolled, setScrolled] = useState(false);
   const [headerHidden, setHeaderHidden] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
@@ -70,8 +70,8 @@ export default function ViolaHeader() {
     setMobileMenuOpen(false);
   };
 
-  // Standalone app — no tenant/lang prefix
-  const prefix = '';
+  const tenantSlug = tenantMapping?.tenantSlug || 'viola';
+  const prefix = `/${tenantSlug}/${activeLang}`;
 
   return (
     <header 

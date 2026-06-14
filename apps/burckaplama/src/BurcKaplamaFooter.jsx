@@ -1,9 +1,11 @@
-
+import React, { useState } from 'react';
+import { useSite } from '../../layouts/SiteLayout';
 import { burcKaplamaData, translate } from './burcKaplamaData';
 import './burckaplama.css';
 
 export default function BurcKaplamaFooter() {
-  const activeLang = 'tr'; const settings = null;
+  const { activeLang, settings } = useSite();
+  const [logoError, setLogoError] = useState(false);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -135,8 +137,17 @@ export default function BurcKaplamaFooter() {
               </span>
             </div>
             <div className="bk-footer-bottom-right">
-              <a href="https://www.coreweb.tr/" target="_blank" rel="noopener noreferrer" aria-label="CoreWeb" style={{ color: 'inherit', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem', opacity: 0.7 }}>
-                CoreWeb
+              <a href="https://www.coreweb.tr/" target="_blank" rel="noopener noreferrer" aria-label="CoreWeb" style={logoError ? { color: 'inherit', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem', opacity: 0.7 } : {}}>
+                {logoError ? (
+                  'CoreWeb'
+                ) : (
+                  <img 
+                    src="/assets/coreweb/coreweb-logo-dark.svg" 
+                    alt="CoreWeb Logo" 
+                    className="bk-footer-agency-logo" 
+                    onError={() => setLogoError(true)}
+                  />
+                )}
               </a>
               <button onClick={scrollToTop} className="bk-scroll-top-btn" aria-label={activeLang === 'tr' ? 'Yukarı Git' : 'Scroll to Top'}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
