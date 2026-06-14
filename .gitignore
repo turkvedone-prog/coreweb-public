@@ -41,3 +41,5 @@ verify_*.cjs
 wait_for_vercel.cjs
 .vercel
 .turbo
+vercel_report_raw.json
+
