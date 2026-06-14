@@ -1,13 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
 import { updateSEOMeta } from '../../utils/seo';
+import { getActiveProducts } from '../../services/publicContentService';
+import { getLocalizedContent } from '../../utils/i18nContent';
 
 
 export default function BurobigProductList({ products }) {
   const { activeLang } = useSite();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+
 
   const isUstYoneticiPath = location.pathname.endsWith('/ust-yonetici');
   const isOfisKoltuklariPath = location.pathname.endsWith('/ofis-koltuklari');

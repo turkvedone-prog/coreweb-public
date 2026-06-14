@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
 import BurobigEcoBanner from './BurobigEcoBanner';
 
@@ -12,9 +12,9 @@ export default function BurobigProductDetail({ product }) {
 
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [activeHeroIdx, setActiveHeroIdx] = useState(0);
-  const [activeDetailImage, setActiveDetailImage] = useState(product.coverImageUrl || '');
+  const [activeDetailImage, setActiveDetailImage] = useState(product?.coverImageUrl || '');
   const [activeDetailIdx, setActiveDetailIdx] = useState(0);
-  const [openAccordion, setOpenAccordion] = useState(null); // 'docs', 'materials', 'specs'
+  const [openAccordion, setOpenAccordion] = useState(null);
   const detailImgRef = useRef(null);
 
   // Storing information from previous renders to adjust state on product change without useEffect
@@ -25,6 +25,20 @@ export default function BurobigProductDetail({ product }) {
     setActiveDetailIdx(0);
     setActiveHeroIdx(0);
   }
+
+  // Fetch related products
+  useEffect(() => {
+    if (!tenantId || !product?.slug) return;
+    getActiveProducts(tenantId)
+      .then(raw => {
+        const localized = raw
+          .map(doc => getLocalizedContent(doc, activeLang))
+          .filter(Boolean);
+        setRelatedProducts(localized.filter(p => p.slug !== product.slug));
+      })
+      .catch(e => console.error(e));
+  }, [tenantId, product?.slug, activeLang]);
+
   const translate = (tr, en) => {
     return activeLang === 'tr' ? tr : en;
   };
@@ -38,28 +52,16 @@ export default function BurobigProductDetail({ product }) {
       : [product.coverImageUrl || ''];
   }, [product]);
 
-  // Determine Detail gallery thumbnails (cover image + gallery images)
-  const detailGallery = product.gallery && product.gallery.length > 0
-    ? Array.from(new Set([product.coverImageUrl, ...product.gallery.map(img => img.url)])).filter(Boolean)
-    : [product.coverImageUrl].filter(Boolean);
+  const detailGallery = useMemo(() => {
+    if (!product) return [];
+    return product.gallery && product.gallery.length > 0
+      ? Array.from(new Set([product.coverImageUrl, ...product.gallery.map(img => img.url)])).filter(Boolean)
+      : [product.coverImageUrl].filter(Boolean);
+  }, [product]);
 
-  // Fetch Related Products
-  useEffect(() => {
-    if (!tenantId) return;
-    const fetchRelated = async () => {
-      try {
-        const raw = await getActiveProducts(tenantId);
-        const localized = raw
-          .map(doc => getLocalizedContent(doc, activeLang))
-          .filter(Boolean)
-          .filter(item => item.slug !== product.slug); // Exclude current product
-        setRelatedProducts(localized);
-      } catch (err) {
-        console.error('Error fetching related products:', err);
-      }
-    };
-    fetchRelated();
-  }, [tenantId, product.slug, activeLang]);
+  // Loading / Not Found states
+  if (loading) return <div style={{ padding: '4rem', textAlign: 'center' }}>Yükleniyor...</div>;
+  if (!product) return <div style={{ padding: '4rem', textAlign: 'center' }}>Ürün bulunamadı.</div>;
 
   // Handle Detail image thumbnail click with fade transition
   const handleDetailImageChange = (src, idx) => {
