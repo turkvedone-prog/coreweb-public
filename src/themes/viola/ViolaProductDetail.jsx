@@ -2,6 +2,14 @@ import { useState, useEffect } from 'react';
 import './viola.css';
 
 export default function ViolaProductDetail({ product }) {
+  if (!product) {
+    return (
+      <div style={{ padding: '4rem', textAlign: 'center' }}>
+        <p>Ürün bulunamadı.</p>
+      </div>
+    );
+  }
+
   const [activeTab, setActiveTab] = useState('docs');
   const [currentSlide, setCurrentSlide] = useState(0);
 
