@@ -54,6 +54,7 @@
     background-color: var(--color-bg, var(--color-bg-crit));
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 
     /* Reset scoped inside theme */
     *, *::before, *::after {
@@ -318,6 +319,35 @@
     .main-flex { height: 70px; }
     .top-bar { display: none; }
     .site-header { top: 0; }
+
+    /* Phase 12-4 Mobile Header Fixes */
+    .campaign-top-bar { display: none !important; }
+    .utility-bar { display: none !important; }
+    .main-nav-row { display: none !important; }
+    .site-header-solid .header-search { display: none !important; }
+    .site-header-solid .header-brand {
+        position: relative;
+        padding-left: 40px;
+    }
+    .site-header-solid .hamburger-btn {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .site-header-solid .logo__img {
+        height: 45px !important;
+    }
+    .site-header-solid .main-header-row {
+        height: 70px !important;
+    }
+    .site-header-solid .header-actions .header-collection-btn {
+        display: none !important;
+    }
+    .site-header-solid .header-actions .action-icon span {
+        display: none !important;
+    }
 }
 
 /* ============================================================
@@ -407,6 +437,12 @@
 
 .hero-content:hover {
     background: rgba(255, 255, 255, 1); /* Üzerine gelince net beyaz */
+}
+
+@media (max-width: 576px) {
+    .hero-content {
+        padding: 2rem 1.5rem;
+    }
 }
 
 
@@ -530,7 +566,7 @@
     color: #777;
 }
 .marquee-wrapper {
-    width: 100%;
+    width: auto;
     margin: 0 200px; /* Sağdan ve soldan tam 200px boşluk */
     padding: 40px 0; /* Add top/bottom padding to prevent clipping on zoom */
     overflow: hidden; /* Tam 200px sınırından dışarı taşanları gizle */
@@ -1769,10 +1805,6 @@
     /* Tablet: Nav + utility gizle, hamburger gelecek */
     .main-nav { display: none; }
     .header-utility .utility-link { display: none; }
-
-    .header-container {
-        grid-template-columns: auto 1fr auto;
-    }
 }
 
 @media (max-width: 768px) {
@@ -5939,6 +5971,20 @@ header:has(.nav-list li.has-mega-menu:hover) .mega-menu-backdrop {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 40px 30px;
+}
+
+@media (max-width: 768px) {
+    .collections-page-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .collections-page-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
 }
 
 /* Collection Card */
