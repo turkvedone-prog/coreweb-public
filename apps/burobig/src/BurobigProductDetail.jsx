@@ -31,13 +31,11 @@ export default function BurobigProductDetail({ product }) {
 
   const getLocalizedPath = (path) => `/${activeLang}${path}`;
 
-  // Determine Hero image slider list
+  // Determine Hero image slider list — tüm ürünler Firebase gallery kullanır
   const heroImages = useMemo(() => {
-    return product.slug === 'inka'
-      ? ['/assets/burobig/images/Deneme 001-1.webp', '/assets/burobig/images/Deneme 002-1.webp']
-      : (product.gallery && product.gallery.length > 0 
-         ? product.gallery.map(img => img.url)
-         : [product.coverImageUrl || '']);
+    return product.gallery && product.gallery.length > 0
+      ? product.gallery.map(img => img.url)
+      : [product.coverImageUrl || ''];
   }, [product]);
 
   // Determine Detail gallery thumbnails (cover image + gallery images)

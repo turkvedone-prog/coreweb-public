@@ -18,7 +18,7 @@ import BurobigDesignPhilosophy from './BurobigDesignPhilosophy';
 import BurobigManifesto from './BurobigManifesto';
 import BurobigQualityPolicy from './BurobigQualityPolicy';
 import BurobigSustainability from './BurobigSustainability';
-import { getActiveProductBySlug } from '../../services/publicContentService';
+import { getActiveProducts, getActiveProductBySlug } from '../../services/publicContentService';
 
 // Demo ürün — Firebase'den veri gelmezse gösterilir
 const DEMO_PRODUCT = {
@@ -83,29 +83,20 @@ const DEMO_PRODUCTS = [
 ];
 
 function BurobigProductPage() {
-  const { activeLang } = useSite();
+  const { activeLang, tenantMapping } = useSite();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    import('./productService').then(({ getActiveProducts }) => {
-      getActiveProducts()
-        .then(raw => {
-          if (raw && raw.length > 0) {
-            const localized = raw.map(p => ({
-              ...p,
-              name: (activeLang === 'tr' ? p.name_tr : p.name_en) || p.name || '',
-              description: (activeLang === 'tr' ? p.description_tr : p.description_en) || p.description || '',
-            }));
-            setProducts(localized);
-          } else {
-            setProducts(DEMO_PRODUCTS);
-          }
-        })
-        .catch(() => setProducts(DEMO_PRODUCTS))
-        .finally(() => setLoading(false));
-    });
-  }, [activeLang]);
+    const tenantId = tenantMapping?.tenantId;
+    getActiveProducts(tenantId)
+      .then(raw => {
+        if (raw && raw.length > 0) setProducts(raw);
+        else setProducts(DEMO_PRODUCTS);
+      })
+      .catch(() => setProducts(DEMO_PRODUCTS))
+      .finally(() => setLoading(false));
+  }, [activeLang, tenantMapping]);
 
   if (loading) return <div style={{ padding: '4rem', textAlign: 'center' }}>Yükleniyor...</div>;
   return <BurobigProductList products={products} />;
