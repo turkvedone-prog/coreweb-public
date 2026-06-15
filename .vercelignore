@@ -1,5 +1,6 @@
 node_modules
-.git
+# Keep .git available during Vercel build so scripts/vercel-build-filter.sh can compare VERCEL_GIT_PREVIOUS_SHA with HEAD.
+# .git
 .turbo
 dist
 apps/*/dist
