@@ -187,11 +187,6 @@ export default function BurobigProductDetail({ product }) {
       {/* Product Hero Premium (Full-Bleed Showcase) */}
       <section className="product-hero-premium">
         {/* Soft background only for now — will be replaced by a fixed image later */}
-        <div className="product-hero-premium__container">
-          <div className="product-hero-designer">
-            {translate('Tasarım A. Baki Çelik', 'Design by A. Baki Çelik')}
-          </div>
-        </div>
       </section>
 
       {/* Product Detail Showcase Section */}
