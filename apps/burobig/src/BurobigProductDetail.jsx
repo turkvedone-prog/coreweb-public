@@ -186,16 +186,7 @@ export default function BurobigProductDetail({ product }) {
     <main className="product-page">
       {/* Product Hero Premium (Full-Bleed Showcase) */}
       <section className="product-hero-premium">
-        <div className={`product-premium-gallery ${isInitial ? 'initial-mount' : ''}`}>
-          {heroImages.map((src, index) => (
-            <img
-              key={index}
-              src={src}
-              alt={`${productTitle} Showcase ${index + 1}`}
-              className={`hero-premium-img ${index === activeHeroIdx ? 'active' : ''}`}
-            />
-          ))}
-        </div>
+        {/* Soft background only for now — will be replaced by a fixed image later */}
         <div className="product-hero-premium__container">
           <div className="product-hero-designer">
             {translate('Tasarım A. Baki Çelik', 'Design by A. Baki Çelik')}
