@@ -8,6 +8,7 @@ import SiteLayout from './layouts/SiteLayout';
 import { useSite } from './layouts/SiteLayout';
 import BurobigHome from './BurobigHome';
 import BurobigBlogList from './BurobigBlogList';
+import BurobigBlogDetail from './BurobigBlogDetail';
 import BurobigProductList from './BurobigProductList';
 import BurobigProductDetail from './BurobigProductDetail';
 import BurobigContact from './BurobigContact';
@@ -19,7 +20,7 @@ import BurobigManifesto from './BurobigManifesto';
 import BurobigQualityPolicy from './BurobigQualityPolicy';
 import BurobigSustainability from './BurobigSustainability';
 import { getActiveProducts, getActiveProductBySlug } from '../../services/publicContentService';
-import { submitLead } from '@coreweb/shared-ui';
+import { submitLead, resolveField } from '@coreweb/shared-ui';
 import { updateSEOMeta } from '../../utils/seo';
 
 // Demo ürün — Firebase'den veri gelmezse gösterilir
@@ -32,8 +33,17 @@ const DEMO_PRODUCT = {
     { url: '/assets/burobig/images/INKA 01.jpg' },
     { url: '/assets/burobig/images/INKA 02.jpg' },
   ],
-  description_tr: 'Doğadan ilham alan yenilikçi çizgilerle, geleceğin premium ofis ortamına uygun Inka yönetici masası.',
-  description_en: 'Inka executive desk, inspired by nature with innovative lines.',
+  defaultLanguage: 'tr',
+  translations: {
+    tr: {
+      name: 'Inka Yönetici Masası',
+      description: 'Doğadan ilham alan yenilikçi çizgilerle, geleceğin premium ofis ortamına uygun Inka yönetici masası.',
+    },
+    en: {
+      name: 'Inka Executive Desk',
+      description: 'Inka executive desk, inspired by nature with innovative lines.',
+    }
+  }
 };
 
 
@@ -69,8 +79,9 @@ function BurobigBlogPage() {
         .then(raw => {
           const localized = raw.map(b => ({
             ...b,
-            title: (activeLang === 'tr' ? b.title_tr : b.title_en) || b.title || '',
-            summary: (activeLang === 'tr' ? b.summary_tr : b.summary_en) || b.summary || '',
+            title: resolveField(b, activeLang, 'title') || resolveField(b, activeLang, 'name') || '',
+            summary: resolveField(b, activeLang, 'summary') || '',
+            slug: resolveField(b, activeLang, 'slug') || b.slug || b.id,
           }));
           setBlogs(localized);
         })
@@ -79,7 +90,13 @@ function BurobigBlogPage() {
     });
   }, [activeLang]);
 
-  if (loading) return <div style={{ padding: '4rem', textAlign: 'center' }}>Yükleniyor...</div>;
+  if (loading) {
+    return (
+      <div style={{ padding: '8rem 2rem', textAlign: 'center', minHeight: '65vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', color: '#8c9094' }}>
+        Yükleniyor...
+      </div>
+    );
+  }
 
   return <BurobigBlogList blogs={blogs} formatDate={formatDate} getLocalizedPath={getLocalizedPath} />;
 }
@@ -109,7 +126,13 @@ function BurobigProductPage() {
       .finally(() => setLoading(false));
   }, [activeLang, tenantMapping]);
 
-  if (loading) return <div style={{ padding: '4rem', textAlign: 'center' }}>Yükleniyor...</div>;
+  if (loading) {
+    return (
+      <div style={{ padding: '8rem 2rem', textAlign: 'center', minHeight: '65vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', color: '#8c9094' }}>
+        Yükleniyor...
+      </div>
+    );
+  }
   return <BurobigProductList products={products} />;
 }
 
@@ -129,8 +152,8 @@ function BurobigProductDetailPage() {
 
   useEffect(() => {
     if (product) {
-      const prodTitle = (activeLang === 'tr' ? product.title_tr : product.title_en) || product.title || '';
-      const prodDesc = (activeLang === 'tr' ? product.description_tr : product.description_en) || product.description || '';
+      const prodTitle = resolveField(product, activeLang, 'title') || resolveField(product, activeLang, 'name') || '';
+      const prodDesc = resolveField(product, activeLang, 'description') || '';
       
       const titleText = prodTitle 
         ? `${prodTitle} | Bürobig` 
@@ -148,7 +171,13 @@ function BurobigProductDetailPage() {
     }
   }, [product, activeLang]);
 
-  if (loading) return <div style={{ padding: '4rem', textAlign: 'center' }}>Yükleniyor...</div>;
+  if (loading) {
+    return (
+      <div style={{ padding: '8rem 2rem', textAlign: 'center', minHeight: '65vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', color: '#8c9094' }}>
+        Yükleniyor...
+      </div>
+    );
+  }
   if (!product) return <div style={{ padding: '4rem', textAlign: 'center' }}>Ürün bulunamadı.</div>;
 
   return <BurobigProductDetail product={product} />;
@@ -241,7 +270,7 @@ function BurobigContactPage() {
 
     try {
       const payload = {
-        tenantId: 'TEN-BUROBIG',
+        tenantId: 'burobig',
         tenantSlug: 'burobig',
         source: 'burobig-website',
         type: 'contact',
@@ -297,6 +326,7 @@ export default function App() {
         <Route path={langPath} element={<BurobigLangWrapper />}>
           <Route index element={<BurobigHome />} />
           <Route path="blog" element={<BurobigBlogPage />} />
+          <Route path="blog/:slug" element={<BurobigBlogDetail />} />
           <Route path="urunler" element={<BurobigProductPage />} />
           <Route path="urunler/:slug" element={<BurobigProductDetailPage />} />
           <Route path="ust-yonetici" element={<BurobigProductPage />} />

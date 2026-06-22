@@ -1,7 +1,7 @@
 import { db } from './firebase';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 
-const TENANT_ID = 'TEN-BUROBIG';
+const TENANT_ID = 'burobig';
 
 export async function getPublishedBlogs() {
   try {

@@ -3,51 +3,11 @@ import { Link } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
 import './burobig.css';
 import BurobigEcoBanner from './BurobigEcoBanner';
-import { getSliders } from '../../services/publicContentService';
+import { getSliders, getActiveProducts } from '../../services/publicContentService';
 import { updateSEOMeta } from '../../utils/seo';
+import { resolveField } from '@coreweb/shared-ui';
 
-const DEFAULT_SLIDES = [
-  {
-    id: 'slide-1',
-    eyebrow: 'Yeni Koleksiyon',
-    title: 'İnka Yönetici\nSerisi',
-    description: 'Prestijli detaylar ve modern çizgilerle üst yönetici alanlarında yeni bir standart.',
-    image: '/assets/burobig/images/inka_yonetici_slider_bg.png',
-    ctaLabel: 'Koleksiyonu Keşfet',
-    ctaHref: '/ust-yonetici',
-    isInternalLink: true
-  },
-  {
-    id: 'slide-2',
-    eyebrow: '',
-    title: 'Tasarımda\nYeni Bir Boyut',
-    description: 'Çalışma ve yaşam alanlarınız için ilham veren, zamansız dokunuşlar.',
-    image: '/assets/burobig/images/hero-office-1.png',
-    ctaLabel: 'Koleksiyonu Keşfet',
-    ctaHref: '#koleksiyonlar',
-    isInternalLink: false
-  },
-  {
-    id: 'slide-3',
-    eyebrow: '',
-    title: 'Sakinliğin\nMimarisi',
-    description: 'Soft tonlar and minimalist çizgilerle ruhunuzu dinlendiren estetik alanlar.',
-    image: '/assets/burobig/images/hero-office-2.png',
-    ctaLabel: 'Koleksiyonu Keşfet',
-    ctaHref: '#koleksiyonlar',
-    isInternalLink: false
-  },
-  {
-    id: 'slide-4',
-    eyebrow: '',
-    title: 'İlham Veren\nÇalışma Alanları',
-    description: 'Ergonomi ve estetiğin mükemmel uyumuyla çalışma verimliliğinizi artırın.',
-    image: '/assets/burobig/images/hero-office-3.png',
-    ctaLabel: 'Koleksiyonu Keşfet',
-    ctaHref: '#koleksiyonlar',
-    isInternalLink: false
-  }
-];
+const DEFAULT_SLIDES = [];
 
 function normalizeSlide(slide, activeLang) {
   const getField = (fieldBase) => {
@@ -75,7 +35,96 @@ export default function BurobigHome() {
 
   const [activeSlide, setActiveSlide] = useState(0);
   const [slides, setSlides] = useState([]);
+  const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [latestProducts, setLatestProducts] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(3);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Fetch latest products from Firestore
+  useEffect(() => {
+    getActiveProducts(tenantMapping.tenantId)
+      .then((raw) => {
+        if (raw && raw.length > 0) {
+          const sorted = [...raw].sort((a, b) => {
+            const timeA = a.createdAt?.seconds ? a.createdAt.seconds * 1000 : (a.createdAt ? new Date(a.createdAt).getTime() : 0);
+            const timeB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
+            return timeB - timeA;
+          });
+          const latest = sorted.slice(0, 20).map(p => ({
+            ...p,
+            title: resolveField(p, activeLang, 'title') || resolveField(p, activeLang, 'name') || '',
+            slug: p.slug || p.id,
+          }));
+          setLatestProducts(latest);
+        } else {
+          setLatestProducts([]);
+        }
+      })
+      .catch((err) => {
+        console.error('Error fetching latest products:', err);
+        setLatestProducts([]);
+      });
+  }, [tenantMapping.tenantId, activeLang]);
+
+  // Handle responsiveness for visible product count
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 576) {
+        setVisibleCount(1);
+      } else if (window.innerWidth <= 900) {
+        setVisibleCount(2);
+      } else {
+        setVisibleCount(3);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const maxIndex = Math.max(0, latestProducts.length - visibleCount);
+
+  // Clamping currentIndex on product list or visible count changes
+  useEffect(() => {
+    setCurrentIndex((prev) => Math.min(prev, maxIndex));
+  }, [maxIndex]);
+
+  // Auto-play product carousel
+  useEffect(() => {
+    if (latestProducts.length <= visibleCount || isHovered) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev < maxIndex ? prev + 1 : 0));
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [latestProducts.length, visibleCount, maxIndex, isHovered]);
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : maxIndex));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev < maxIndex ? prev + 1 : 0));
+  };
+
+  // Fetch published blogs from Firestore
+  useEffect(() => {
+    import('./blogService').then(({ getPublishedBlogs }) => {
+      getPublishedBlogs()
+        .then(raw => {
+          const localized = raw.map(b => ({
+            ...b,
+            title: resolveField(b, activeLang, 'title') || resolveField(b, activeLang, 'name') || '',
+            summary: resolveField(b, activeLang, 'summary') || '',
+            slug: resolveField(b, activeLang, 'slug') || b.slug || b.id,
+          }));
+          setBlogs(localized);
+        })
+        .catch(() => setBlogs([]));
+    });
+  }, [activeLang]);
 
   // Set custom document title and description using updateSEOMeta
   useEffect(() => {
@@ -158,7 +207,7 @@ export default function BurobigHome() {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [blogs, slides]);
 
   const handleDotClick = (index) => {
     setActiveSlide(index);
@@ -420,58 +469,72 @@ export default function BurobigHome() {
         <section className="products-section" aria-labelledby="new-products-heading">
           <div className="products-wrapper">
             <header className="products-header reveal-up">
-              <h2 id="new-products-heading">Yeni Ürünlerimiz</h2>
+              <h2 id="new-products-heading">{activeLang === 'tr' ? 'Yeni Ürünlerimiz' : 'Our New Products'}</h2>
+              {latestProducts.length > visibleCount && (
+                <div className="carousel-controls">
+                  <button className="control-btn prev-btn" onClick={handlePrev} aria-label={activeLang === 'tr' ? 'Önceki Ürün' : 'Previous Product'}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                  </button>
+                  <button className="control-btn next-btn" onClick={handleNext} aria-label={activeLang === 'tr' ? 'Sonraki Ürün' : 'Next Product'}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </button>
+                </div>
+              )}
             </header>
 
-            <div className="products-grid">
-              {/* Product 1: Elephant */}
-              <article className="product-card reveal-up delay-100">
-                <Link to={getLocalizedPath('/urunler/elephant')} className="product-card__link">
-                  <figure className="product-card__figure">
-                    <img src="/assets/burobig/images/product-elephant.png" alt="Elephant Koltuk" className="product-card__img" loading="lazy" />
-                  </figure>
-                  <div className="product-card__info">
-                    <h3 className="product-card__title">Elephant</h3>
-                    <svg className="product-card__arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                  </div>
-                </Link>
-              </article>
-
-              {/* Product 2: Vetra */}
-              <article className="product-card reveal-up delay-200">
-                <Link to={getLocalizedPath('/urunler/vetra')} className="product-card__link">
-                  <figure className="product-card__figure">
-                    <img src="/assets/burobig/images/product-vetra.png" alt="Vetra Koltuk" className="product-card__img" loading="lazy" />
-                  </figure>
-                  <div className="product-card__info">
-                    <h3 className="product-card__title">Vetra</h3>
-                    <svg className="product-card__arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                  </div>
-                </Link>
-              </article>
-
-              {/* Product 3: Luci */}
-              <article className="product-card reveal-up delay-300">
-                <Link to={getLocalizedPath('/urunler/luci')} className="product-card__link">
-                  <figure className="product-card__figure">
-                    <img src="/assets/burobig/images/product-luci.png" alt="Luci Koltuk" className="product-card__img" loading="lazy" />
-                  </figure>
-                  <div className="product-card__info">
-                    <h3 className="product-card__title">Luci</h3>
-                    <svg className="product-card__arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                  </div>
-                </Link>
-              </article>
-            </div>
+            {latestProducts.length > 0 ? (
+              <div 
+                className="products-slider-container reveal-up delay-100"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                <div 
+                  className="products-slider-track"
+                  style={{
+                    transform: `translate3d(calc(-1 * ${currentIndex} * (100% + var(--slider-gap)) / ${visibleCount}), 0, 0)`
+                  }}
+                >
+                  {latestProducts.map((product) => {
+                    const fallbackImage = '/assets/burobig/images/INKA 01.jpg';
+                    return (
+                      <article 
+                        key={product.id} 
+                        className="product-slider-item"
+                        style={{
+                          flex: `0 0 calc((100% - (${visibleCount} - 1) * var(--slider-gap)) / ${visibleCount})`
+                        }}
+                      >
+                        <Link to={getLocalizedPath(`/urunler/${product.slug}`)} className="product-card__link">
+                          <figure className="product-card__figure">
+                            <img 
+                              src={product.coverImageUrl || fallbackImage} 
+                              alt={product.title} 
+                              className="product-card__img" 
+                              loading="lazy" 
+                            />
+                          </figure>
+                          <div className="product-card__info">
+                            <h3 className="product-card__title">{product.title}</h3>
+                            <svg className="product-card__arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                              <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                          </div>
+                        </Link>
+                      </article>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className="no-products-message">
+                <p>{activeLang === 'tr' ? 'Ürün bulunamadı.' : 'No products found.'}</p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -479,60 +542,64 @@ export default function BurobigHome() {
         <section className="awards-section reveal-up" aria-labelledby="awards-heading" id="odullu-urunler">
           <div className="awards-container">
             <header className="awards-header">
-              <h2 id="awards-heading" className="awards-section-title">Ödüllü Tasarımlar</h2>
+              <h2 id="awards-heading" className="awards-section-title">{activeLang === 'tr' ? 'Ödüllü Tasarımlar' : 'Award Winning Designs'}</h2>
             </header>
 
             <div className="awards-grid">
-              {/* Award 1: Monolith */}
+              {/* Award 1: Duet */}
               <article className="award-card">
-                <Link to={getLocalizedPath('/urunler/monolith')} className="award-card__link">
+                <Link to={getLocalizedPath('/urunler/duet')} className="award-card__link">
                   <div className="award-card__image-wrapper">
                     <figure className="award-card__figure">
-                      <img src="/assets/burobig/images/award_monolith.png" alt="Monolith" loading="lazy" className="award-card__img" />
+                      <img src="/assets/burobig/images/award_product_1.jpg" alt="Duet" loading="lazy" className="award-card__img" style={{ objectPosition: '16% center' }} />
                     </figure>
-                    <div className="award-card__badge">
-                      <span className="award-badge-text">RED<br />DOT</span>
+                    <div className="award-card__badge-if">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="if-logo-svg" aria-hidden="true">
+                        <rect x="4" y="9" width="3" height="11" fill="white"/>
+                        <circle cx="5.5" cy="5" r="1.5" fill="white"/>
+                        <rect x="9" y="5" width="3" height="15" fill="white"/>
+                        <rect x="12" y="5" width="5" height="2.5" fill="white"/>
+                        <rect x="12" y="10.5" width="4" height="2.5" fill="white"/>
+                      </svg>
+                      <div className="if-divider"></div>
+                      <div className="if-award-text">
+                        <span className="if-award-title">DESIGN AWARD</span>
+                        <span className="if-award-year">2026</span>
+                      </div>
                     </div>
                   </div>
                   <div className="award-card__info">
-                    <h3 className="award-card__title">Monolith</h3>
-                    <p className="award-card__subtitle">Tasarım - A. Baki Çelik</p>
+                    <h3 className="award-card__title">Duet</h3>
+                    <p className="award-card__subtitle">{activeLang === 'tr' ? 'Tasarım - Yunus Emre Pektaş' : 'Design - Yunus Emre Pektaş'}</p>
                   </div>
                 </Link>
               </article>
 
-              {/* Award 2: İnka */}
+              {/* Award 2: Graf */}
               <article className="award-card">
-                <Link to={getLocalizedPath('/urunler/inka')} className="award-card__link">
+                <Link to={getLocalizedPath('/urunler/graf')} className="award-card__link">
                   <div className="award-card__image-wrapper">
                     <figure className="award-card__figure">
-                      <img src="/assets/burobig/images/award_inka.png" alt="İnka" loading="lazy" className="award-card__img" />
+                      <img src="/assets/burobig/images/award_product_2.jpg" alt="Graf" loading="lazy" className="award-card__img" style={{ objectPosition: '42% center' }} />
                     </figure>
-                    <div className="award-card__badge">
-                      <span className="award-badge-text">GERMAN<br />AWARD</span>
+                    <div className="award-card__badge-if">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="if-logo-svg" aria-hidden="true">
+                        <rect x="4" y="9" width="3" height="11" fill="white"/>
+                        <circle cx="5.5" cy="5" r="1.5" fill="white"/>
+                        <rect x="9" y="5" width="3" height="15" fill="white"/>
+                        <rect x="12" y="5" width="5" height="2.5" fill="white"/>
+                        <rect x="12" y="10.5" width="4" height="2.5" fill="white"/>
+                      </svg>
+                      <div className="if-divider"></div>
+                      <div className="if-award-text">
+                        <span className="if-award-title">DESIGN AWARD</span>
+                        <span className="if-award-year">2026</span>
+                      </div>
                     </div>
                   </div>
                   <div className="award-card__info">
-                    <h3 className="award-card__title">İnka</h3>
-                    <p className="award-card__subtitle">Tasarım - Rıza Özdemir</p>
-                  </div>
-                </Link>
-              </article>
-
-              {/* Award 3: Vetra */}
-              <article className="award-card">
-                <Link to={getLocalizedPath('/urunler/vetra')} className="award-card__link">
-                  <div className="award-card__image-wrapper">
-                    <figure className="award-card__figure">
-                      <img src="/assets/burobig/images/award_vetra.png" alt="Vetra" loading="lazy" className="award-card__img" />
-                    </figure>
-                    <div className="award-card__badge">
-                      <span className="award-badge-text">GOOD<br />DESIGN</span>
-                    </div>
-                  </div>
-                  <div className="award-card__info">
-                    <h3 className="award-card__title">Vetra</h3>
-                    <p className="award-card__subtitle">Tasarım - Y. Emre Pektaş</p>
+                    <h3 className="award-card__title">Graf</h3>
+                    <p className="award-card__subtitle">{activeLang === 'tr' ? 'Tasarım - Klan Studio' : 'Design - Klan Studio'}</p>
                   </div>
                 </Link>
               </article>
@@ -541,72 +608,49 @@ export default function BurobigHome() {
         </section>
 
         {/* Blog */}
-        <section className="blog-section" id="blog" aria-label="Blog Yazıları">
-          <div className="blog-wrapper">
-            <header className="blog-header reveal-up">
-              <h2 id="blog-heading">Blog Yazılarımız</h2>
-            </header>
+        {blogs.length > 0 && (
+          <section className="blog-section" id="blog" aria-label="Blog Yazıları">
+            <div className="blog-wrapper">
+              <header className="blog-header reveal-up">
+                <h2 id="blog-heading">Blog Yazılarımız</h2>
+              </header>
 
-            <div className="blog-grid">
-              {/* Blog 1 */}
-              <article className="blog-card reveal-up delay-100">
-                <Link to={getLocalizedPath('/blog/gelecegin-calisma-alanlari-hibrit-ofisler')} className="blog-card__link">
-                  <figure className="blog-card__figure">
-                    <img src="/assets/burobig/images/blog-1.png" alt="Geleceğin Çalışma Alanları: Hibrit Ofisler" className="blog-card__img" loading="lazy" />
-                  </figure>
-                  <div className="blog-card__content">
-                    <h3 className="blog-card__title">Geleceğin Çalışma Alanları:<br />Hibrit Ofisler</h3>
-                    <span className="blog-card__readmore">
-                      Hemen İncele{' '}
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                      </svg>
-                    </span>
-                  </div>
-                </Link>
-              </article>
-
-              {/* Blog 2 */}
-              <article className="blog-card reveal-up delay-200">
-                <Link to={getLocalizedPath('/blog/ofislerde-isik-ve-ergonomi-yonetimi')} className="blog-card__link">
-                  <figure className="blog-card__figure">
-                    <img src="/assets/burobig/images/blog-2.png" alt="Ofislerde Işık ve Ergonomi Yönetimi" className="blog-card__img" loading="lazy" />
-                  </figure>
-                  <div className="blog-card__content">
-                    <h3 className="blog-card__title">Ofislerde Işık ve<br />Ergonomi Yönetimi</h3>
-                    <span className="blog-card__readmore">
-                      Hemen İncele{' '}
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                      </svg>
-                    </span>
-                  </div>
-                </Link>
-              </article>
-
-              {/* Blog 3 */}
-              <article className="blog-card reveal-up delay-300">
-                <Link to={getLocalizedPath('/blog/sessiz-odaklanma-akustik-panel-cozumleri')} className="blog-card__link">
-                  <figure className="blog-card__figure">
-                    <img src="/assets/burobig/images/blog-3.png" alt="Sessiz Odaklanma: Akustik Panel Çözümleri" className="blog-card__img" loading="lazy" />
-                  </figure>
-                  <div className="blog-card__content">
-                    <h3 className="blog-card__title">Sessiz Odaklanma:<br />Akustik Panel Çözümleri</h3>
-                    <span className="blog-card__readmore">
-                      Hemen İncele{' '}
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                      </svg>
-                    </span>
-                  </div>
-                </Link>
-              </article>
+              <div className="blog-grid">
+                {blogs.slice(0, 3).map((blog, idx) => {
+                  const detailPath = getLocalizedPath(`/blog/${blog.slug}`);
+                  return (
+                    <article key={blog.id} className={`blog-card reveal-up delay-${(idx + 1) * 100}`}>
+                      <Link to={detailPath} className="blog-card__link">
+                        <figure className="blog-card__figure">
+                          {blog.coverImageUrl ? (
+                            <img src={blog.coverImageUrl} alt={blog.title} className="blog-card__img" loading="lazy" />
+                          ) : (
+                            <div className="blog-card__placeholder">
+                              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '40px', height: '40px', color: '#9ca3af' }}>
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                              </svg>
+                            </div>
+                          )}
+                        </figure>
+                        <div className="blog-card__content">
+                          <h3 className="blog-card__title">{blog.title}</h3>
+                          <span className="blog-card__readmore">
+                            {activeLang === 'tr' ? 'Hemen İncele' : 'Read More'}{' '}
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                              <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                          </span>
+                        </div>
+                      </Link>
+                    </article>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Sustainability & Eco Section */}
         <BurobigEcoBanner />

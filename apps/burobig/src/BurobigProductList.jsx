@@ -4,6 +4,7 @@ import { useSite } from '../../layouts/SiteLayout';
 import { updateSEOMeta } from '../../utils/seo';
 import { getActiveProducts } from '../../services/publicContentService';
 import { getLocalizedContent } from '../../utils/i18nContent';
+import { resolveField } from '@coreweb/shared-ui';
 
 
 export default function BurobigProductList({ products }) {
@@ -61,22 +62,49 @@ export default function BurobigProductList({ products }) {
     }
   };
 
+  // Helper to slugify strings for robust matching
+  const slugify = (text) => {
+    if (!text) return '';
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[ğĞ]/g, 'g')
+      .replace(/[üÜ]/g, 'u')
+      .replace(/[şŞ]/g, 's')
+      .replace(/[ıİ]/g, 'i')
+      .replace(/[öÖ]/g, 'o')
+      .replace(/[çÇ]/g, 'c')
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-');
+  };
+
   // Filter products based on active tab
   const filteredProducts = products.filter(product => {
+    const catSlug = slugify(product.category);
+    const subcatSlug = slugify(product.subcategory);
+
     if (activeTab === 'ust-yonetici') {
-      return product.category === 'Üst Yönetici Masası';
+      return subcatSlug === 'ust-yonetici' || product.category === 'Üst Yönetici Masası';
     }
     if (activeTab === 'ofis-koltuklari') {
-      return product.category === 'Ofis Koltuğu';
+      return catSlug === 'ofis-koltuklari' || product.category === 'Ofis Koltuğu';
     }
     if (activeTab === 'operasyonel') {
-      return product.category === 'Operasyonel Masa';
+      return subcatSlug === 'operasyonel' || product.category === 'Operasyonel Masa';
     }
     if (activeTab === 'toplanti') {
-      return product.category === 'Toplantı Masası';
+      return subcatSlug === 'toplanti' || product.category === 'Toplantı Masası';
     }
     if (activeTab === 'masalar') {
-      return product.category === 'Üst Yönetici Masası' || product.category === 'Operasyonel Masa' || product.category === 'Toplantı Masası';
+      return catSlug === 'masalar' || 
+             subcatSlug === 'ust-yonetici' || 
+             subcatSlug === 'operasyonel' || 
+             subcatSlug === 'toplanti' ||
+             product.category === 'Üst Yönetici Masası' || 
+             product.category === 'Operasyonel Masa' || 
+             product.category === 'Toplantı Masası';
     }
     return true; // 'all'
   });
@@ -222,30 +250,31 @@ export default function BurobigProductList({ products }) {
                 const detailPath = getLocalizedPath(`/urunler/${productSlug}`);
                 const cardNumber = (index + 1).toString().padStart(2, '0');
                 const fallbackImage = '/assets/burobig/images/INKA 01.jpg';
+                const productTitle = resolveField(product, activeLang, 'title') || resolveField(product, activeLang, 'name') || '';
 
                 return (
                   <article key={product.id} className="product-card">
                     <span className="product-card__number">{cardNumber}</span>
                     <div className="product-card__content">
                       <h2 className="product-card__title" style={{ fontSize: '20px', lineHeight: '1.2' }}>
-                        {product.title || ''}
+                        {productTitle}
                       </h2>
                     </div>
                     <div className="product-card__image-wrapper">
                       <img 
                         src={product.coverImageUrl || fallbackImage} 
-                        alt={product.title || 'Bürobig Ürün'} 
+                        alt={productTitle || 'Bürobig Ürün'} 
                         loading="lazy"
                       />
                     </div>
                     <div className="product-card__footer" style={{ position: 'relative', top: '7px' }}>
                       <span className="product-card__explore">{translate('Keşfet →', 'Explore →')}</span>
-                      <span className="product-card__category">{product.category || ''}</span>
+                      <span className="product-card__category">{product.subcategory || product.category || ''}</span>
                     </div>
                     <Link 
                       to={detailPath} 
                       className="product-card__link" 
-                      aria-label={`${product.title || ''} ${translate('Ürün Detayı', 'Product Detail')}`}
+                      aria-label={`${productTitle} ${translate('Ürün Detayı', 'Product Detail')}`}
                     />
                   </article>
                 );

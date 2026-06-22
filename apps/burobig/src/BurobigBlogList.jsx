@@ -50,7 +50,13 @@ export default function BurobigBlogList({ blogs = [], formatDate, getLocalizedPa
               return (
                 <article key={blog.id} className="blog-list-card">
                   <div className="blog-list-image-wrapper">
-                    <img src={blog.coverImageUrl} alt={blog.title} />
+                    {blog.coverImageUrl ? (
+                      <img src={blog.coverImageUrl} alt={blog.title} />
+                    ) : (
+                      <div className="blog-list-image-placeholder">
+                        <BookOpen className="h-10 w-10 text-slate-400" />
+                      </div>
+                    )}
                     {blog.category && <span className="blog-list-tag">{blog.category}</span>}
                   </div>
                   <div className="blog-list-card-content">

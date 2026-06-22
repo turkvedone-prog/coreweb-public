@@ -116,6 +116,7 @@ export async function getPublishedBlogBySlug(tenantId, slug, activeLang) {
   try {
     const blogs = await getPublishedBlogs(tenantId);
     const blog = blogs.find((item) => {
+      if (item.id === slug) return true;
       if (item.slug === slug) return true;
       if (item.translations?.[activeLang]?.slug === slug) return true;
       const defaultLang = item.defaultLanguage || 'tr';
@@ -204,7 +205,10 @@ export async function getActiveProducts(tenantId) {
       const querySnapshot = await getDocs(q);
       const products = [];
       querySnapshot.forEach((doc) => {
-        products.push({ id: doc.id, ...doc.data() });
+        const data = doc.data();
+        if (data.archived !== true && data.isDeleted !== true) {
+          products.push({ id: doc.id, ...data });
+        }
       });
       return products;
     } catch (indexError) {
@@ -213,7 +217,10 @@ export async function getActiveProducts(tenantId) {
       const querySnapshot = await getDocs(q);
       const products = [];
       querySnapshot.forEach((doc) => {
-        products.push({ id: doc.id, ...doc.data() });
+        const data = doc.data();
+        if (data.archived !== true && data.isDeleted !== true) {
+          products.push({ id: doc.id, ...data });
+        }
       });
       products.sort((a, b) => {
         const orderA = typeof a.order === 'number' ? a.order : (a.order ? parseInt(a.order, 10) : Infinity);

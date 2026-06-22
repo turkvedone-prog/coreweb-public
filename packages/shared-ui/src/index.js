@@ -21,3 +21,4 @@ export { getLocalizedContent } from './utils/i18nContent';
 export { updateSEOMeta } from './utils/seo';
 export { detectAndResolveTenant } from './utils/tenantResolver';
 export { loadRecaptchaScript, executeRecaptcha } from './utils/recaptcha';
+export { resolveField } from './utils/resolveField';

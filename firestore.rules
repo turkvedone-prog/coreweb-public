@@ -515,12 +515,12 @@ service cloud.firestore {
         ] &&
         (!('riskLevel' in request.resource.data) || request.resource.data.riskLevel in ['none', 'warning', 'critical', 'blocked']) &&
         (!('priorityLevel' in request.resource.data) || request.resource.data.priorityLevel in ['normal', 'takip', 'yüksek', 'kritik']) &&
-        !(tenantId in ['TEN-507', 'TEN-BUROBIG', 'TEN-CAPILON', 'TEN-243', 'TEN-TEST-LOJISTIK']) &&
+        !(tenantId in ['TEN-507', 'TEN-BUROBIG', 'TEN-CAPILON', 'TEN-243', 'TEN-TEST-LOJISTIK', 'burobig']) &&
         !(request.resource.data.tenantSlug in ['coreweb', 'burobig', 'capilon', 'kreatiffikirler', 'test-lojistik']);
 
       // ── GERÇEK MÜŞTERİ YAZMA KURALLARI PROPOSAL (FAZ 12-10C - DONDURULMUŞ) ──
       allow write: if isSignedIn() && isSuperAdmin() &&
-        (tenantId == 'TEN-BUROBIG' || tenantId == 'TEN-CAPILON') && // Pilot kiracılar Burobig ve Capilon
+        (tenantId == 'TEN-BUROBIG' || tenantId == 'burobig' || tenantId == 'TEN-CAPILON') && // Pilot kiracılar Burobig ve Capilon
         request.resource.data.isTestOperation == false &&
         request.resource.data.operationWriteMode == "real_customer" &&
         request.resource.data.writeRiskLevel == "low" &&

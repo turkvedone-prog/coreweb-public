@@ -2,13 +2,21 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
 import BurobigEcoBanner from './BurobigEcoBanner';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { getActiveProducts } from '../../services/publicContentService';
 import { getLocalizedContent } from '../../utils/i18nContent';
+import { resolveField } from '@coreweb/shared-ui';
 
 export default function BurobigProductDetail({ product }) {
   const { tenantMapping, activeLang } = useSite();
   const { tenantId, tenantSlug } = tenantMapping;
+
+  const productTitle = resolveField(product, activeLang, 'title') || resolveField(product, activeLang, 'name') || '';
+  const productSummary = resolveField(product, activeLang, 'summary') || '';
+  const productDescription = resolveField(product, activeLang, 'description') || resolveField(product, activeLang, 'content') || '';
+  const technicalDetails = resolveField(product, activeLang, 'technicalDetails') || product?.technicalDetails || '';
+  const usageAreas = resolveField(product, activeLang, 'usageAreas') || product?.usageAreas || '';
 
   const FALLBACK_IMAGE = '/assets/burobig/images/INKA 01.jpg';
 
@@ -16,6 +24,7 @@ export default function BurobigProductDetail({ product }) {
   const [activeHeroIdx, setActiveHeroIdx] = useState(0);
   const [activeDetailImage, setActiveDetailImage] = useState(product?.coverImageUrl || FALLBACK_IMAGE);
   const [activeDetailIdx, setActiveDetailIdx] = useState(0);
+  const [thumbStartIndex, setThumbStartIndex] = useState(0);
   const [openAccordion, setOpenAccordion] = useState(null);
   const detailImgRef = useRef(null);
 
@@ -26,6 +35,7 @@ export default function BurobigProductDetail({ product }) {
     setActiveDetailImage(product.coverImageUrl || FALLBACK_IMAGE);
     setActiveDetailIdx(0);
     setActiveHeroIdx(0);
+    setThumbStartIndex(0);
   }
 
   // Fetch related products
@@ -103,6 +113,15 @@ export default function BurobigProductDetail({ product }) {
     return () => clearInterval(interval);
   }, [detailGallery, activeDetailIdx]);
 
+  // Auto-adjust thumbnail sliding window when active index changes (e.g. via auto-cycle or clicks)
+  useEffect(() => {
+    if (activeDetailIdx < thumbStartIndex) {
+      setThumbStartIndex(activeDetailIdx);
+    } else if (activeDetailIdx >= thumbStartIndex + 5) {
+      setThumbStartIndex(activeDetailIdx - 4);
+    }
+  }, [activeDetailIdx, thumbStartIndex]);
+
   // Early return for missing product placed AFTER all hooks
   if (!product) {
     return (
@@ -165,7 +184,7 @@ export default function BurobigProductDetail({ product }) {
             <img
               key={index}
               src={src}
-              alt={`${product.title} Showcase ${index + 1}`}
+              alt={`${productTitle} Showcase ${index + 1}`}
               className={`hero-premium-img ${index === activeHeroIdx ? 'active' : ''}`}
             />
           ))}
@@ -186,48 +205,75 @@ export default function BurobigProductDetail({ product }) {
               <img
                 ref={detailImgRef}
                 src={activeDetailImage}
-                alt={`${product.title} Detay`}
+                alt={`${productTitle} Detay`}
                 className="detail-gallery__main-img"
                 style={{ transition: 'opacity 0.15s ease-in-out' }}
               />
             </div>
             {/* Thumbnails */}
             {detailGallery.length > 1 && (
-              <div className="detail-gallery__thumbs">
-                {detailGallery.map((src, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleDetailImageChange(src, idx)}
-                    className={`detail-gallery__thumb ${idx === activeDetailIdx ? 'active' : ''}`}
-                    aria-label={`Görsel ${idx + 1}`}
+              <div className="detail-gallery__thumbs-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%', justifyContent: 'center', marginTop: '1.5rem' }}>
+                {detailGallery.length > 5 && (
+                  <button 
+                    onClick={() => setThumbStartIndex(prev => Math.max(0, prev - 1))}
+                    disabled={thumbStartIndex === 0}
+                    className="detail-gallery__nav-btn"
+                    aria-label="Önceki görseller"
                   >
-                    <img src={src} alt={`Küçük Görsel ${idx + 1}`} />
+                    <ChevronLeft size={20} />
                   </button>
-                ))}
+                )}
+                
+                <div className="detail-gallery__thumbs" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'nowrap', overflow: 'hidden', padding: '4px 2px' }}>
+                  {detailGallery.slice(thumbStartIndex, thumbStartIndex + 5).map((src, sliceIdx) => {
+                    const idx = thumbStartIndex + sliceIdx;
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => handleDetailImageChange(src, idx)}
+                        className={`detail-gallery__thumb ${idx === activeDetailIdx ? 'active' : ''}`}
+                        aria-label={`Görsel ${idx + 1}`}
+                      >
+                        <img src={src} alt={`Küçük Görsel ${idx + 1}`} />
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {detailGallery.length > 5 && (
+                  <button 
+                    onClick={() => setThumbStartIndex(prev => Math.min(detailGallery.length - 5, prev + 1))}
+                    disabled={thumbStartIndex + 5 >= detailGallery.length}
+                    className="detail-gallery__nav-btn"
+                    aria-label="Sonraki görseller"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                )}
               </div>
             )}
           </div>
 
           {/* Description & Action Column */}
           <div className="detail-showcase__content">
-            <h2 className="detail-showcase__title">{product.title}</h2>
+            <h2 className="detail-showcase__title">{productTitle}</h2>
             <span className="detail-showcase__subtitle">
-              {product.category?.toUpperCase()}
+              {(product.subcategory || product.category)?.toUpperCase()}
             </span>
             <div className="detail-showcase__desc">
-              {product.content ? (
-                product.content.startsWith('<') ? (
-                  <div dangerouslySetInnerHTML={{ __html: product.content }} className="space-y-4" />
+              {productDescription ? (
+                productDescription.startsWith('<') ? (
+                  <div dangerouslySetInnerHTML={{ __html: productDescription }} className="space-y-4" />
                 ) : (
-                  <div className="whitespace-pre-line">{product.content}</div>
+                  <div className="whitespace-pre-line">{productDescription}</div>
                 )
               ) : (
-                product.summary
+                productSummary
               )}
             </div>
             <div className="detail-showcase__actions">
               <a
-                href={`mailto:info@burobig.com?subject=Fiyat Teklifi: ${product.title}`}
+                href={`mailto:info@burobig.com?subject=Fiyat Teklifi: ${productTitle}`}
                 className="btn-primary-dark"
               >
                 {translate('Fiyat Teklifi Al', 'Get a Quote')}
@@ -255,7 +301,7 @@ export default function BurobigProductDetail({ product }) {
               <div className={`accordion-content ${openAccordion === 'docs' ? 'active' : ''}`}>
                 <ul className="doc-list">
                   <li>
-                    <span>{product.title} 2D Cad Data</span>
+                    <span>{productTitle} 2D Cad Data</span>
                     <a href={product.catalogFileUrl || '#'} download>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -265,7 +311,7 @@ export default function BurobigProductDetail({ product }) {
                     </a>
                   </li>
                   <li>
-                    <span>{product.title} 3D Max</span>
+                    <span>{productTitle} 3D Max</span>
                     <a href={product.catalogFileUrl || '#'} download>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -337,16 +383,22 @@ export default function BurobigProductDetail({ product }) {
                 <div className="acc-toggle-icon"></div>
               </button>
               <div className={`accordion-content ${openAccordion === 'specs' ? 'active' : ''}`}>
-                {product.technicalDetails ? (
+                {technicalDetails ? (
                   <div className="specs-placeholder" style={{ marginBottom: '2rem' }}>
                     <p style={{ fontWeight: 300, lineHeight: 1.8, color: '#1a1a1a', whiteSpace: 'pre-line' }}>
-                      {product.technicalDetails}
+                      {technicalDetails}
                     </p>
                   </div>
                 ) : null}
                 <ul className="doc-list">
+                  {usageAreas && (
+                    <li>
+                      <span style={{ fontWeight: 400 }}>{translate('Kullanım Alanları', 'Usage Areas')}:</span>
+                      <span style={{ color: '#666' }}>{usageAreas}</span>
+                    </li>
+                  )}
                   <li>
-                    <span>{product.title} {translate('Teknik Ölçüler (PDF)', 'Technical Dimensions (PDF)')}</span>
+                    <span>{productTitle} {translate('Teknik Ölçüler (PDF)', 'Technical Dimensions (PDF)')}</span>
                     <a href={product.catalogFileUrl || '#'} download>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -356,7 +408,7 @@ export default function BurobigProductDetail({ product }) {
                     </a>
                   </li>
                   <li>
-                    <span>{product.title} {translate('Montaj Kılavuzu', 'Assembly Manual')}</span>
+                    <span>{productTitle} {translate('Montaj Kılavuzu', 'Assembly Manual')}</span>
                     <a href={product.catalogFileUrl || '#'} download>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>

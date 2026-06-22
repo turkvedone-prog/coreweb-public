@@ -17,7 +17,7 @@ export function useSite() {
 
 export default function SiteLayout({ children, activeLang }) {
   const tenantMapping = {
-    tenantId: 'TEN-BUROBIG',
+    tenantId: 'burobig',
     tenantSlug: 'burobig',
     defaultLanguage: 'tr',
     enabledLanguages: ['tr', 'en']
@@ -40,9 +40,15 @@ export default function SiteLayout({ children, activeLang }) {
       });
   }, [tenantMapping.tenantId]);
 
+  useEffect(() => {
+    if (activeLang) {
+      document.documentElement.lang = activeLang;
+    }
+  }, [activeLang]);
+
   return (
     <SiteContext.Provider value={{ tenantMapping, activeLang, settings }}>
-      <div className="burobig-theme">
+      <div className="burobig-theme" lang={activeLang}>
         <BurobigHeader />
         <main id="main-content">
           {children}
