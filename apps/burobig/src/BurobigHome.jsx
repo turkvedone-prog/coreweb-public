@@ -570,7 +570,7 @@ export default function BurobigHome() {
                   </div>
                   <div className="award-card__info">
                     <h3 className="award-card__title">Duet</h3>
-                    <p className="award-card__subtitle">{activeLang === 'tr' ? 'Tasarım - Yunus Emre Pektaş' : 'Design - Yunus Emre Pektaş'}</p>
+                    <p className="award-card__subtitle">{activeLang === 'tr' ? 'Tasarım - Klan Studio' : 'Design - Klan Studio'}</p>
                   </div>
                 </Link>
               </article>
@@ -593,7 +593,7 @@ export default function BurobigHome() {
                       <div className="if-divider"></div>
                       <div className="if-award-text">
                         <span className="if-award-title">DESIGN AWARD</span>
-                        <span className="if-award-year">2026</span>
+                        <span className="if-award-year">2025</span>
                       </div>
                     </div>
                   </div>
