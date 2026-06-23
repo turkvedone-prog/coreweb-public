@@ -2317,12 +2317,18 @@ body, html, ul, ol {
 }
 
 .category-hero__title {
-    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    font-size: 45px;
     font-weight: 400;
     color: #1a1a1a;
     letter-spacing: -0.5px;
     margin-bottom: 0.25rem;
-    font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Playfair Display', serif;
+}
+
+@media (max-width: 768px) {
+    .category-hero__title {
+        font-size: 32px;
+    }
 }
 
 .category-hero__subtitle {
