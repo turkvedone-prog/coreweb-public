@@ -19,29 +19,102 @@ export default function BurobigProductDetail({ product }) {
   const usageAreas = resolveField(product, activeLang, 'usageAreas') || product?.usageAreas || '';
   const productSlug = resolveField(product, activeLang, 'slug') || product?.slug || product?.id;
 
-  const getCategoryPath = (cat, subcat) => {
+  const getCategoryPath = (cat, subcat, titleStr, slugStr) => {
     const c = (cat || '').toLocaleLowerCase('tr-TR').trim();
     const s = (subcat || '').toLocaleLowerCase('tr-TR').trim();
+    const t = (titleStr || '').toLocaleLowerCase('tr-TR').trim();
+    const sl = (slugStr || '').toLocaleLowerCase('tr-TR').trim();
 
-    if (s.includes('üst yönetici') || c.includes('üst yönetici') || s.includes('ust yonetici') || c.includes('ust yonetici')) {
-      return '/ust-yonetici';
-    }
-    if (s.includes('yönetici') || c.includes('yönetici') || s.includes('yonetici') || c.includes('yonetici')) {
-      return '/yonetici';
-    }
-    if (s.includes('koltuk') || c.includes('koltuk')) {
+    // 1. Ofis Koltukları (subcategories first to avoid greediness)
+    if (c.includes('ofis') || c.includes('office') || s.includes('ofis-kolt') || s.includes('office-chair')) {
+      if (s.includes('üst yönetici') || s.includes('ust yonetici') || s.includes('executive')) {
+        return '/yonetici-koltuklari'; 
+      }
+      if (s.includes('yönetici') || s.includes('yonetici') || s.includes('manager')) {
+        return '/yonetici-koltuklari';
+      }
+      if (s.includes('çalışma') || s.includes('calisma') || s.includes('task') || s.includes('work')) {
+        return '/calisma-koltuklari';
+      }
+      if (s.includes('misafir') || s.includes('bekleme') || s.includes('guest') || s.includes('wait')) {
+        return '/misafir-ve-bekleme-koltuklari';
+      }
       return '/ofis-koltuklari';
     }
-    if (s.includes('operasyonel') || c.includes('operasyonel')) {
-      return '/operasyonel-masalar';
+
+    // 2. Masalar (subcategories first)
+    if (c.includes('masa') || c.includes('table') || c.includes('desk') || t.includes('masa') || sl.includes('masa')) {
+      if (s.includes('üst yönetici') || s.includes('ust yonetici') || s.includes('executive')) {
+        return '/ust-yonetici';
+      }
+      if (s.includes('yönetici') || s.includes('yonetici') || s.includes('manager')) {
+        return '/yonetici';
+      }
+      if (s.includes('çalışma') || s.includes('calisma') || s.includes('work')) {
+        return '/calisma-masalari';
+      }
+      if (s.includes('operasyonel') || s.includes('operational')) {
+        return '/operasyonel-masalar';
+      }
+      if (s.includes('toplantı') || s.includes('toplanti') || s.includes('meeting')) {
+        return '/toplanti-masalari';
+      }
+      return '/urunler';
     }
-    if (s.includes('toplantı') || c.includes('toplantı') || s.includes('toplanti') || c.includes('toplanti')) {
-      return '/toplanti-masalari';
+
+    // 3. Koltuklar / Kanepeler
+    if (c.includes('kanepe') || c.includes('kanap') || c.includes('sofa') || c.includes('koltuk') || c.includes('armchair') || t.includes('kanepe') || t.includes('kanap') || t.includes('sofa') || sl.includes('kanepe') || sl.includes('kanap') || sl.includes('sofa')) {
+      // Kanepeler Check
+      if (s.includes('kanepe') || s.includes('kanap') || s.includes('sofa') || (!s.includes('koltuk') && !s.includes('armchair') && (c === 'kanepeler' || c === 'kanapeler' || c === 'kanepe' || c === 'kanap' || t.includes('kanepe') || t.includes('kanap') || t.includes('sofa') || sl.includes('kanepe') || sl.includes('kanap') || sl.includes('sofa')))) {
+        return '/kanepeler';
+      }
+      if (s.includes('sandalye') || s.includes('chair')) {
+        return '/sandalyeler';
+      }
+      if (s.includes('bekleme') || s.includes('waiting')) {
+        return '/bekleme-alanlari';
+      }
+      if (s.includes('koltuk') || s.includes('armchair') || c.includes('koltuk') || c.includes('armchair')) {
+        return '/koltuklar';
+      }
+      return '/koltuklar-kanepeler';
     }
+
+    // 4. Depolama Sistemleri
+    if (c.includes('depolama') || c.includes('storage')) {
+      if (s.includes('keson') || s.includes('pedestal')) {
+        return '/kesonlar';
+      }
+      if (s.includes('dolap') || s.includes('cabinet')) {
+        return '/dolaplar';
+      }
+      if (s.includes('kitap') || s.includes('raf') || s.includes('bookcase') || s.includes('shel')) {
+        return '/kitaplik-ve-raf-sistemleri';
+      }
+      return '/depolama-sistemleri';
+    }
+
+    // 5. Tamamlayıcılar
+    if (c.includes('tamamlayıcı') || c.includes('tamamlayici') || c.includes('accessori')) {
+      if (s.includes('sehpa') || s.includes('table')) {
+        return '/sehpalar';
+      }
+      if (s.includes('puf') || s.includes('pouf')) {
+        return '/puflar';
+      }
+      if (s.includes('askılık') || s.includes('askilik') || s.includes('coat') || s.includes('hanger')) {
+        return '/askiliklar';
+      }
+      if (s.includes('elektrifikasyon') || s.includes('electrifi')) {
+        return '/elektrifikasyon';
+      }
+      return '/tamamlayicilar';
+    }
+
     return '/urunler';
   };
 
-  const categoryPath = getCategoryPath(product?.category, product?.subcategory);
+  const categoryPath = getCategoryPath(product?.category, product?.subcategory, productTitle, productSlug);
 
   const FALLBACK_IMAGE = '/assets/burobig/images/INKA 01.jpg';
 

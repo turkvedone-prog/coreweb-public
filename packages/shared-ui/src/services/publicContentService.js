@@ -1,8 +1,53 @@
 import { db } from '../config/firebase';
 import { doc, getDoc, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 
-const activeProductsCache = {};
+// ─── Cache Yardımcıları ───────────────────────────────────────────
+const CACHE_TTL = 5 * 60 * 1000; // 5 dakika
 
+function getCached(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const { data, ts } = JSON.parse(raw);
+    if (Date.now() - ts < CACHE_TTL) return data;
+    localStorage.removeItem(key);
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function setCache(key, data) {
+  try {
+    localStorage.setItem(key, JSON.stringify({ data, ts: Date.now() }));
+  } catch {
+    // localStorage dolu veya hata — sessizce geç
+  }
+}
+
+/**
+ * Belirli bir tenant'ın tüm cache'ini temizler.
+ * Panel'den içerik güncellendiğinde çağrılabilir.
+ */
+export function invalidateCache(tenantId) {
+  if (!tenantId) return;
+  const prefixes = [
+    `cw_products_${tenantId}`,
+    `cw_sliders_${tenantId}`,
+    `cw_settings_${tenantId}`,
+    `cw_nav_${tenantId}`,
+    `cw_blogs_${tenantId}`,
+    `cw_news_${tenantId}`
+  ];
+  prefixes.forEach(key => {
+    try { localStorage.removeItem(key); } catch { /* */ }
+  });
+}
+
+// In-memory fallback (sayfa içi navigasyon için)
+const memoryCache = {};
+
+// ─── Company Settings ─────────────────────────────────────────────
 export async function getCompanySettings(tenantId) {
   if (!tenantId) return null;
   if (tenantId === 'TEN-VIOLA' && import.meta.env.DEV) {
@@ -19,11 +64,18 @@ export async function getCompanySettings(tenantId) {
       }
     };
   }
+
+  const cacheKey = `cw_settings_${tenantId}`;
+  const cached = getCached(cacheKey);
+  if (cached) return cached;
+
   try {
     const docRef = doc(db, 'tenants', tenantId, 'settings', 'company');
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      return docSnap.data();
+      const data = docSnap.data();
+      setCache(cacheKey, data);
+      return data;
     }
     return null;
   } catch (error) {
@@ -32,11 +84,17 @@ export async function getCompanySettings(tenantId) {
   }
 }
 
+// ─── Sliders ──────────────────────────────────────────────────────
 export async function getSliders(tenantId) {
   if (!tenantId) return [];
   if (tenantId === 'TEN-VIOLA' && import.meta.env.DEV) {
     return [];
   }
+
+  const cacheKey = `cw_sliders_${tenantId}`;
+  const cached = getCached(cacheKey);
+  if (cached) return cached;
+
   try {
     const slidersRef = collection(db, 'tenants', tenantId, 'sliders');
     const q = query(
@@ -49,6 +107,7 @@ export async function getSliders(tenantId) {
     querySnapshot.forEach((doc) => {
       sliders.push({ id: doc.id, ...doc.data() });
     });
+    setCache(cacheKey, sliders);
     return sliders;
   } catch (error) {
     console.error('Error in getSliders:', error);
@@ -56,6 +115,7 @@ export async function getSliders(tenantId) {
   }
 }
 
+// ─── Navigation ───────────────────────────────────────────────────
 export async function getNavigation(tenantId) {
   if (!tenantId) return [];
   if (tenantId === 'TEN-VIOLA' && import.meta.env.DEV) {
@@ -65,6 +125,11 @@ export async function getNavigation(tenantId) {
       { id: '3', title: 'İletişim', targetUrl: '/iletisim' }
     ];
   }
+
+  const cacheKey = `cw_nav_${tenantId}`;
+  const cached = getCached(cacheKey);
+  if (cached) return cached;
+
   try {
     const navRef = collection(db, 'tenants', tenantId, 'navigation');
     const querySnapshot = await getDocs(navRef);
@@ -72,6 +137,7 @@ export async function getNavigation(tenantId) {
     querySnapshot.forEach((doc) => {
       items.push({ id: doc.id, ...doc.data() });
     });
+    setCache(cacheKey, items);
     return items;
   } catch (error) {
     console.error('Error in getNavigation:', error);
@@ -79,8 +145,14 @@ export async function getNavigation(tenantId) {
   }
 }
 
+// ─── Blogs ────────────────────────────────────────────────────────
 export async function getPublishedBlogs(tenantId) {
   if (!tenantId) return [];
+
+  const cacheKey = `cw_blogs_${tenantId}`;
+  const cached = getCached(cacheKey);
+  if (cached) return cached;
+
   try {
     const blogsRef = collection(db, 'tenants', tenantId, 'blogs');
     let q;
@@ -91,6 +163,7 @@ export async function getPublishedBlogs(tenantId) {
       querySnapshot.forEach((doc) => {
         blogs.push({ id: doc.id, ...doc.data() });
       });
+      setCache(cacheKey, blogs);
       return blogs;
     } catch (indexError) {
       console.warn('Index not found for blogs, falling back to client-side sorting:', indexError);
@@ -105,6 +178,7 @@ export async function getPublishedBlogs(tenantId) {
         const dateB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
         return dateB - dateA;
       });
+      setCache(cacheKey, blogs);
       return blogs;
     }
   } catch (error) {
@@ -132,8 +206,14 @@ export async function getPublishedBlogBySlug(tenantId, slug, activeLang) {
   }
 }
 
+// ─── News ─────────────────────────────────────────────────────────
 export async function getPublishedNews(tenantId) {
   if (!tenantId) return [];
+
+  const cacheKey = `cw_news_${tenantId}`;
+  const cached = getCached(cacheKey);
+  if (cached) return cached;
+
   try {
     const newsRef = collection(db, 'tenants', tenantId, 'news');
     let q;
@@ -144,6 +224,7 @@ export async function getPublishedNews(tenantId) {
       querySnapshot.forEach((doc) => {
         news.push({ id: doc.id, ...doc.data() });
       });
+      setCache(cacheKey, news);
       return news;
     } catch (indexError) {
       console.warn('Index not found for news, falling back to client-side sorting:', indexError);
@@ -158,6 +239,7 @@ export async function getPublishedNews(tenantId) {
         const dateB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
         return dateB - dateA;
       });
+      setCache(cacheKey, news);
       return news;
     }
   } catch (error) {
@@ -184,6 +266,7 @@ export async function getPublishedNewsBySlug(tenantId, slug, activeLang) {
   }
 }
 
+// ─── Products ─────────────────────────────────────────────────────
 export async function getActiveProducts(tenantId) {
   if (!tenantId) return [];
   if (tenantId === 'TEN-VIOLA' && import.meta.env.DEV) {
@@ -199,9 +282,21 @@ export async function getActiveProducts(tenantId) {
       }
     ];
   }
-  if (activeProductsCache[tenantId]) {
-    return activeProductsCache[tenantId];
+
+  // 1. In-memory cache (aynı sayfa oturumu)
+  if (memoryCache[`products_${tenantId}`]) {
+    return memoryCache[`products_${tenantId}`];
   }
+
+  // 2. localStorage cache (sayfalar arası)
+  const cacheKey = `cw_products_${tenantId}`;
+  const cached = getCached(cacheKey);
+  if (cached) {
+    memoryCache[`products_${tenantId}`] = cached;
+    return cached;
+  }
+
+  // 3. Firestore'dan çek
   try {
     const productsRef = collection(db, 'tenants', tenantId, 'products');
     let q;
@@ -215,7 +310,8 @@ export async function getActiveProducts(tenantId) {
           products.push({ id: doc.id, ...data });
         }
       });
-      activeProductsCache[tenantId] = products;
+      memoryCache[`products_${tenantId}`] = products;
+      setCache(cacheKey, products);
       return products;
     } catch (indexError) {
       console.warn('Index not found for products, falling back to client-side sorting:', indexError);
@@ -238,7 +334,8 @@ export async function getActiveProducts(tenantId) {
         const dateB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
         return dateB - dateA;
       });
-      activeProductsCache[tenantId] = products;
+      memoryCache[`products_${tenantId}`] = products;
+      setCache(cacheKey, products);
       return products;
     }
   } catch (error) {

@@ -116,38 +116,38 @@ export default function BurobigHeader() {
                     <div className="mega-menu__col">
                       <h5 className="mega-menu__title">OFİS KOLTUKLARI</h5>
                       <ul className="mega-menu__list">
-                        <li><Link to={getLocalizedPath('/ofis-koltuklari')}>Yönetici Koltukları</Link></li>
-                        <li><Link to={getLocalizedPath('/ofis-koltuklari')}>Çalışma Koltukları</Link></li>
-                        <li><Link to={getLocalizedPath('/ofis-koltuklari')}>Misafir ve Bekleme Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/yonetici-koltuklari')}>Yönetici Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/calisma-koltuklari')}>Çalışma Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/misafir-ve-bekleme-koltuklari')}>Misafir ve Bekleme Koltukları</Link></li>
                       </ul>
                     </div>
                     {/* Koltuklar / Kanepeler */}
                     <div className="mega-menu__col">
                       <h5 className="mega-menu__title">KOLTUKLAR / KANEPELER</h5>
                       <ul className="mega-menu__list">
-                        <li><Link to={getLocalizedPath('/urunler')}>Koltuklar</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler')}>Kanepeler</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler')}>Sandalyeler</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler')}>Bekleme Alanları</Link></li>
+                        <li><Link to={getLocalizedPath('/koltuklar')}>Koltuklar</Link></li>
+                        <li><Link to={getLocalizedPath('/kanepeler')}>Kanepeler</Link></li>
+                        <li><Link to={getLocalizedPath('/sandalyeler')}>Sandalyeler</Link></li>
+                        <li><Link to={getLocalizedPath('/bekleme-alanlari')}>Bekleme Alanları</Link></li>
                       </ul>
                     </div>
                     {/* Depolama Sistemleri */}
                     <div className="mega-menu__col">
                       <h5 className="mega-menu__title">DEPOLAMA SİSTEMLERİ</h5>
                       <ul className="mega-menu__list">
-                        <li><Link to={getLocalizedPath('/urunler?cat=depolama-sistemleri&sub=kesonlar')}>Kesonlar</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler?cat=depolama-sistemleri&sub=dolaplar')}>Dolaplar</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler?cat=depolama-sistemleri&sub=kitaplik-raf')}>Kitaplık ve Raf Sistemleri</Link></li>
+                        <li><Link to={getLocalizedPath('/kesonlar')}>Kesonlar</Link></li>
+                        <li><Link to={getLocalizedPath('/dolaplar')}>Dolaplar</Link></li>
+                        <li><Link to={getLocalizedPath('/kitaplik-ve-raf-sistemleri')}>Kitaplık ve Raf Sistemleri</Link></li>
                       </ul>
                     </div>
                     {/* Tamamlayıcılar */}
                     <div className="mega-menu__col">
                       <h5 className="mega-menu__title">TAMAMLAYICILAR</h5>
                       <ul className="mega-menu__list">
-                        <li><Link to={getLocalizedPath('/urunler?cat=tamamlayicilar&sub=sehpalar')}>Sehpalar</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler?cat=tamamlayicilar&sub=puflar')}>Puflar</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler?cat=tamamlayicilar&sub=askiliklar')}>Askılıklar</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler?cat=tamamlayicilar&sub=elektrifikasyon')}>Elektrifikasyon</Link></li>
+                        <li><Link to={getLocalizedPath('/sehpalar')}>Sehpalar</Link></li>
+                        <li><Link to={getLocalizedPath('/puflar')}>Puflar</Link></li>
+                        <li><Link to={getLocalizedPath('/askiliklar')}>Askılıklar</Link></li>
+                        <li><Link to={getLocalizedPath('/elektrifikasyon')}>Elektrifikasyon</Link></li>
                       </ul>
                     </div>
                   </div>
@@ -270,18 +270,18 @@ export default function BurobigHeader() {
                     <div className="mobile-submenu__section">
                       <h6 className="mobile-submenu__title">OFİS KOLTUKLARI</h6>
                       <ul>
-                        <li><Link to={getLocalizedPath('/ofis-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>Yönetici Koltukları</Link></li>
-                        <li><Link to={getLocalizedPath('/ofis-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>Çalışma Koltukları</Link></li>
-                        <li><Link to={getLocalizedPath('/ofis-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>Misafir ve Bekleme Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/yonetici-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>Yönetici Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/calisma-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>Çalışma Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/misafir-ve-bekleme-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>Misafir ve Bekleme Koltukları</Link></li>
                       </ul>
                     </div>
                     {/* Diğer Kategoriler */}
                     <div className="mobile-submenu__section">
                       <h6 className="mobile-submenu__title">DİĞER KATEGORİLER</h6>
                       <ul>
-                        <li><Link to={getLocalizedPath('/urunler')} onClick={() => setIsMobileMenuOpen(false)}>Koltuklar & Kanepeler</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler?cat=depolama-sistemleri')} onClick={() => setIsMobileMenuOpen(false)}>Depolama Sistemleri</Link></li>
-                        <li><Link to={getLocalizedPath('/urunler?cat=tamamlayicilar')} onClick={() => setIsMobileMenuOpen(false)}>Tamamlayıcılar</Link></li>
+                        <li><Link to={getLocalizedPath('/koltuklar-kanepeler')} onClick={() => setIsMobileMenuOpen(false)}>Koltuklar & Kanepeler</Link></li>
+                        <li><Link to={getLocalizedPath('/depolama-sistemleri')} onClick={() => setIsMobileMenuOpen(false)}>Depolama Sistemleri</Link></li>
+                        <li><Link to={getLocalizedPath('/tamamlayicilar')} onClick={() => setIsMobileMenuOpen(false)}>Tamamlayıcılar</Link></li>
                       </ul>
                     </div>
                   </div>

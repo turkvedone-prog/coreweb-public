@@ -332,6 +332,23 @@ export default function App() {
           <Route path="ofis-koltuklari" element={<BurobigProductPage />} />
           <Route path="operasyonel-masalar" element={<BurobigProductPage />} />
           <Route path="toplanti-masalari" element={<BurobigProductPage />} />
+          <Route path="yonetici-koltuklari" element={<BurobigProductPage />} />
+          <Route path="calisma-koltuklari" element={<BurobigProductPage />} />
+          <Route path="misafir-ve-bekleme-koltuklari" element={<BurobigProductPage />} />
+          <Route path="koltuklar" element={<BurobigProductPage />} />
+          <Route path="kanepeler" element={<BurobigProductPage />} />
+          <Route path="sandalyeler" element={<BurobigProductPage />} />
+          <Route path="bekleme-alanlari" element={<BurobigProductPage />} />
+          <Route path="koltuklar-kanepeler" element={<BurobigProductPage />} />
+          <Route path="kesonlar" element={<BurobigProductPage />} />
+          <Route path="dolaplar" element={<BurobigProductPage />} />
+          <Route path="kitaplik-ve-raf-sistemleri" element={<BurobigProductPage />} />
+          <Route path="depolama-sistemleri" element={<BurobigProductPage />} />
+          <Route path="sehpalar" element={<BurobigProductPage />} />
+          <Route path="puflar" element={<BurobigProductPage />} />
+          <Route path="askiliklar" element={<BurobigProductPage />} />
+          <Route path="elektrifikasyon" element={<BurobigProductPage />} />
+          <Route path="tamamlayicilar" element={<BurobigProductPage />} />
           <Route path="tasarimcilar" element={<BurobigDesigners />} />
           <Route path="hikayemiz" element={<BurobigHistory />} />
           <Route path="tasarim-sureci" element={<BurobigDesignProcess />} />

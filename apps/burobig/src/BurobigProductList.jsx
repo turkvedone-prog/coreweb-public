@@ -19,7 +19,37 @@ export default function BurobigProductList({ products }) {
   const isOfisKoltuklariPath = location.pathname.endsWith('/ofis-koltuklari');
   const isOperasyonelPath = location.pathname.endsWith('/operasyonel-masalar');
   const isToplantiPath = location.pathname.endsWith('/toplanti-masalari');
-  const isCleanPath = isUstYoneticiPath || isYoneticiPath || isCalismaPath || isOfisKoltuklariPath || isOperasyonelPath || isToplantiPath;
+  
+  // Ofis Koltukları subcategories
+  const isYoneticiKoltuklariPath = location.pathname.endsWith('/yonetici-koltuklari');
+  const isCalismaKoltuklariPath = location.pathname.endsWith('/calisma-koltuklari');
+  const isMisafirKoltuklariPath = location.pathname.endsWith('/misafir-ve-bekleme-koltuklari');
+  
+  // Koltuklar / Kanepeler
+  const isKoltuklarPath = location.pathname.endsWith('/koltuklar');
+  const isKanepelerPath = location.pathname.endsWith('/kanepeler');
+  const isSandalyelerPath = location.pathname.endsWith('/sandalyeler');
+  const isBeklemeAlanlariPath = location.pathname.endsWith('/bekleme-alanlari');
+  const isKoltuklarKanepelerPath = location.pathname.endsWith('/koltuklar-kanepeler');
+
+  // Depolama Sistemleri
+  const isKesonlarPath = location.pathname.endsWith('/kesonlar');
+  const isDolaplarPath = location.pathname.endsWith('/dolaplar');
+  const isKitaplikRafPath = location.pathname.endsWith('/kitaplik-ve-raf-sistemleri');
+  const isDepolamaSistemleriPath = location.pathname.endsWith('/depolama-sistemleri');
+
+  // Tamamlayıcılar
+  const isSehpalarPath = location.pathname.endsWith('/sehpalar');
+  const isPuflarPath = location.pathname.endsWith('/puflar');
+  const isAskiliklarPath = location.pathname.endsWith('/askiliklar');
+  const isElektrifikasyonPath = location.pathname.endsWith('/elektrifikasyon');
+  const isTamamlayicilarPath = location.pathname.endsWith('/tamamlayicilar');
+
+  const isCleanPath = isUstYoneticiPath || isYoneticiPath || isCalismaPath || isOfisKoltuklariPath || isOperasyonelPath || isToplantiPath ||
+                      isYoneticiKoltuklariPath || isCalismaKoltuklariPath || isMisafirKoltuklariPath ||
+                      isKoltuklarPath || isKanepelerPath || isSandalyelerPath || isBeklemeAlanlariPath || isKoltuklarKanepelerPath ||
+                      isKesonlarPath || isDolaplarPath || isKitaplikRafPath || isDepolamaSistemleriPath ||
+                      isSehpalarPath || isPuflarPath || isAskiliklarPath || isElektrifikasyonPath || isTamamlayicilarPath;
 
   const catParam = searchParams.get('cat');
   const subParam = searchParams.get('sub');
@@ -70,31 +100,57 @@ export default function BurobigProductList({ products }) {
   } else if (isToplantiPath) {
     targetCatSlug = 'masalar';
     targetSubcatSlug = 'toplanti';
+  } else if (isYoneticiKoltuklariPath) {
+    targetCatSlug = 'ofis-koltuklari';
+    targetSubcatSlug = 'yonetici-koltuklari';
+  } else if (isCalismaKoltuklariPath) {
+    targetCatSlug = 'ofis-koltuklari';
+    targetSubcatSlug = 'calisma-koltuklari';
+  } else if (isMisafirKoltuklariPath) {
+    targetCatSlug = 'ofis-koltuklari';
+    targetSubcatSlug = 'misafir-ve-bekleme-koltuklari';
+  } else if (isKoltuklarPath) {
+    targetCatSlug = 'koltuklar-kanepeler';
+    targetSubcatSlug = 'koltuklar';
+  } else if (isKanepelerPath) {
+    targetCatSlug = 'koltuklar-kanepeler';
+    targetSubcatSlug = 'kanepeler';
+  } else if (isSandalyelerPath) {
+    targetCatSlug = 'koltuklar-kanepeler';
+    targetSubcatSlug = 'sandalyeler';
+  } else if (isBeklemeAlanlariPath) {
+    targetCatSlug = 'koltuklar-kanepeler';
+    targetSubcatSlug = 'bekleme-alanlari';
+  } else if (isKoltuklarKanepelerPath) {
+    targetCatSlug = 'koltuklar-kanepeler';
+  } else if (isKesonlarPath) {
+    targetCatSlug = 'depolama-sistemleri';
+    targetSubcatSlug = 'kesonlar';
+  } else if (isDolaplarPath) {
+    targetCatSlug = 'depolama-sistemleri';
+    targetSubcatSlug = 'dolaplar';
+  } else if (isKitaplikRafPath) {
+    targetCatSlug = 'depolama-sistemleri';
+    targetSubcatSlug = 'kitaplik-raf';
+  } else if (isDepolamaSistemleriPath) {
+    targetCatSlug = 'depolama-sistemleri';
+  } else if (isSehpalarPath) {
+    targetCatSlug = 'tamamlayicilar';
+    targetSubcatSlug = 'sehpalar';
+  } else if (isPuflarPath) {
+    targetCatSlug = 'tamamlayicilar';
+    targetSubcatSlug = 'puflar';
+  } else if (isAskiliklarPath) {
+    targetCatSlug = 'tamamlayicilar';
+    targetSubcatSlug = 'askiliklar';
+  } else if (isElektrifikasyonPath) {
+    targetCatSlug = 'tamamlayicilar';
+    targetSubcatSlug = 'elektrifikasyon';
+  } else if (isTamamlayicilarPath) {
+    targetCatSlug = 'tamamlayicilar';
   }
 
-  // Determine current active filter tab
-  const getActiveTab = () => {
-    if (targetSubcatSlug === 'ust-yonetici') {
-      return 'ust-yonetici';
-    }
-    if (targetCatSlug === 'ofis-koltuklari') {
-      return 'ofis-koltuklari';
-    }
-    return 'all';
-  };
 
-  const activeTab = getActiveTab();
-
-  // Handle Tab Switch
-  const handleTabClick = (tab) => {
-    if (tab === 'all') {
-      setSearchParams({});
-    } else if (tab === 'ust-yonetici') {
-      setSearchParams({ cat: 'masalar', sub: 'ust-yonetici' });
-    } else if (tab === 'ofis-koltuklari') {
-      setSearchParams({ cat: 'ofis-koltuklari' });
-    }
-  };
 
   // Filter products dynamically
   const filteredProducts = products.filter(product => {
@@ -105,7 +161,8 @@ export default function BurobigProductList({ products }) {
       const isCatMatch = catSlug.includes(targetCatSlug) || 
                          targetCatSlug.includes(catSlug) ||
                          (targetCatSlug === 'masalar' && (catSlug.includes('masa') || catSlug.includes('table') || catSlug.includes('desk'))) ||
-                         (targetCatSlug === 'ofis-koltuklari' && (catSlug.includes('koltuk') || catSlug.includes('chair')));
+                         (targetCatSlug === 'ofis-koltuklari' && (catSlug.includes('koltuk') || catSlug.includes('chair'))) ||
+                         (targetCatSlug === 'koltuklar-kanepeler' && !catSlug.includes('ofis-koltuk') && !catSlug.includes('office-chair') && (catSlug.includes('koltuk') || catSlug.includes('kanepe') || catSlug.includes('kanap') || catSlug.includes('sandalye') || catSlug.includes('sofa') || catSlug.includes('armchair') || catSlug.includes('chair')));
       if (!isCatMatch) return false;
     }
 
@@ -117,6 +174,35 @@ export default function BurobigProductList({ products }) {
       } else if (targetSubcatSlug === 'ust-yonetici') {
         // Strict matching for executive: subcat must be 'ust-yonetici'
         if (subcatSlug !== 'ust-yonetici' && !catSlug.includes('ust-yonetici-masasi')) return false;
+      } else if (targetSubcatSlug === 'yonetici-koltuklari') {
+        if (subcatSlug !== 'yonetici-koltuklari' && !subcatSlug.includes('yonetici') && !catSlug.includes('yonetici-koltuk')) return false;
+      } else if (targetSubcatSlug === 'calisma-koltuklari') {
+        if (subcatSlug !== 'calisma-koltuklari' && !subcatSlug.includes('calisma') && !subcatSlug.includes('task') && !catSlug.includes('calisma-koltuk')) return false;
+      } else if (targetSubcatSlug === 'misafir-ve-bekleme-koltuklari') {
+        if (subcatSlug !== 'misafir-ve-bekleme-koltuklari' && !subcatSlug.includes('misafir') && !subcatSlug.includes('bekleme') && !subcatSlug.includes('guest') && !subcatSlug.includes('waiting')) return false;
+      } else if (targetSubcatSlug === 'koltuklar') {
+        if (catSlug.includes('ofis-koltuk') || catSlug.includes('office-chair')) return false;
+        if (subcatSlug.includes('kanepe') || subcatSlug.includes('kanap') || subcatSlug.includes('sofa') || catSlug.includes('kanepe-') || catSlug.includes('kanap-') || catSlug === 'kanepeler' || catSlug === 'kanapeler' || catSlug === 'kanepe' || catSlug === 'kanap') return false;
+        const isMatch = subcatSlug === 'koltuklar' || subcatSlug.includes('koltuk') || subcatSlug.includes('armchair') || catSlug.includes('koltuk');
+        if (!isMatch) return false;
+      } else if (targetSubcatSlug === 'kanepeler') {
+        if (subcatSlug.includes('koltuk') || subcatSlug.includes('armchair') || catSlug.includes('koltuk-') || catSlug === 'koltuklar' || catSlug === 'koltuk') return false;
+        const isMatch = subcatSlug === 'kanepeler' || subcatSlug === 'kanapeler' || subcatSlug.includes('kanepe') || subcatSlug.includes('kanap') || subcatSlug.includes('sofa') || catSlug.includes('kanepe') || catSlug.includes('kanap');
+        if (!isMatch) return false;
+      } else if (targetSubcatSlug === 'sandalyeler') {
+        if (subcatSlug.includes('koltuk') || subcatSlug.includes('armchair') || subcatSlug.includes('kanepe') || subcatSlug.includes('kanap') || subcatSlug.includes('sofa')) return false;
+        const isMatch = subcatSlug === 'sandalyeler' || subcatSlug.includes('sandalye') || subcatSlug.includes('chair') || catSlug.includes('sandalye');
+        if (!isMatch) return false;
+      } else if (targetSubcatSlug === 'bekleme-alanlari') {
+        const isMatch = subcatSlug === 'bekleme-alanlari' || subcatSlug.includes('bekleme') || subcatSlug.includes('waiting');
+        if (!isMatch) return false;
+      } else if (targetSubcatSlug === 'kitaplik-raf') {
+        const isMatch = subcatSlug === 'kitaplik-raf' || 
+                        subcatSlug.includes('kitaplik') || 
+                        subcatSlug.includes('raf') || 
+                        subcatSlug.includes('bookcase') || 
+                        subcatSlug.includes('shel');
+        if (!isMatch) return false;
       } else {
         // General dynamic matching for other categories (e.g. calisma)
         const isSubcatMatch = subcatSlug === targetSubcatSlug ||
@@ -137,12 +223,24 @@ export default function BurobigProductList({ products }) {
       'calisma': { tr: 'Çalışma Masaları', en: 'Work Desks', pathTr: 'Masalar / Çalışma', pathEn: 'Desks / Work' },
       'operasyonel': { tr: 'Operasyonel Masalar', en: 'Operational Desks', pathTr: 'Masalar / Operasyonel', pathEn: 'Desks / Operational' },
       'toplanti': { tr: 'Toplantı Masaları', en: 'Meeting Tables', pathTr: 'Masalar / Toplantı', pathEn: 'Desks / Meeting' },
-      'ofis-koltuklari': { tr: 'Ofis Koltukları', en: 'Office Chairs', pathTr: 'Koltuklar / Ofis Koltukları', pathEn: 'Chairs / Office Chairs' },
+      
+      'ofis-koltuklari': { tr: 'Ofis Koltukları', en: 'Office Chairs', pathTr: 'Bürobig / Ofis Koltukları', pathEn: 'Bürobig / Office Chairs' },
+      'yonetici-koltuklari': { tr: 'Yönetici Koltukları', en: 'Executive Chairs', pathTr: 'Ofis Koltukları / Yönetici Koltukları', pathEn: 'Office Chairs / Executive Chairs' },
+      'calisma-koltuklari': { tr: 'Çalışma Koltukları', en: 'Task Chairs', pathTr: 'Ofis Koltukları / Çalışma Koltukları', pathEn: 'Office Chairs / Task Chairs' },
+      'misafir-ve-bekleme-koltuklari': { tr: 'Misafir ve Bekleme Koltukları', en: 'Guest & Waiting Chairs', pathTr: 'Ofis Koltukları / Misafir ve Bekleme Koltukları', pathEn: 'Office Chairs / Guest & Waiting Chairs' },
+
+      'koltuklar': { tr: 'Koltuklar', en: 'Armchairs', pathTr: 'Koltuklar / Kanepeler / Koltuklar', pathEn: 'Armchairs & Sofas / Armchairs' },
+      'kanepeler': { tr: 'Kanepeler', en: 'Sofas', pathTr: 'Koltuklar / Kanepeler / Kanepeler', pathEn: 'Armchairs & Sofas / Sofas' },
+      'sandalyeler': { tr: 'Sandalyeler', en: 'Chairs', pathTr: 'Koltuklar / Kanepeler / Sandalyeler', pathEn: 'Armchairs & Sofas / Chairs' },
+      'bekleme-alanlari': { tr: 'Bekleme Alanları', en: 'Waiting Areas', pathTr: 'Koltuklar / Kanepeler / Bekleme Alanları', pathEn: 'Armchairs & Sofas / Waiting Areas' },
+      'koltuklar-kanepeler': { tr: 'Koltuklar ve Kanepeler', en: 'Armchairs & Sofas', pathTr: 'Bürobig / Koltuklar ve Kanepeler', pathEn: 'Bürobig / Armchairs & Sofas' },
+
       'masalar': { tr: 'Tüm Masalar', en: 'All Desks', pathTr: 'Bürobig / Ofis Masaları', pathEn: 'Bürobig / Office Desks' },
-      'depolama-sistemleri': { tr: 'Depolama Sistemleri', en: 'Storage Systems', pathTr: 'Bürobig / Depolama', pathEn: 'Bürobig / Storage' },
-      'kesonlar': { tr: 'Kesonlar', en: 'Pedestals', pathTr: 'Depolama / Kesonlar', pathEn: 'Storage / Pedestals' },
-      'dolaplar': { tr: 'Dolaplar', en: 'Cabinets', pathTr: 'Depolama / Dolaplar', pathEn: 'Storage / Cabinets' },
-      'kitaplik-raf': { tr: 'Kitaplık ve Raf Sistemleri', en: 'Bookcases & Shelves', pathTr: 'Depolama / Kitaplıklar', pathEn: 'Storage / Bookcases' },
+      'depolama-sistemleri': { tr: 'Depolama Sistemleri', en: 'Storage Systems', pathTr: 'Bürobig / Depolama Sistemleri', pathEn: 'Bürobig / Storage Systems' },
+      'kesonlar': { tr: 'Kesonlar', en: 'Pedestals', pathTr: 'Depolama Sistemleri / Kesonlar', pathEn: 'Storage Systems / Pedestals' },
+      'dolaplar': { tr: 'Dolaplar', en: 'Cabinets', pathTr: 'Depolama Sistemleri / Dolaplar', pathEn: 'Storage Systems / Cabinets' },
+      'kitaplik-raf': { tr: 'Kitaplık ve Raf Sistemleri', en: 'Bookcases & Shelves', pathTr: 'Depolama Sistemleri / Kitaplık ve Raf Sistemleri', pathEn: 'Storage Systems / Bookcases & Shelves' },
+      
       'tamamlayicilar': { tr: 'Tamamlayıcılar', en: 'Accessories', pathTr: 'Bürobig / Tamamlayıcılar', pathEn: 'Bürobig / Accessories' },
       'sehpalar': { tr: 'Sehpalar', en: 'Coffee Tables', pathTr: 'Tamamlayıcılar / Sehpalar', pathEn: 'Accessories / Coffee Tables' },
       'puflar': { tr: 'Puflar', en: 'Poufs', pathTr: 'Tamamlayıcılar / Puflar', pathEn: 'Accessories / Poufs' },
@@ -237,7 +335,11 @@ export default function BurobigProductList({ products }) {
       companyName: 'Bürobig'
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeLang, title, isUstYoneticiPath, isYoneticiPath, isCalismaPath, isOfisKoltuklariPath, isOperasyonelPath, isToplantiPath]);
+  }, [activeLang, title, isUstYoneticiPath, isYoneticiPath, isCalismaPath, isOfisKoltuklariPath, isOperasyonelPath, isToplantiPath,
+      isYoneticiKoltuklariPath, isCalismaKoltuklariPath, isMisafirKoltuklariPath,
+      isKoltuklarPath, isKanepelerPath, isSandalyelerPath, isBeklemeAlanlariPath, isKoltuklarKanepelerPath,
+      isKesonlarPath, isDolaplarPath, isKitaplikRafPath, isDepolamaSistemleriPath,
+      isSehpalarPath, isPuflarPath, isAskiliklarPath, isElektrifikasyonPath, isTamamlayicilarPath]);
 
   return (
     <main className="category-page">
@@ -249,43 +351,7 @@ export default function BurobigProductList({ products }) {
         </div>
       </section>
 
-      {/* Category Tab Filter Bar (Premium UI Enhancement) */}
-      {!isCleanPath && (
-        <section className="bg-white border-b border-slate-100 py-6">
-          <div className="max-w-[1440px] mx-auto px-[5%] flex justify-center gap-8">
-            <button
-              onClick={() => handleTabClick('all')}
-              className={`pb-2 text-sm font-medium tracking-wider uppercase transition-colors relative ${
-                activeTab === 'all'
-                  ? 'text-[#c9a96e] border-b-2 border-[#c9a96e]'
-                  : 'text-slate-400 hover:text-slate-800'
-              }`}
-            >
-              {translate('Tümü', 'All')}
-            </button>
-            <button
-              onClick={() => handleTabClick('ust-yonetici')}
-              className={`pb-2 text-sm font-medium tracking-wider uppercase transition-colors relative ${
-                activeTab === 'ust-yonetici'
-                  ? 'text-[#c9a96e] border-b-2 border-[#c9a96e]'
-                  : 'text-slate-400 hover:text-slate-800'
-              }`}
-            >
-              {translate('Üst Yönetici Masaları', 'Executive Desks')}
-            </button>
-            <button
-              onClick={() => handleTabClick('ofis-koltuklari')}
-              className={`pb-2 text-sm font-medium tracking-wider uppercase transition-colors relative ${
-                activeTab === 'ofis-koltuklari'
-                  ? 'text-[#c9a96e] border-b-2 border-[#c9a96e]'
-                  : 'text-slate-400 hover:text-slate-800'
-              }`}
-            >
-              {translate('Ofis Koltukları', 'Office Chairs')}
-            </button>
-          </div>
-        </section>
-      )}
+
 
       {/* Product Grid Section */}
       <section className="category-grid-section">
