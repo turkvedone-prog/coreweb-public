@@ -394,13 +394,6 @@ body, html, ul, ol {
 }
 .utility-link:hover { color: var(--color-accent); }
 
-.utility-link--disabled {
-    color: #b5b5b5 !important;
-    cursor: default !important;
-    opacity: 0.6;
-    pointer-events: none;
-}
-
 /* TR dil butonu dropdown'u */
 .utility-dropdown {
     position: relative;

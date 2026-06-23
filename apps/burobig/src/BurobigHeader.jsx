@@ -165,15 +165,15 @@ export default function BurobigHeader() {
 
           {/* UTILITY: Right side */}
           <div className="header-utility">
-            <span className="utility-link utility-link--disabled" id="util-shop">
+            <a href="#" onClick={(e) => e.preventDefault()} className="utility-link" id="util-shop">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
                 <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                 <line x1="3" y1="6" x2="21" y2="6"></line>
                 <path d="M16 10a4 4 0 0 1-8 0"></path>
               </svg>
               Shop
-            </span>
-            <span className="utility-link utility-link--has-line utility-link--disabled" id="util-portal">
+            </a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="utility-link utility-link--has-line" id="util-portal">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
                 <rect x="3" y="3" width="7" height="9" rx="1"></rect>
                 <rect x="14" y="3" width="7" height="5" rx="1"></rect>
@@ -181,14 +181,14 @@ export default function BurobigHeader() {
                 <rect x="3" y="16" width="7" height="5" rx="1"></rect>
               </svg>
               Big<span style={{ fontSize: '1.8em', verticalAlign: 'middle', lineHeight: 0, display: 'inline-block', margin: '0 -0.25em', transform: 'translateY(-1px)' }}>&bull;</span>Portal
-            </span>
-            <span className="utility-link utility-link--has-line utility-link--disabled" id="util-pay">
+            </a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="utility-link utility-link--has-line" id="util-pay">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
                 <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
                 <line x1="2" y1="10" x2="22" y2="10"></line>
               </svg>
               Pay
-            </span>
+            </a>
 
             <div className="utility-dropdown">
               <button className="utility-link utility-lang" id="util-lang" aria-label="Dil seç">
