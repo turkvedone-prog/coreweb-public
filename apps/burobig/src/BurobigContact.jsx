@@ -12,12 +12,12 @@ export default function BurobigContact({
   handleChange,
   settings
 }) {
-  const address = settings?.contact?.address || "Balıkhisar, Turgut Reis Cd. no 3, 06750 Akyurt/Ankara";
+  const address = settings?.contact?.address || "Balıkhisar, Turgut Reis Cd. No: 3, 06750 Akyurt/Ankara";
   const phone = settings?.contact?.phone || "+90 312 351 07 97";
-  const phone2 = settings?.contact?.phones?.[1] || settings?.contact?.phone2 || "312 351 07 93";
-  const email = settings?.contact?.email || "info@burobig.com.tr";
+  const phone2 = null;
+  const email = "info@burobig.com.tr";
   
-  const rawWorkingHours = settings?.contact?.workingHours || settings?.workingHours || "Hafta İçi: 09:00 - 18:00\nCumartesi: 10:00 - 14:00\nPazar: Kapalı";
+  const rawWorkingHours = settings?.contact?.workingHours || settings?.workingHours || "Hafta İçi: 08:00 - 18:30\nCumartesi: Kapalı\nPazar: Kapalı";
   const workingHoursLines = typeof rawWorkingHours === 'string' ? rawWorkingHours.split('\n') : [];
 
   return (
@@ -104,8 +104,8 @@ export default function BurobigContact({
                         ))
                       ) : (
                         <>
-                          Hafta İçi: 09:00 - 18:00<br />
-                          Cumartesi: 10:00 - 14:00<br />
+                          Hafta İçi: 08:00 - 18:30<br />
+                          Cumartesi: Kapalı<br />
                           Pazar: Kapalı
                         </>
                       )}

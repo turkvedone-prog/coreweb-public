@@ -13,8 +13,8 @@ export default function BurobigProductList({ products }) {
   const location = useLocation();
 
 
-  const isUstYoneticiPath = location.pathname.endsWith('/ust-yonetici');
-  const isYoneticiPath = location.pathname.endsWith('/yonetici');
+  const isUstYoneticiPath = location.pathname.endsWith('/ust-yonetici-masalari');
+  const isYoneticiPath = location.pathname.endsWith('/yonetici-masalari');
   const isCalismaPath = location.pathname.endsWith('/calisma-masalari') || location.pathname.endsWith('/calisma');
   const isOfisKoltuklariPath = location.pathname.endsWith('/ofis-koltuklari');
   const isOperasyonelPath = location.pathname.endsWith('/operasyonel-masalar');
@@ -161,7 +161,7 @@ export default function BurobigProductList({ products }) {
       const isCatMatch = catSlug.includes(targetCatSlug) || 
                          targetCatSlug.includes(catSlug) ||
                          (targetCatSlug === 'masalar' && (catSlug.includes('masa') || catSlug.includes('table') || catSlug.includes('desk'))) ||
-                         (targetCatSlug === 'ofis-koltuklari' && (catSlug.includes('koltuk') || catSlug.includes('chair'))) ||
+                         (targetCatSlug === 'ofis-koltuklari' && !catSlug.includes('kanep') && !catSlug.includes('kanap') && catSlug !== 'koltuklar-kanepeler' && (catSlug.includes('koltuk') || catSlug.includes('chair'))) ||
                          (targetCatSlug === 'koltuklar-kanepeler' && !catSlug.includes('ofis-koltuk') && !catSlug.includes('office-chair') && (catSlug.includes('koltuk') || catSlug.includes('kanepe') || catSlug.includes('kanap') || catSlug.includes('sandalye') || catSlug.includes('sofa') || catSlug.includes('armchair') || catSlug.includes('chair')));
       if (!isCatMatch) return false;
     }
@@ -179,21 +179,26 @@ export default function BurobigProductList({ products }) {
       } else if (targetSubcatSlug === 'calisma-koltuklari') {
         if (subcatSlug !== 'calisma-koltuklari' && !subcatSlug.includes('calisma') && !subcatSlug.includes('task') && !catSlug.includes('calisma-koltuk')) return false;
       } else if (targetSubcatSlug === 'misafir-ve-bekleme-koltuklari') {
+        if (subcatSlug === 'bekleme-alanlari') return false;
         if (subcatSlug !== 'misafir-ve-bekleme-koltuklari' && !subcatSlug.includes('misafir') && !subcatSlug.includes('bekleme') && !subcatSlug.includes('guest') && !subcatSlug.includes('waiting')) return false;
       } else if (targetSubcatSlug === 'koltuklar') {
         if (catSlug.includes('ofis-koltuk') || catSlug.includes('office-chair')) return false;
         if (subcatSlug.includes('kanepe') || subcatSlug.includes('kanap') || subcatSlug.includes('sofa') || catSlug.includes('kanepe-') || catSlug.includes('kanap-') || catSlug === 'kanepeler' || catSlug === 'kanapeler' || catSlug === 'kanepe' || catSlug === 'kanap') return false;
+        if (subcatSlug === 'bekleme-alanlari' || subcatSlug.includes('bekleme') || subcatSlug === 'sandalyeler' || subcatSlug.includes('sandalye') || subcatSlug.includes('chair')) return false;
         const isMatch = subcatSlug === 'koltuklar' || subcatSlug.includes('koltuk') || subcatSlug.includes('armchair') || catSlug.includes('koltuk');
         if (!isMatch) return false;
       } else if (targetSubcatSlug === 'kanepeler') {
         if (subcatSlug.includes('koltuk') || subcatSlug.includes('armchair') || catSlug.includes('koltuk-') || catSlug === 'koltuklar' || catSlug === 'koltuk') return false;
+        if (subcatSlug === 'bekleme-alanlari' || subcatSlug.includes('bekleme') || subcatSlug === 'sandalyeler' || subcatSlug.includes('sandalye') || subcatSlug.includes('chair')) return false;
         const isMatch = subcatSlug === 'kanepeler' || subcatSlug === 'kanapeler' || subcatSlug.includes('kanepe') || subcatSlug.includes('kanap') || subcatSlug.includes('sofa') || catSlug.includes('kanepe') || catSlug.includes('kanap');
         if (!isMatch) return false;
       } else if (targetSubcatSlug === 'sandalyeler') {
         if (subcatSlug.includes('koltuk') || subcatSlug.includes('armchair') || subcatSlug.includes('kanepe') || subcatSlug.includes('kanap') || subcatSlug.includes('sofa')) return false;
+        if (subcatSlug === 'bekleme-alanlari' || subcatSlug.includes('bekleme') || subcatSlug === 'koltuklar' || subcatSlug.includes('koltuk')) return false;
         const isMatch = subcatSlug === 'sandalyeler' || subcatSlug.includes('sandalye') || subcatSlug.includes('chair') || catSlug.includes('sandalye');
         if (!isMatch) return false;
       } else if (targetSubcatSlug === 'bekleme-alanlari') {
+        if (subcatSlug.includes('koltuk') || subcatSlug.includes('armchair') || subcatSlug.includes('kanepe') || subcatSlug.includes('kanap') || subcatSlug.includes('sofa') || subcatSlug === 'sandalyeler' || subcatSlug.includes('sandalye')) return false;
         const isMatch = subcatSlug === 'bekleme-alanlari' || subcatSlug.includes('bekleme') || subcatSlug.includes('waiting');
         if (!isMatch) return false;
       } else if (targetSubcatSlug === 'kitaplik-raf') {

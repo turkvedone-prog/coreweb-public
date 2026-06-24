@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
-
 
 @keyframes hero-entrance {
     from {
@@ -212,14 +210,16 @@ body, html, ul, ol {
 }
 
 .main-nav > ul > li > a:hover { color: var(--color-accent); }
-.main-nav > ul > li.has-dropdown:hover > a { color: var(--color-accent); }
+.main-nav > ul > li.has-dropdown:hover > a,
+.main-nav > ul > li.has-dropdown.is-open > a { color: var(--color-accent); }
 
 /* Dropdown Chevron */
 .nav__chevron {
     flex-shrink: 0;
     transition: transform 0.25s ease;
 }
-.main-nav > ul > li.has-dropdown:hover > a .nav__chevron {
+.main-nav > ul > li.has-dropdown:hover > a .nav__chevron,
+.main-nav > ul > li.has-dropdown.is-open > a .nav__chevron {
     transform: rotate(180deg);
 }
 
@@ -243,7 +243,8 @@ body, html, ul, ol {
     text-align: left; /* Garanti sol hizalama */
 }
 
-.has-dropdown:hover .mega-menu {
+.has-dropdown:hover .mega-menu,
+.has-dropdown.is-open .mega-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -737,7 +738,7 @@ body, html, ul, ol {
 }
 
 #collections-heading {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: 55px;
     font-weight: 400;
 }
@@ -1096,7 +1097,7 @@ body, html, ul, ol {
 }
 
 .awards-section-title {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: 55px;
     font-weight: 400;
     color: #1c1a1f; /* Elegant almost-black tone */
@@ -1207,7 +1208,7 @@ body, html, ul, ol {
 }
 
 .award-card__overlay-subtitle {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: clamp(0.75rem, 1vw, 0.85rem);
     color: rgba(255, 255, 255, 0.75);
     margin: 0;
@@ -1323,7 +1324,7 @@ body, html, ul, ol {
 }
 
 .award-card__subtitle {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: clamp(0.85rem, 1.1vw, 0.9rem);
     color: #888888;
     margin: 0;
@@ -2183,7 +2184,7 @@ body, html, ul, ol {
 }
 
 .eco-title {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-primary);
     font-size: clamp(1.8rem, 2.5vw, 2.2rem);
     font-weight: 500;
     margin-bottom: 0.5rem;
@@ -2362,7 +2363,7 @@ body, html, ul, ol {
 }
 
 .corporate-large-title {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: clamp(2.2rem, 4.5vw, 3.8rem);
     line-height: 1.15;
     color: #0e2922; /* Premium brand green */
@@ -2372,7 +2373,7 @@ body, html, ul, ol {
 
 .corporate-sub-title {
     font-size: clamp(1.2rem, 2vw, 1.6rem);
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-style: italic;
     color: #c9a96e; /* Gold */
     margin-bottom: 1.5rem;
@@ -2437,7 +2438,7 @@ body, html, ul, ol {
 
 /* Giant style for Manifesto */
 .manifesto-giant-title {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: clamp(3.5rem, 8vw, 7rem);
     font-weight: 900;
     color: #f0ede9; /* Subtle giant text behind */
@@ -2466,7 +2467,7 @@ body, html, ul, ol {
 
 .corporate-eng-subtitle {
     font-size: clamp(1rem, 1.8vw, 1.25rem);
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-style: italic;
     color: #8c8c8c;
     margin-top: -1rem;
@@ -2535,7 +2536,7 @@ body, html, ul, ol {
     color: #1a1a1a;
     letter-spacing: -0.5px;
     margin-bottom: 0.25rem;
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-primary);
 }
 
 @media (max-width: 768px) {
@@ -2599,6 +2600,17 @@ body, html, ul, ol {
     z-index: 1;
     border-right: 1px solid rgba(0, 0, 0, 0.06);
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Limit grid container width and columns dynamically based on item count to avoid dangling borders */
+.product-grid:has(> .product-card:first-child:last-child) {
+    max-width: calc(100% / 3);
+    grid-template-columns: 1fr;
+}
+
+.product-grid:has(> .product-card:nth-child(2):last-child) {
+    max-width: calc(100% * 2 / 3);
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .product-grid .product-card:hover {
@@ -2705,6 +2717,14 @@ body, html, ul, ol {
     .product-grid .product-card {
         padding: 2.5rem 2rem 3rem;
         min-height: 440px;
+        border-right: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    .product-grid:has(> .product-card:first-child:last-child) {
+        max-width: 50%;
+        grid-template-columns: 1fr;
+    }
+    .product-grid:has(> .product-card:first-child:last-child) .product-card {
+        border-right: none;
     }
 }
 
@@ -2715,6 +2735,7 @@ body, html, ul, ol {
     .product-grid .product-card {
         padding: 2rem 1.5rem 2.5rem;
         min-height: 400px;
+        border-right: none;
     }
     .category-hero {
         padding: 130px 5% 30px;
@@ -2876,7 +2897,7 @@ body, html, ul, ol {
     object-fit: contain;
     mix-blend-mode: multiply; /* Blends white background images nicely */
     transition: opacity 0.15s ease-in-out, transform 0.4s ease;
-    transform: scale(1.2);
+    transform: scale(1);
 }
 
 .detail-gallery__thumbs {
@@ -2962,7 +2983,7 @@ body, html, ul, ol {
     color: #1a1a1a;
     margin: 0 0 2px 0; /* Reduced margin to bring closer to subtitle */
     letter-spacing: -0.5px;
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
 }
 
 .detail-showcase__subtitle {
@@ -3102,7 +3123,7 @@ body, html, ul, ol {
 .related-carousel-track {
     display: flex;
     width: max-content;
-    animation: scroll 80s linear infinite;
+    animation: scroll 160s linear infinite;
 }
 .related-carousel-track:hover {
     animation-play-state: paused;
@@ -3385,7 +3406,7 @@ body, html, ul, ol {
     }
     
     .philosophy-main-title {
-        font-family: 'Playfair Display', Georgia, serif;
+        font-family: var(--font-primary);
         font-size: clamp(2rem, 4.5vw, 3.5rem);
         line-height: 1.15;
         color: #0e2922; /* Premium brand green */
@@ -3437,7 +3458,7 @@ body, html, ul, ol {
     }
     
     .designers-column-title {
-        font-family: 'Playfair Display', Georgia, serif;
+        font-family: var(--font-primary);
         font-size: clamp(1.8rem, 3.5vw, 2.8rem);
         line-height: 1.2;
         color: #0e2922;
@@ -3559,7 +3580,7 @@ body, html, ul, ol {
     }
     
     .designer-detail-name {
-        font-family: 'Playfair Display', Georgia, serif;
+        font-family: var(--font-primary);
         font-size: clamp(1.8rem, 3.5vw, 2.5rem);
         color: #0e2922;
         margin: 0;
@@ -3666,7 +3687,7 @@ body, html, ul, ol {
 }
 
 .blog-list-title {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: clamp(2.5rem, 5vw, 4rem);
     color: #0e2922;
     font-weight: 400;
@@ -3796,7 +3817,7 @@ body, html, ul, ol {
 }
 
 .blog-list-card-title {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: 1.15rem;
     font-weight: 500;
     line-height: 1.4;
@@ -3874,7 +3895,7 @@ body, html, ul, ol {
     align-items: start;
 }
 .contact-page .contact-large-title {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: clamp(2.5rem, 5vw, 4rem);
     color: #0e2922;
     font-weight: 400;
@@ -3950,7 +3971,7 @@ body, html, ul, ol {
 }
 
 .contact-page .contact-form-title {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: 1.75rem;
     font-weight: 400;
     color: #0e2922;
@@ -4072,7 +4093,7 @@ body, html, ul, ol {
 }
 
 .contact-page .form-success-state h3 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: 1.8rem;
     color: #0e2922;
     margin-bottom: 0.75rem;
@@ -4178,7 +4199,7 @@ body, html, ul, ol {
 }
 
 .blog-detail-title {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: 2.6rem;
     color: #1a1a1a;
     line-height: 1.3;
@@ -4238,7 +4259,7 @@ body, html, ul, ol {
 }
 
 .blog-detail-prose h2, .blog-detail-prose h3 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     color: #1a1a1a;
     margin: 2.5rem 0 1.2rem 0;
     font-weight: 400;
@@ -4253,7 +4274,7 @@ body, html, ul, ol {
 }
 
 .blog-detail-notfound-title {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: 2.2rem;
     color: #1a1a1a;
     margin-bottom: 1rem;

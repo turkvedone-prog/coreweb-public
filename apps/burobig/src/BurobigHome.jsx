@@ -329,7 +329,7 @@ export default function BurobigHome() {
             <div className="collections-grid" role="list">
               {/* FEATURED CARD */}
               <article className="collection-card collection-card--featured" role="listitem">
-                <Link to={getLocalizedPath('/ust-yonetici')} className="collection-card__link" id="card-makam" aria-label="Makam Takımları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/ust-yonetici-masalari')} className="collection-card__link" id="card-makam" aria-label="Üst Yönetici Masaları koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-makam.png"
@@ -342,7 +342,7 @@ export default function BurobigHome() {
                   </figure>
                   <div className="collection-card__overlay">
                     <div className="collection-card__info">
-                      <h3 className="collection-card__title">Makam<br />Takımları</h3>
+                      <h3 className="collection-card__title">Üst Yönetici<br />Masaları</h3>
                       <span className="collection-card__cta">
                         Keşfet{' '}
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -410,11 +410,11 @@ export default function BurobigHome() {
 
               {/* CARD 4 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/ofis-koltuklari')} className="collection-card__link" id="card-koltuklar" aria-label="Çalışma Koltukları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/yonetici-koltuklari')} className="collection-card__link" id="card-koltuklar" aria-label="Yönetici Koltukları koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-koltuklar.png"
-                      alt="Ergonomik çalışma koltukları"
+                      alt="Ergonomik yönetici koltukları"
                       width="700"
                       height="550"
                       loading="lazy"
@@ -423,7 +423,7 @@ export default function BurobigHome() {
                   </figure>
                   <div className="collection-card__overlay">
                     <div className="collection-card__info">
-                      <h3 className="collection-card__title">Çalışma<br />Koltukları</h3>
+                      <h3 className="collection-card__title">Yönetici<br />Koltukları</h3>
                       <span className="collection-card__cta">
                         Keşfet{' '}
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">

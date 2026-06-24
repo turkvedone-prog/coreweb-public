@@ -47,8 +47,8 @@ export default function BurobigDesignProcess() {
                   <p style={{ fontSize: '0.95rem', color: '#555555', lineHeight: 1.7, fontWeight: 300 }}>Adını aldığı monolitik mimariden ilham alan MONOLITH, bw3, sessiz duruşuyla gücü yansıtır. Yuvarlatılmış traverten tablası ve altındaki heykelsi hacimleriyle, sıradan bir çalışma masasından odanın odak noktasına dönüşür.</p>
                 </div>
                 <div style={{ borderTop: '1px solid #eaeaea', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                  <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '1.8rem', fontWeight: 400, letterSpacing: '2px', color: '#0e2922', textTransform: 'uppercase' }}>MONOLITH</span>
-                  <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: 'italic', fontSize: '1.25rem', color: '#c9a96e' }}>Bürobig Tasarım Ekibi</span>
+                  <span style={{ fontFamily: "var(--font-primary)", fontSize: '1.8rem', fontWeight: 400, letterSpacing: '2px', color: '#0e2922', textTransform: 'uppercase' }}>MONOLITH</span>
+                  <span style={{ fontFamily: "var(--font-primary)", fontStyle: 'italic', fontSize: '1.25rem', color: '#c9a96e' }}>Bürobig Tasarım Ekibi</span>
                   <span style={{ fontSize: '0.7rem', letterSpacing: '3px', color: '#8c9094', textTransform: 'uppercase', marginTop: '0.5rem', fontWeight: 500 }}>KONSEPT ESKİZ</span>
                 </div>
               </div>

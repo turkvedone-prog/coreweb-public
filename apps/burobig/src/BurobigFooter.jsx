@@ -80,11 +80,14 @@ export default function BurobigFooter() {
             <div className="footer-col">
               <h4>Koleksiyonlar</h4>
               <ul className="footer-links">
-                <li><Link to={`${getLocalizedPath('/urunler')}#masalar`}>Masalar</Link></li>
-                <li><Link to={`${getLocalizedPath('/urunler')}#ofis-koltuklari`}>Ofis Koltukları</Link></li>
-                <li><Link to={`${getLocalizedPath('/urunler')}#koltuklar-kanepeler`}>Koltuk & Kanepeler</Link></li>
-                <li><Link to={`${getLocalizedPath('/urunler')}#depolama-sistemleri`}>Depolama</Link></li>
-                <li><Link to={`${getLocalizedPath('/urunler')}#tamamlayicilar`}>Tamamlayıcılar</Link></li>
+                <li><Link to={getLocalizedPath('/ust-yonetici-masalari')}>Üst Yönetici Masaları</Link></li>
+                <li><Link to={getLocalizedPath('/yonetici-masalari')}>Yönetici Masaları</Link></li>
+                <li><Link to={getLocalizedPath('/calisma-masalari')}>Çalışma Masaları</Link></li>
+                <li><Link to={getLocalizedPath('/operasyonel-masalar')}>Operasyonel Masalar</Link></li>
+                <li><Link to={getLocalizedPath('/toplanti-masalari')}>Toplantı Masaları</Link></li>
+                <li><Link to={getLocalizedPath('/yonetici-koltuklari')}>Yönetici Koltukları</Link></li>
+                <li><Link to={getLocalizedPath('/calisma-koltuklari')}>Çalışma Koltukları</Link></li>
+                <li><Link to={getLocalizedPath('/misafir-ve-bekleme-koltuklari')}>Misafir ve Bekleme Koltukları</Link></li>
               </ul>
             </div>
 
@@ -130,7 +133,7 @@ export default function BurobigFooter() {
         </button>
       </div>
 
-      {/* WhatsApp Lead Widget */}
+      {/* WhatsApp Lead Widget
       <div className="wa-widget">
         <a href={`https://wa.me/${cleanWa}`} target="_blank" rel="noopener noreferrer" className="wa-btn" aria-label="WhatsApp ile İletişime Geçin">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -138,6 +141,7 @@ export default function BurobigFooter() {
           </svg>
         </a>
       </div>
+      */}
     </>
   );
 }

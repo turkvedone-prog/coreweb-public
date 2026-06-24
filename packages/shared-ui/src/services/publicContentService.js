@@ -2,9 +2,12 @@ import { db } from '../config/firebase';
 import { doc, getDoc, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 
 // ─── Cache Yardımcıları ───────────────────────────────────────────
-const CACHE_TTL = 5 * 60 * 1000; // 5 dakika
+const IS_DEV = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
+const CACHE_TTL = IS_DEV ? 30 * 1000 : 5 * 60 * 1000; // Dev: 30sn, Prod: 5dk
+const NO_CACHE = typeof window !== 'undefined' && window.location?.search?.includes('nocache');
 
 function getCached(key) {
+  if (NO_CACHE) return null;
   try {
     const raw = localStorage.getItem(key);
     if (!raw) return null;
@@ -16,6 +19,7 @@ function getCached(key) {
     return null;
   }
 }
+
 
 function setCache(key, data) {
   try {
@@ -42,10 +46,13 @@ export function invalidateCache(tenantId) {
   prefixes.forEach(key => {
     try { localStorage.removeItem(key); } catch { /* */ }
   });
+  // In-memory cache'i de temizle
+  delete memoryCache[`products_${tenantId}`];
 }
 
 // In-memory fallback (sayfa içi navigasyon için)
 const memoryCache = {};
+
 
 // ─── Company Settings ─────────────────────────────────────────────
 export async function getCompanySettings(tenantId) {

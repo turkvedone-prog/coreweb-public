@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
 import BurobigEcoBanner from './BurobigEcoBanner';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+
 
 import { getActiveProducts } from '../../services/publicContentService';
 import { getLocalizedContent } from '../../utils/i18nContent';
@@ -45,10 +45,10 @@ export default function BurobigProductDetail({ product }) {
     // 2. Masalar (subcategories first)
     if (c.includes('masa') || c.includes('table') || c.includes('desk') || t.includes('masa') || sl.includes('masa')) {
       if (s.includes('üst yönetici') || s.includes('ust yonetici') || s.includes('executive')) {
-        return '/ust-yonetici';
+        return '/ust-yonetici-masalari';
       }
       if (s.includes('yönetici') || s.includes('yonetici') || s.includes('manager')) {
-        return '/yonetici';
+        return '/yonetici-masalari';
       }
       if (s.includes('çalışma') || s.includes('calisma') || s.includes('work')) {
         return '/calisma-masalari';
@@ -139,10 +139,32 @@ export default function BurobigProductDetail({ product }) {
   }
 
   useEffect(() => {
+    setThumbStartIndex(activeDetailIdx);
+  }, [activeDetailIdx]);
+
+  useEffect(() => {
     setIsInitial(true);
     const timer = setTimeout(() => setIsInitial(false), 200);
     return () => clearTimeout(timer);
   }, [productSlug]);
+
+  // Helper to slugify strings for robust matching
+  const slugify = (text) => {
+    if (!text) return '';
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[ğĞ]/g, 'g')
+      .replace(/[üÜ]/g, 'u')
+      .replace(/[şŞ]/g, 's')
+      .replace(/[ıİ]/g, 'i')
+      .replace(/[öÖ]/g, 'o')
+      .replace(/[çÇ]/g, 'c')
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-');
+  };
 
   // Fetch related products
   useEffect(() => {
@@ -152,10 +174,37 @@ export default function BurobigProductDetail({ product }) {
         const localized = raw
           .map(doc => getLocalizedContent(doc, activeLang))
           .filter(Boolean);
-        setRelatedProducts(localized.filter(p => p.slug !== productSlug));
+
+        // Filter out current product
+        const otherProducts = localized.filter(p => (p.slug || p.id) !== productSlug);
+
+        const currentCatSlug = slugify(product?.category);
+        const currentSubcatSlug = slugify(product?.subcategory);
+
+        // 1. Match subcategory first
+        let filtered = otherProducts.filter(p => slugify(p.subcategory) === currentSubcatSlug);
+
+        // 2. If we need more (less than 6), add same category products
+        if (filtered.length < 6 && currentCatSlug) {
+          const sameCategory = otherProducts.filter(p => 
+            slugify(p.category) === currentCatSlug && 
+            !filtered.some(f => (f.slug || f.id) === (p.slug || p.id))
+          );
+          filtered = [...filtered, ...sameCategory];
+        }
+
+        // 3. If we still need more (less than 6), add any other products
+        if (filtered.length < 6) {
+          const rest = otherProducts.filter(p => 
+            !filtered.some(f => (f.slug || f.id) === (p.slug || p.id))
+          );
+          filtered = [...filtered, ...rest];
+        }
+
+        setRelatedProducts(filtered.slice(0, 10));
       })
       .catch(e => console.error(e));
-  }, [tenantId, productSlug, activeLang]);
+  }, [tenantId, productSlug, activeLang, product?.category, product?.subcategory]);
 
   const translate = (tr, en) => {
     return activeLang === 'tr' ? tr : en;
@@ -304,44 +353,59 @@ export default function BurobigProductDetail({ product }) {
             </div>
             {/* Thumbnails */}
             {detailGallery.length > 1 && (
-              <div className="detail-gallery__thumbs-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%', justifyContent: 'center', marginTop: '1.5rem' }}>
-                {detailGallery.length > 5 && (
-                  <button 
-                    onClick={() => setThumbStartIndex(prev => Math.max(0, prev - 1))}
-                    disabled={thumbStartIndex === 0}
-                    className="detail-gallery__nav-btn"
-                    aria-label="Önceki görseller"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
+              <div className="detail-gallery__thumbs-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', width: '100%', justifyContent: 'center', marginTop: '1.5rem' }}>
+                {/* Vertical Up/Down Controls on the Left */}
+                {detailGallery.length > 1 && (
+                  <div className="detail-gallery__scroll-controls" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <button 
+                      onClick={() => {
+                        const prevIdx = (activeDetailIdx - 1 + detailGallery.length) % detailGallery.length;
+                        handleDetailImageChange(detailGallery[prevIdx], prevIdx);
+                      }}
+                      className="control-btn" 
+                      style={{ width: '36px', height: '36px', border: 'none' }}
+                      aria-label="Önceki görseller"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                      </svg>
+                    </button>
+                    <button 
+                      onClick={() => {
+                        const nextIdx = (activeDetailIdx + 1) % detailGallery.length;
+                        handleDetailImageChange(detailGallery[nextIdx], nextIdx);
+                      }}
+                      className="control-btn" 
+                      style={{ width: '36px', height: '36px', border: 'none' }}
+                      aria-label="Sonraki görseller"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </div>
                 )}
                 
                 <div className="detail-gallery__thumbs" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'nowrap', overflow: 'hidden', padding: '4px 2px' }}>
-                  {detailGallery.slice(thumbStartIndex, thumbStartIndex + 5).map((src, sliceIdx) => {
-                    const idx = thumbStartIndex + sliceIdx;
-                    return (
+                  {(() => {
+                    const visibleThumbs = [];
+                    const count = Math.min(5, detailGallery.length);
+                    for (let i = 0; i < count; i++) {
+                      const idx = (thumbStartIndex + i) % detailGallery.length;
+                      visibleThumbs.push({ src: detailGallery[idx], index: idx });
+                    }
+                    return visibleThumbs.map((item) => (
                       <button
-                        key={idx}
-                        onClick={() => handleDetailImageChange(src, idx)}
-                        className={`detail-gallery__thumb ${idx === activeDetailIdx ? 'active' : ''}`}
-                        aria-label={`Görsel ${idx + 1}`}
+                        key={item.index}
+                        onClick={() => handleDetailImageChange(item.src, item.index)}
+                        className={`detail-gallery__thumb ${item.index === activeDetailIdx ? 'active' : ''}`}
+                        aria-label={`Görsel ${item.index + 1}`}
                       >
-                        <img src={src} alt={`Küçük Görsel ${idx + 1}`} />
+                        <img src={item.src} alt={`Küçük Görsel ${item.index + 1}`} />
                       </button>
-                    );
-                  })}
+                    ));
+                  })()}
                 </div>
-
-                {detailGallery.length > 5 && (
-                  <button 
-                    onClick={() => setThumbStartIndex(prev => Math.min(detailGallery.length - 5, prev + 1))}
-                    disabled={thumbStartIndex + 5 >= detailGallery.length}
-                    className="detail-gallery__nav-btn"
-                    aria-label="Sonraki görseller"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-                )}
               </div>
             )}
           </div>
