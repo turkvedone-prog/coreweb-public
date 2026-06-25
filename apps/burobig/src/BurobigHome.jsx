@@ -440,7 +440,7 @@ export default function BurobigHome() {
 
               {/* CARD 5 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/urunler')} className="collection-card__link" id="card-bekleme" aria-label="Bekleme Alanları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/bekleme-alanlari')} className="collection-card__link" id="card-bekleme" aria-label="Bekleme Alanları koleksiyonunu keşfet">
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-bekleme.jpg"
