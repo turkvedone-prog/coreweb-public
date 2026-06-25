@@ -2689,12 +2689,11 @@ body, html, ul, ol {
     right: 1rem;
     background: #e24125;
     color: #ffffff;
-    padding: 4px 10px;
-    font-size: 0.75rem;
+    padding: 2px 6px;
+    font-size: 10px;
     font-weight: 700;
     border-radius: 4px;
     letter-spacing: 0.5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     z-index: 6;
     font-family: var(--font-primary), sans-serif;
 }
@@ -2724,11 +2723,10 @@ body, html, ul, ol {
     background: #e24125;
     color: #ffffff;
     text-align: center;
-    font-size: 0.65rem;
+    font-size: 10px;
     font-weight: 700;
     transform: rotate(45deg);
     padding: 3px 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     font-family: var(--font-primary), sans-serif;
     letter-spacing: 0.5px;
 }
