@@ -29,7 +29,7 @@ export default function BurobigDesigners() {
 
   const designers = [
     {
-      name: 'Işık Oral & F. Akın Oral',
+      name: 'Işık Oral & E. Akın Oral',
       title: translate('Klan Studio', 'Klan Studio'),
       image: '/assets/burobig/images/designer-klan.jpg',
       bio: translate(
