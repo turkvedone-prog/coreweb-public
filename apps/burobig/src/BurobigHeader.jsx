@@ -1,20 +1,94 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
+import { getActiveProducts } from '../../services/publicContentService';
+import { resolveField } from '@coreweb/shared-ui';
 import './burobig.css';
 
 export default function BurobigHeader() {
   const { tenantMapping, activeLang, settings } = useSite();
+  const translate = (tr, en) => activeLang === 'tr' ? tr : en;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState(null); // 'urunler' | 'kurumsal' | null
   const [isUrunlerOpen, setIsUrunlerOpen] = useState(false);
   const [isKurumsalOpen, setIsKurumsalOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const location = useLocation();
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     setIsUrunlerOpen(false);
     setIsKurumsalOpen(false);
+    setIsSearchOpen(false);
   }, [location]);
+
+  // Fetch products when search modal opens
+  useEffect(() => {
+    if (isSearchOpen) {
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 80);
+      if (products.length === 0) {
+        getActiveProducts(tenantMapping.tenantId)
+          .then(raw => {
+            setProducts(raw || []);
+          })
+          .catch(err => {
+            console.error('Error fetching products for search:', err);
+          });
+      }
+    } else {
+      document.body.style.overflow = '';
+      setSearchQuery('');
+      setSearchResults([]);
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isSearchOpen, tenantMapping.tenantId]);
+
+  // Close search overlay on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsSearchOpen(false);
+      }
+    };
+    if (isSearchOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isSearchOpen]);
+
+  // Clientside search filtering
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    const queryLower = searchQuery.toLowerCase().trim();
+    const filtered = products.filter(p => {
+      const title = (resolveField(p, activeLang, 'title') || resolveField(p, activeLang, 'name') || '').toLowerCase();
+      const desc = (resolveField(p, activeLang, 'description') || '').toLowerCase();
+      const category = (resolveField(p, activeLang, 'category') || '').toLowerCase();
+      const subcategory = (resolveField(p, activeLang, 'subcategory') || '').toLowerCase();
+      return title.includes(queryLower) || desc.includes(queryLower) || category.includes(queryLower) || subcategory.includes(queryLower);
+    }).map(p => ({
+      ...p,
+      title: resolveField(p, activeLang, 'title') || resolveField(p, activeLang, 'name') || '',
+      slug: resolveField(p, activeLang, 'slug') || p.slug || p.id,
+      categoryName: resolveField(p, activeLang, 'category') || ''
+    }));
+    setSearchResults(filtered);
+  }, [searchQuery, products, activeLang]);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -278,7 +352,12 @@ export default function BurobigHeader() {
                 <a href="#ru">RU</a>
               </div>
             </div>
-            <button className="icon-btn" id="btn-search" aria-label="Arama Yap">
+            <button 
+              className="icon-btn" 
+              id="btn-search" 
+              aria-label="Arama Yap"
+              onClick={() => setIsSearchOpen(true)}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -385,6 +464,150 @@ export default function BurobigHeader() {
           </div>
         </div>
       </header>
+
+      {/* Arama Overlay (Modal) */}
+      {isSearchOpen && (
+        <div className="search-overlay" role="dialog" aria-modal="true" aria-label={translate('Arama', 'Search')}>
+          <div className="search-overlay__background" onClick={() => setIsSearchOpen(false)} />
+          <div className="search-overlay__content">
+            <div className="search-overlay__container">
+              {/* Header */}
+              <div className="search-overlay__header">
+                <div className="search-overlay__input-wrapper">
+                  <svg className="search-overlay__search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    className="search-overlay__input"
+                    placeholder={translate('Ürün adı, kategori veya detay ara...', 'Search product title, category or details...')}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    autoComplete="off"
+                  />
+                  {searchQuery && (
+                    <button 
+                      className="search-overlay__clear" 
+                      onClick={() => setSearchQuery('')}
+                      aria-label={translate('Temizle', 'Clear')}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+                <button 
+                  className="search-overlay__close-btn" 
+                  onClick={() => setIsSearchOpen(false)}
+                  aria-label={translate('Kapat', 'Close')}
+                >
+                  <span>{translate('KAPAT', 'CLOSE')}</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="search-overlay__body">
+                {searchQuery.trim() === '' ? (
+                  <div className="search-overlay__suggestions">
+                    <div className="search-overlay__suggest-col">
+                      <h3 className="search-overlay__section-title">
+                        {translate('Popüler Aramalar', 'Popular Searches')}
+                      </h3>
+                      <div className="search-overlay__tags">
+                        {[
+                          translate('İnka', 'Inka'),
+                          translate('Vetra', 'Vetra'),
+                          translate('Masa', 'Desk'),
+                          translate('Koltuk', 'Chair'),
+                          translate('Toplantı', 'Meeting'),
+                          translate('Keson', 'Pedestal')
+                        ].map(tag => (
+                          <button 
+                            key={tag} 
+                            className="search-overlay__tag-btn"
+                            onClick={() => setSearchQuery(tag)}
+                          >
+                            {tag}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="search-overlay__suggest-col">
+                      <h3 className="search-overlay__section-title">
+                        {translate('Öne Çıkan Ürünler', 'Featured Products')}
+                      </h3>
+                      <div className="search-overlay__featured-grid">
+                        {products.slice(0, 3).map(p => {
+                          const productSlug = resolveField(p, activeLang, 'slug') || p.slug || p.id;
+                          const pTitle = resolveField(p, activeLang, 'title') || resolveField(p, activeLang, 'name') || '';
+                          const pImage = p.coverImageUrl || '/assets/burobig/images/INKA 01.jpg';
+                          return (
+                            <Link 
+                              key={p.id}
+                              to={getLocalizedPath(`/urunler/${productSlug}`)} 
+                              className="search-overlay__featured-item"
+                              onClick={() => setIsSearchOpen(false)}
+                            >
+                              <img src={pImage} alt={pTitle} />
+                              <div>
+                                <span className="search-overlay__featured-name">{pTitle}</span>
+                                <span className="search-overlay__featured-cat">
+                                  {resolveField(p, activeLang, 'subcategory') || resolveField(p, activeLang, 'category') || ''}
+                                </span>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="search-overlay__results">
+                    <h3 className="search-overlay__section-title">
+                      {translate(`Arama Sonuçları (${searchResults.length})`, `Search Results (${searchResults.length})`)}
+                    </h3>
+                    {searchResults.length === 0 ? (
+                      <div className="search-overlay__empty">
+                        <p>{translate(`"${searchQuery}" için eşleşen bir ürün bulunamadı.`, `No products found matching "${searchQuery}".`)}</p>
+                        <span>{translate('Farklı anahtar kelimelerle aramayı deneyebilirsiniz.', 'Please try searching with different keywords.')}</span>
+                      </div>
+                    ) : (
+                      <div className="search-overlay__results-grid">
+                        {searchResults.map(p => {
+                          const detailPath = getLocalizedPath(`/urunler/${p.slug}`);
+                          const pImage = p.coverImageUrl || '/assets/burobig/images/INKA 01.jpg';
+                          return (
+                            <Link 
+                              key={p.id} 
+                              to={detailPath} 
+                              className="search-overlay__result-card"
+                              onClick={() => setIsSearchOpen(false)}
+                            >
+                              <div className="search-overlay__result-img-wrapper">
+                                <img src={pImage} alt={p.title} />
+                              </div>
+                              <div className="search-overlay__result-info">
+                                <h4 className="search-overlay__result-title">{p.title}</h4>
+                                <p className="search-overlay__result-category">{p.categoryName || ''}</p>
+                              </div>
+                              <span className="search-overlay__result-arrow">→</span>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
