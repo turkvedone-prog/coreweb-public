@@ -433,13 +433,33 @@ export default function BurobigHeader() {
                         <li><Link to={getLocalizedPath('/misafir-ve-bekleme-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>Misafir ve Bekleme Koltukları</Link></li>
                       </ul>
                     </div>
-                    {/* Diğer Kategoriler */}
+                    {/* Koltuklar / Kanepeler */}
                     <div className="mobile-submenu__section">
-                      <h6 className="mobile-submenu__title">DİĞER KATEGORİLER</h6>
+                      <h6 className="mobile-submenu__title">KOLTUKLAR / KANEPELER</h6>
                       <ul>
-                        <li><Link to={getLocalizedPath('/koltuklar-kanepeler')} onClick={() => setIsMobileMenuOpen(false)}>Koltuklar & Kanepeler</Link></li>
-                        <li><Link to={getLocalizedPath('/depolama-sistemleri')} onClick={() => setIsMobileMenuOpen(false)}>Depolama Sistemleri</Link></li>
-                        <li><Link to={getLocalizedPath('/tamamlayicilar')} onClick={() => setIsMobileMenuOpen(false)}>Tamamlayıcılar</Link></li>
+                        <li><Link to={getLocalizedPath('/koltuklar')} onClick={() => setIsMobileMenuOpen(false)}>Koltuklar</Link></li>
+                        <li><Link to={getLocalizedPath('/kanepeler')} onClick={() => setIsMobileMenuOpen(false)}>Kanepeler</Link></li>
+                        <li><Link to={getLocalizedPath('/sandalyeler')} onClick={() => setIsMobileMenuOpen(false)}>Sandalyeler</Link></li>
+                        <li><Link to={getLocalizedPath('/bekleme-alanlari')} onClick={() => setIsMobileMenuOpen(false)}>Bekleme Alanları</Link></li>
+                      </ul>
+                    </div>
+                    {/* Depolama Sistemleri */}
+                    <div className="mobile-submenu__section">
+                      <h6 className="mobile-submenu__title">DEPOLAMA SİSTEMLERİ</h6>
+                      <ul>
+                        <li><Link to={getLocalizedPath('/kesonlar')} onClick={() => setIsMobileMenuOpen(false)}>Kesonlar</Link></li>
+                        <li><Link to={getLocalizedPath('/dolaplar')} onClick={() => setIsMobileMenuOpen(false)}>Dolaplar</Link></li>
+                        <li><Link to={getLocalizedPath('/kitaplik-ve-raf-sistemleri')} onClick={() => setIsMobileMenuOpen(false)}>Kitaplık ve Raf Sistemleri</Link></li>
+                      </ul>
+                    </div>
+                    {/* Tamamlayıcılar */}
+                    <div className="mobile-submenu__section">
+                      <h6 className="mobile-submenu__title">TAMAMLAYICILAR</h6>
+                      <ul>
+                        <li><Link to={getLocalizedPath('/sehpalar')} onClick={() => setIsMobileMenuOpen(false)}>Sehpalar</Link></li>
+                        <li><Link to={getLocalizedPath('/puflar')} onClick={() => setIsMobileMenuOpen(false)}>Puflar</Link></li>
+                        <li><Link to={getLocalizedPath('/askiliklar')} onClick={() => setIsMobileMenuOpen(false)}>Askılıklar</Link></li>
+                        <li><Link to={getLocalizedPath('/elektrifikasyon')} onClick={() => setIsMobileMenuOpen(false)}>Elektrifikasyon</Link></li>
                       </ul>
                     </div>
                   </div>
