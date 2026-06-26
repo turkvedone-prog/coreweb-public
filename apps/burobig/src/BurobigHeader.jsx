@@ -337,6 +337,7 @@ export default function BurobigHeader() {
               </svg>
               Shop
             </a>
+            {/* 
             <a href="#" onClick={(e) => e.preventDefault()} className="utility-link utility-link--has-line" id="util-portal" style={{ display: 'inline-flex', alignItems: 'center', paddingLeft: '0.75rem', gap: '0.15rem' }}>
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
@@ -349,6 +350,7 @@ export default function BurobigHeader() {
               </svg>
               Portal
             </a>
+            */}
             <a href="https://burobig.tahsilat.com.tr/auth/sign-in" target="_blank" rel="noopener noreferrer" className="utility-link utility-link--has-line" id="util-pay">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
                 <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>

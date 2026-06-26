@@ -1880,10 +1880,14 @@ body, html, ul, ol {
     .main-nav { display: none; }
     .header-utility .utility-link { display: none; }
 
-    /* Mobilde arama ve dil seçimi gizlenir */
-    #btn-search,
+    /* Mobilde dil seçimi gizlenir, arama butonu görünür kalır */
     .utility-dropdown {
         display: none !important;
+    }
+
+    #btn-search {
+        display: flex !important;
+        margin-right: 0.5rem; /* hamburger menü ile arasına mesafe */
     }
 
     .site-header {
