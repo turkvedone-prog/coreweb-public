@@ -1880,8 +1880,9 @@ body, html, ul, ol {
     .main-nav { display: none; }
     .header-utility .utility-link { display: none; }
 
-    /* Mobilde dil seçimi gizlenir, arama butonu görünür kalır */
-    .utility-dropdown {
+    /* Mobilde dil seçimi ve portal gizlenir, arama butonu görünür kalır */
+    .utility-dropdown,
+    #util-portal {
         display: none !important;
     }
 
