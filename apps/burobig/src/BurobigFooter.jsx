@@ -119,19 +119,7 @@ export default function BurobigFooter() {
         </div>
       </footer>
 
-      {/* Floating Scroll Navigation Widget */}
-      <div className="scroll-navigation-fixed">
-        <button onClick={scrollToTop} className="control-btn" aria-label="Yukarı Git">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="18 15 12 9 6 15"></polyline>
-          </svg>
-        </button>
-        <button onClick={scrollToBottom} className="control-btn" aria-label="Aşağı Git">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-      </div>
+
 
       {/* WhatsApp Lead Widget
       <div className="wa-widget">
