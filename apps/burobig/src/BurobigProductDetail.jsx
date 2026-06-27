@@ -8,6 +8,41 @@ import { getActiveProducts } from '../../services/publicContentService';
 import { getLocalizedContent } from '../../utils/i18nContent';
 import { resolveField } from '@coreweb/shared-ui';
 
+const getSubcategoryColor = (subcategory, category) => {
+  const name = (subcategory || category || '').toLowerCase().trim();
+  
+  // Masalar
+  if (name.includes('üst yönetici') || name.includes('ust-yonetici') || name.includes('ust yönetici') || name.includes('ust_yonetici')) return '#f3f1ec'; // Soft premium sand
+  if (name.includes('yönetici masaları') || name.includes('yonetici-masalari') || name.includes('yönetici-masaları')) return '#efebe4'; // Soft warm clay
+  if (name.includes('çalışma masaları') || name.includes('calisma-masalari') || name.includes('çalışma-masaları')) return '#e8e6e1'; // Soft linen
+  if (name.includes('operasyonel') || name.includes('operasyonel-masalar')) return '#e2e4e1'; // Soft ash gray
+  if (name.includes('toplantı') || name.includes('toplanti')) return '#dee0d9'; // Soft olive gray/sage
+  
+  // Ofis Koltukları
+  if (name.includes('yönetici koltukları') || name.includes('yonetici-koltuklari') || name.includes('yönetici-koltukaları') || name.includes('yönetici-koltukları')) return '#ebdcd5'; // Soft deep taupe
+  if (name.includes('çalışma koltukları') || name.includes('calisma-koltuklari') || name.includes('çalışma-koltukları')) return '#dbe1e1'; // Soft mist gray
+  if (name.includes('misafir') || name.includes('bekleme koltuk') || name.includes('bekleme-koltuk')) return '#eddcd2'; // Soft peach beige
+  
+  // Koltuklar / Kanepeler
+  if (name.includes('koltuklar') && !name.includes('ofis') && !name.includes('yönetici') && !name.includes('çalışma')) return '#ebdcd9'; // Soft powder rose
+  if (name.includes('kanepeler')) return '#e6dfd9'; // Soft warm plaster
+  if (name.includes('sandalyeler')) return '#dfdfd9'; // Soft slate beige
+  if (name.includes('bekleme alanları') || name.includes('bekleme-alanlari') || name.includes('bekleme-alanları')) return '#eddcd2'; // Soft desert sand
+  
+  // Depolama Sistemleri
+  if (name.includes('kesonlar')) return '#dae2e0'; // Soft teal gray
+  if (name.includes('dolaplar')) return '#eeded1'; // Soft almond
+  if (name.includes('kitaplık') || name.includes('kitaplik') || name.includes('raf')) return '#dae1e6'; // Soft mist blue
+  
+  // Tamamlayıcılar
+  if (name.includes('sehpalar')) return '#e9dfd8'; // Soft dry clay
+  if (name.includes('puflar')) return '#dfdae3'; // Soft lilac gray
+  if (name.includes('askılıklar') || name.includes('askiliklar')) return '#eaeae5'; // Soft bone white
+  if (name.includes('elektrifikasyon')) return '#e5e8e8'; // Soft cool silver
+
+  return '#f3f1ec'; // Default fallback zemin color
+};
+
 export default function BurobigProductDetail({ product }) {
   const { tenantMapping, activeLang } = useSite();
   const { tenantId, tenantSlug } = tenantMapping;
@@ -327,18 +362,20 @@ export default function BurobigProductDetail({ product }) {
     };
   }, [productTitle, product, productSummary, productDescription]);
 
+  const resolvedBgColor = product.customPageSettings?.backgroundColor || getSubcategoryColor(product.subcategory, product.category);
+
   return (
     <main className="product-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
       <section 
         className="product-hero-premium"
-        style={product.customPageSettings?.backgroundColor ? { backgroundColor: product.customPageSettings.backgroundColor } : {}}
+        style={{ backgroundColor: resolvedBgColor }}
       >
         {(product.customPageSettings?.backgroundImageUrl || product.coverImageUrl) && (
           <div 
             className="product-premium-gallery"
             style={{ 
-              backgroundColor: product.customPageSettings?.backgroundColor || '#f3f1ec',
+              backgroundColor: resolvedBgColor,
               isolation: 'isolate'
             }}
           >
