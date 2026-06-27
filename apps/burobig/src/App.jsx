@@ -20,6 +20,7 @@ const BurobigDesignPhilosophy = lazy(() => import('./BurobigDesignPhilosophy'));
 const BurobigManifesto = lazy(() => import('./BurobigManifesto'));
 const BurobigQualityPolicy = lazy(() => import('./BurobigQualityPolicy'));
 const BurobigSustainability = lazy(() => import('./BurobigSustainability'));
+const BurobigLegalDetail = lazy(() => import('./BurobigLegalDetail'));
 
 import { getActiveProducts, getActiveProductBySlug } from '../../services/publicContentService';
 import { submitLead, resolveField } from '@coreweb/shared-ui';
@@ -374,6 +375,7 @@ export default function App() {
           <Route path="kalite-politikamiz" element={<BurobigQualityPolicy />} />
           <Route path="surdurulebilirlik" element={<BurobigSustainability />} />
           <Route path="iletisim" element={<BurobigContactPage />} />
+          <Route path=":slug" element={<BurobigLegalDetail />} />
           <Route path="*" element={<BurobigNotFound />} />
         </Route>
         <Route path="*" element={<Navigate to={defaultRedirect} replace />} />

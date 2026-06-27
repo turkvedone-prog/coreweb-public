@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import BurobigHeader from '../BurobigHeader';
 import BurobigFooter from '../BurobigFooter';
+import BurobigCookieConsent from '../BurobigCookieConsent';
 import { getCompanySettings } from '../../services/publicContentService';
 
 const SiteContext = createContext(null);
@@ -54,6 +55,7 @@ export default function SiteLayout({ children, activeLang }) {
           {children}
         </main>
         <BurobigFooter />
+        <BurobigCookieConsent settings={settings} activeLang={activeLang} />
       </div>
     </SiteContext.Provider>
   );

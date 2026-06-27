@@ -37,12 +37,21 @@ export default function BurobigBlogList({ blogs = [], formatDate, getLocalizedPa
                         <BookOpen className="h-10 w-10 text-slate-400" />
                       </div>
                     )}
-                    {blog.category && <span className="blog-list-tag">{blog.category}</span>}
                   </div>
                   <div className="blog-list-card-content">
-                    <div className="blog-list-date">
-                      <Calendar className="h-3 w-3" style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
-                      <span>{formatDate(blog.createdAt)}</span>
+                    <div className="blog-list-date" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Calendar className="h-3.5 w-3.5" style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
+                        <span>{formatDate(blog.createdAt)}</span>
+                      </div>
+                      {blog.category && (
+                        <>
+                          <span style={{ color: '#dadce0' }}>•</span>
+                          <span style={{ color: 'var(--accent-color)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            {blog.category}
+                          </span>
+                        </>
+                      )}
                     </div>
                     <Link to={detailPath} className="blog-list-card-title">
                       {blog.title}
