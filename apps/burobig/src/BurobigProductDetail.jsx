@@ -12,9 +12,9 @@ const getSubcategoryColor = (subcategory, category) => {
   const name = (subcategory || category || '').toLowerCase().trim();
   
   // Masalar
-  if (name.includes('üst yönetici') || name.includes('ust-yonetici') || name.includes('ust yönetici') || name.includes('ust_yonetici')) return '#f3f1ec'; // Soft premium sand
-  if (name.includes('yönetici masaları') || name.includes('yonetici-masalari') || name.includes('yönetici-masaları')) return '#efebe4'; // Soft warm clay
-  if (name.includes('çalışma masaları') || name.includes('calisma-masalari') || name.includes('çalışma-masaları')) return '#e8e6e1'; // Soft linen
+  if (name.includes('üst yönetici') || name.includes('ust-yonetici') || name.includes('ust yönetici') || name.includes('ust_yonetici')) return '#f2ece4'; // Soft premium ivory beige
+  if (name.includes('yönetici masaları') || name.includes('yonetici-masalari') || name.includes('yönetici-masaları')) return '#e5dfd9'; // Soft clay taupe
+  if (name.includes('çalışma masaları') || name.includes('calisma-masalari') || name.includes('çalışma-masaları')) return '#dae1e0'; // Soft sage teal mist
   if (name.includes('operasyonel') || name.includes('operasyonel-masalar')) return '#e2e4e1'; // Soft ash gray
   if (name.includes('toplantı') || name.includes('toplanti')) return '#dee0d9'; // Soft olive gray/sage
   
