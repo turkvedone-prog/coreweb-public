@@ -214,6 +214,9 @@ export default function BurobigProductDetail({ product }) {
 
   // Determine Hero image slider list — tüm ürünler Firebase gallery kullanır
   const heroImages = useMemo(() => {
+    if (product?.customPageSettings?.backgroundImageUrl) {
+      return [product.customPageSettings.backgroundImageUrl];
+    }
     const galleryImages = (product?.gallery || [])
       .map(img => img?.url)
       .filter(Boolean);
@@ -352,8 +355,31 @@ export default function BurobigProductDetail({ product }) {
     <main className="product-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
       {/* Product Hero Premium (Full-Bleed Showcase) */}
-      <section className="product-hero-premium">
-        {/* Soft background only for now — will be replaced by a fixed image later */}
+      <section 
+        className="product-hero-premium"
+        style={product.customPageSettings?.backgroundColor ? { backgroundColor: product.customPageSettings.backgroundColor } : {}}
+      >
+        <div className="product-hero-premium__container">
+          <div className="product-hero-premium__caption">
+            <h1 className="hero-premium-title">{productTitle}</h1>
+            <p className="hero-premium-subtitle">{(product.subcategory || product.category)?.toUpperCase()}</p>
+          </div>
+          {product.designer && (
+            <div className="product-hero-designer">
+              DESIGNED BY {product.designer.toUpperCase()}
+            </div>
+          )}
+        </div>
+        <div className="product-premium-gallery">
+          {heroImages.map((img, idx) => (
+            <img
+              key={idx}
+              src={img}
+              alt={`${productTitle} Hero ${idx + 1}`}
+              className={`hero-premium-img ${idx === activeHeroIdx ? 'active' : ''}`}
+            />
+          ))}
+        </div>
       </section>
 
       {/* Product Detail Showcase Section */}
