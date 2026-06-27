@@ -335,7 +335,13 @@ export default function BurobigProductDetail({ product }) {
         style={product.customPageSettings?.backgroundColor ? { backgroundColor: product.customPageSettings.backgroundColor } : {}}
       >
         {(product.customPageSettings?.backgroundImageUrl || product.coverImageUrl) && (
-          <div className="product-premium-gallery">
+          <div 
+            className="product-premium-gallery"
+            style={{ 
+              backgroundColor: product.customPageSettings?.backgroundColor || '#f3f1ec',
+              isolation: 'isolate'
+            }}
+          >
             <img
               src={product.customPageSettings?.backgroundImageUrl || product.coverImageUrl}
               alt={`${productTitle} Hero`}
