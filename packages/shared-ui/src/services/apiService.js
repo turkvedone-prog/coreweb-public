@@ -17,7 +17,8 @@ export async function submitLead(payload) {
     consentAccepted: !!payload.consentAccepted,
     recaptchaToken: payload.recaptchaToken || '',
     website_dummy: payload.website_dummy || '',
-    sourcePage: window.location.href
+    sourcePage: window.location.href,
+    extraData: payload.extraData || null
   };
 
   try {

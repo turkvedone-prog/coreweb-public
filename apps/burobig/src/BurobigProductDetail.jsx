@@ -6,7 +6,7 @@ import BurobigEcoBanner from './BurobigEcoBanner';
 
 import { getActiveProducts } from '../../services/publicContentService';
 import { getLocalizedContent } from '../../utils/i18nContent';
-import { resolveField } from '@coreweb/shared-ui';
+import { resolveField, submitLead } from '@coreweb/shared-ui';
 
 const getSubcategoryColor = (subcategory, category) => {
   const name = (subcategory || category || '').toLowerCase().trim();
@@ -161,6 +161,16 @@ export default function BurobigProductDetail({ product }) {
   const detailImgRef = useRef(null);
   const [isInitial, setIsInitial] = useState(true);
 
+  // Proposal modal states
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [proposalData, setProposalData] = useState({
+    name: '', email: '', phone: '', message: '', website_dummy: ''
+  });
+  const [proposalConsent, setProposalConsent] = useState(false);
+  const [proposalLoading, setProposalLoading] = useState(false);
+  const [proposalSuccess, setProposalSuccess] = useState(false);
+  const [proposalError, setProposalError] = useState(null);
+
   // Storing information from previous renders to adjust state on product change without useEffect
   const [prevProduct, setPrevProduct] = useState(product);
   const prevSlug = resolveField(prevProduct, activeLang, 'slug') || prevProduct?.slug || prevProduct?.id;
@@ -169,6 +179,12 @@ export default function BurobigProductDetail({ product }) {
     setActiveDetailImage(product.coverImageUrl || FALLBACK_IMAGE);
     setActiveDetailIdx(0);
     setThumbStartIndex(0);
+    // Reset modal states
+    setIsModalOpen(false);
+    setProposalSuccess(false);
+    setProposalError(null);
+    setProposalConsent(false);
+    setProposalData({ name: '', email: '', phone: '', message: '', website_dummy: '' });
   }
 
   useEffect(() => {
@@ -269,6 +285,86 @@ export default function BurobigProductDetail({ product }) {
     } else {
       setActiveDetailImage(src);
       setActiveDetailIdx(idx);
+    }
+  };
+
+  const handleProposalChange = (e) => {
+    setProposalData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleProposalSubmit = async (e) => {
+    e.preventDefault();
+    setProposalLoading(true);
+    setProposalError(null);
+
+    // Honeypot check
+    if (proposalData.website_dummy) {
+      setTimeout(() => {
+        setProposalSuccess(true);
+        setProposalLoading(false);
+      }, 400);
+      return;
+    }
+
+    if (!proposalData.name || !proposalData.name.trim()) {
+      setProposalError(translate('Lütfen adınızı ve soyadınızı girin.', 'Please enter your name.'));
+      setProposalLoading(false);
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!proposalData.email || !emailRegex.test(proposalData.email)) {
+      setProposalError(translate('Lütfen geçerli bir e-posta adresi girin.', 'Please enter a valid email address.'));
+      setProposalLoading(false);
+      return;
+    }
+    const phoneDigits = proposalData.phone ? proposalData.phone.replace(/\D/g, '') : '';
+    if (!proposalData.phone || phoneDigits.length < 10) {
+      setProposalError(translate('Lütfen en az 10 haneli geçerli bir telefon numarası girin.', 'Please enter a valid phone number with at least 10 digits.'));
+      setProposalLoading(false);
+      return;
+    }
+    if (!proposalData.message || !proposalData.message.trim()) {
+      setProposalError(translate('Lütfen mesajınızı girin.', 'Please enter your message.'));
+      setProposalLoading(false);
+      return;
+    }
+    if (!proposalConsent) {
+      setProposalError(translate('Lütfen KVKK onay metnini kabul edin.', 'Please accept the KVKK consent.'));
+      setProposalLoading(false);
+      return;
+    }
+
+    try {
+      const payload = {
+        tenantId: 'burobig',
+        tenantSlug: 'burobig',
+        source: 'burobig-website',
+        type: 'proposal',
+        formType: 'proposal',
+        name: proposalData.name,
+        email: proposalData.email,
+        phone: proposalData.phone,
+        message: proposalData.message,
+        consentAccepted: proposalConsent,
+        website_dummy: proposalData.website_dummy,
+        pageUrl: window.location.href,
+        createdAt: new Date().toISOString(),
+        status: 'new',
+        extraData: {
+          "Ürün Adı": productTitle,
+          "Ürün Linki": window.location.href
+        }
+      };
+
+      await submitLead(payload);
+      setProposalSuccess(true);
+    } catch (err) {
+      setProposalError(err.message || translate(
+        'Bir hata oluştu, lütfen tekrar deneyin.',
+        'An error occurred, please try again.'
+      ));
+    } finally {
+      setProposalLoading(false);
     }
   };
 
@@ -491,12 +587,13 @@ export default function BurobigProductDetail({ product }) {
               )}
             </div>
             <div className="detail-showcase__actions">
-              <a
-                href={`mailto:info@burobig.com?subject=Fiyat Teklifi: ${productTitle}`}
+              <button
+                onClick={() => setIsModalOpen(true)}
                 className="btn-primary-dark"
+                style={{ cursor: 'pointer', border: 'none' }}
               >
                 {translate('Fiyat Teklifi Al', 'Get a Quote')}
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -692,6 +789,157 @@ export default function BurobigProductDetail({ product }) {
       </div>
 
       <BurobigEcoBanner />
+
+      {/* Proposal Modal */}
+      {isModalOpen && (
+        <div className="proposal-modal">
+          <div className="proposal-modal__backdrop" onClick={() => setIsModalOpen(false)} />
+          <div className="proposal-modal__content">
+            <button className="proposal-modal__close" onClick={() => setIsModalOpen(false)} aria-label={translate('Kapat', 'Close')}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+
+            {proposalSuccess ? (
+              <div className="proposal-modal__success">
+                <div className="proposal-modal__success-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <h3>{translate('Teklif Talebiniz Alındı', 'Quote Request Received')}</h3>
+                <p>
+                  {translate(
+                    'İnka Üst Yönetici için teklif talebiniz başarıyla kaydedilmiştir. En kısa sürede sizinle iletişime geçeceğiz.',
+                    'Your quote request for İnka Üst Yönetici has been successfully registered. We will contact you as soon as possible.'
+                  ).replace('İnka Üst Yönetici', productTitle)}
+                </p>
+                <button className="btn-close" onClick={() => setIsModalOpen(false)}>
+                  {translate('Kapat', 'Close')}
+                </button>
+              </div>
+            ) : (
+              <>
+                <h3 className="proposal-modal__title">{translate('Fiyat Teklifi Al', 'Get a Quote')}</h3>
+                <p className="proposal-modal__subtitle">
+                  {translate(
+                    'Aşağıdaki formu doldurarak İnka Üst Yönetici için özel fiyat teklifi talep edebilirsiniz.',
+                    'Fill out the form below to request a custom price quote for İnka Üst Yönetici.'
+                  ).replace('İnka Üst Yönetici', productTitle)}
+                </p>
+
+                <form onSubmit={handleProposalSubmit} className="proposal-form">
+                  {proposalError && (
+                    <div className="proposal-form__error">
+                      <span>{proposalError}</span>
+                    </div>
+                  )}
+
+                  {/* Honeypot field */}
+                  <input
+                    type="text"
+                    name="website_dummy"
+                    value={proposalData.website_dummy}
+                    onChange={handleProposalChange}
+                    style={{ display: 'none' }}
+                    tabIndex="-1"
+                    autoComplete="off"
+                  />
+
+                  <div className="form-group">
+                    <label htmlFor="name" className="form-label">{translate('Ad Soyad *', 'Name *')}</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={proposalData.name}
+                      onChange={handleProposalChange}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="email" className="form-label">{translate('E-Posta *', 'Email *')}</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={proposalData.email}
+                      onChange={handleProposalChange}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="phone" className="form-label">{translate('Telefon *', 'Phone *')}</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={proposalData.phone}
+                      onChange={handleProposalChange}
+                      className="form-input"
+                      placeholder="05xx xxx xx xx"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="message" className="form-label">{translate('Mesajınız *', 'Your Message *')}</label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={proposalData.message}
+                      onChange={handleProposalChange}
+                      className="form-textarea"
+                      placeholder={translate('Ürün hakkında sormak istedikleriniz...', 'Your questions about the product...')}
+                      required
+                    />
+                  </div>
+
+                  <label className="form-checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={proposalConsent}
+                      onChange={(e) => setProposalConsent(e.target.checked)}
+                      className="form-checkbox"
+                      required
+                    />
+                    <span>
+                      {translate(
+                        'KVKK kapsamında kişisel verilerimin işlenmesini ve iletişim bilgilerim üzerinden benimle iletişime geçilmesini kabul ediyorum.',
+                        'I accept the processing of my personal data under KVKK and consent to be contacted via my communication details.'
+                      )}
+                    </span>
+                  </label>
+
+                  <button
+                    type="submit"
+                    className="btn-submit"
+                    disabled={proposalLoading}
+                  >
+                    {proposalLoading ? (
+                      translate('Gönderiliyor...', 'Sending...')
+                    ) : (
+                      <>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: 'rotate(-45deg)', marginTop: '-2px' }}>
+                          <line x1="22" y1="2" x2="11" y2="13"></line>
+                          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                        {translate('Teklifi Gönder', 'Submit Request')}
+                      </>
+                    )}
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
