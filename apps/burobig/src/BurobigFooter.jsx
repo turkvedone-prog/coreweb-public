@@ -30,6 +30,20 @@ export default function BurobigFooter() {
     cleanWa = waDigits;
   }
 
+  const getSocialLink = (socialField, defaultUrl) => {
+    if (!socialField) return defaultUrl;
+    if (typeof socialField === 'string') return socialField || defaultUrl;
+    if (typeof socialField === 'object') {
+      if (socialField.active === false) return null;
+      return socialField.url || null;
+    }
+    return defaultUrl;
+  };
+
+  const instagramUrl = getSocialLink(settings?.socials?.instagram, "https://instagram.com/burobig");
+  const facebookUrl = getSocialLink(settings?.socials?.facebook, "https://facebook.com/burobig");
+  const linkedinUrl = getSocialLink(settings?.socials?.linkedin, "https://linkedin.com/company/burobig");
+
   return (
     <>
       {/* Footer */}
@@ -42,23 +56,29 @@ export default function BurobigFooter() {
               </Link>
               <p>{footerText}</p>
               <div className="footer-socials">
-                <a href={settings?.socials?.instagram || "https://instagram.com/burobig"} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                  </svg>
-                </a>
-                <a href={settings?.socials?.facebook || "https://facebook.com/burobig"} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-                  </svg>
-                </a>
-                <a href={settings?.socials?.linkedin || "https://linkedin.com/company/burobig"} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
-                  </svg>
-                </a>
+                {instagramUrl && (
+                  <a href={instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                  </a>
+                )}
+                {facebookUrl && (
+                  <a href={facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                    </svg>
+                  </a>
+                )}
+                {linkedinUrl && (
+                  <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
+                    </svg>
+                  </a>
+                )}
               </div>
             </div>
 

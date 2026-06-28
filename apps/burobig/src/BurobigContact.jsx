@@ -1,6 +1,50 @@
 import React from 'react';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
+// Google Maps Iframe parser and domain validator
+const extractGoogleMapUrl = (iframeString) => {
+  if (!iframeString) return null;
+  
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(iframeString, 'text/html');
+    const iframe = doc.querySelector('iframe');
+    if (iframe) {
+      const src = iframe.getAttribute('src');
+      if (src) return src;
+    }
+  } catch (e) {
+    console.error("DOMParser error in extractGoogleMapUrl:", e);
+  }
+
+  const srcRegex = /src=["'](https?:\/\/[^"']+)["']/i;
+  const match = iframeString.match(srcRegex);
+  if (match && match[1]) {
+    return match[1];
+  }
+
+  if (/^https?:\/\//i.test(iframeString.trim())) {
+    return iframeString.trim();
+  }
+
+  return null;
+};
+
+const validateGoogleMapUrl = (urlStr) => {
+  try {
+    const url = new URL(urlStr);
+    const host = url.hostname.toLowerCase();
+    const path = url.pathname.toLowerCase();
+    
+    const isValidDomain = host === 'google.com' || host === 'maps.google.com' || host.endsWith('.google.com');
+    const isValidPath = path.startsWith('/maps');
+    
+    return isValidDomain && isValidPath;
+  } catch (e) {
+    return false;
+  }
+};
+
 export default function BurobigContact({
   formData,
   consentAccepted,
@@ -13,12 +57,18 @@ export default function BurobigContact({
   settings
 }) {
   const address = settings?.contact?.address || "Balıkhisar, Turgut Reis Cd. No: 3, 06750 Akyurt/Ankara";
-  const phone = settings?.contact?.phone || "+90 312 351 07 97";
-  const phone2 = null;
-  const email = "info@burobig.com.tr";
+  const phone = settings?.contact?.phone || settings?.contact?.phone1 || "+90 312 351 07 97";
+  const phone2 = settings?.contact?.phone2 || null;
+  const email = settings?.contact?.email || settings?.contact?.email1 || "info@burobig.com.tr";
   
   const rawWorkingHours = settings?.contact?.workingHours || settings?.workingHours || "Hafta İçi: 08:00 - 18:30\nCumartesi: Kapalı\nPazar: Kapalı";
   const workingHoursLines = typeof rawWorkingHours === 'string' ? rawWorkingHours.split('\n') : [];
+
+  const customMapIframe = settings?.contact?.mapsIframe;
+  const extractedMapUrl = extractGoogleMapUrl(customMapIframe);
+  const isMapValid = extractedMapUrl && validateGoogleMapUrl(extractedMapUrl);
+  const defaultMapUrl = "https://maps.google.com/maps?q=B%C3%BCrobig%20Fabrika,%20Bal%C4%B1khisar,%20Turgut%20Reis%20Cd.%20No:3,%2006750%20Akyurt/Ankara&t=&z=15&ie=UTF8&iwloc=&output=embed";
+  const finalMapSrc = isMapValid ? extractedMapUrl : defaultMapUrl;
 
   return (
     <main id="main-content" className="corporate-page contact-page">
@@ -280,7 +330,7 @@ export default function BurobigContact({
       {/* Full Width Edge-to-Edge Map Section */}
       <section className="contact-map-section">
         <iframe
-          src="https://maps.google.com/maps?q=B%C3%BCrobig%20Fabrika,%20Bal%C4%B1khisar,%20Turgut%20Reis%20Cd.%20No:3,%2006750%20Akyurt/Ankara&t=&z=15&ie=UTF8&iwloc=&output=embed"
+          src={finalMapSrc}
           width="100%"
           height="450"
           style={{ border: 0, display: 'block' }}
