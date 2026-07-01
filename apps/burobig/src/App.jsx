@@ -23,7 +23,7 @@ const BurobigSustainability = lazy(() => import('./BurobigSustainability'));
 const BurobigLegalDetail = lazy(() => import('./BurobigLegalDetail'));
 
 import { getActiveProducts, getActiveProductBySlug } from '../../services/publicContentService';
-import { submitLead, resolveField, loadRecaptchaScript, executeRecaptcha } from '@coreweb/shared-ui';
+import { submitLead, resolveField, loadRecaptchaScript, executeRecaptcha, getCatalogMetadata } from '@coreweb/shared-ui';
 import { updateSEOMeta } from '../../utils/seo';
 
 // ─── 404 Not Found Page ──────────────────────────────────────────────────────
@@ -206,6 +206,335 @@ function BurobigProductDetailPage() {
   return <BurobigProductDetail product={product} />;
 }
 
+const STATIC_CATALOG_METADATA = {
+  categories: [
+    {
+      name: "MASALAR",
+      slug: "masalar",
+      translations: {
+        tr: { name: "MASALAR", slug: "masalar" },
+        en: { name: "DESKS", slug: "desks" },
+        ar: { name: "طاولات", slug: "desks" }
+      }
+    },
+    {
+      name: "OFİS KOLTUKLARI",
+      slug: "ofis-koltuklari",
+      translations: {
+        tr: { name: "OFİS KOLTUKLARI", slug: "ofis-koltuklari" },
+        en: { name: "OFFICE CHAIRS", slug: "office-chairs" },
+        ar: { name: "كراسي مكتب", slug: "office-chairs" }
+      }
+    },
+    {
+      name: "KOLTUKLAR / KANEPELER",
+      slug: "koltuklar-kanepeler",
+      translations: {
+        tr: { name: "KOLTUKLAR / KANEPELER", slug: "koltuklar-kanepeler" },
+        en: { name: "ARMCHAIRS / SOFAS", slug: "armchairs-sofas" },
+        ar: { name: "أرائك ومقاعد", slug: "armchairs-sofas" }
+      }
+    },
+    {
+      name: "DEPOLAMA SİSTEMLERİ",
+      slug: "depolama-sistemleri",
+      translations: {
+        tr: { name: "DEPOLAMA SİSTEMLERİ", slug: "depolama-sistemleri" },
+        en: { name: "STORAGE SYSTEMS", slug: "storage-systems" },
+        ar: { name: "أنظمة التخزين", slug: "storage-systems" }
+      }
+    },
+    {
+      name: "TAMAMLAYICILAR",
+      slug: "tamamlayicilar",
+      translations: {
+        tr: { name: "TAMAMLAYICILAR", slug: "tamamlayicilar" },
+        en: { name: "ACCESSORIES", slug: "accessories" },
+        ar: { name: "إكسسوارات", slug: "accessories" }
+      }
+    }
+  ],
+  subcategories: [
+    {
+      name: "ÜST YÖNETİCİ",
+      slug: "ust-yonetici",
+      translations: {
+        tr: { name: "ÜST YÖNETİCİ", slug: "ust-yonetici" },
+        en: { name: "EXECUTIVE", slug: "executive" },
+        ar: { name: "تنفيذي", slug: "executive" }
+      }
+    },
+    {
+      name: "YÖNETİCİ",
+      slug: "yonetici",
+      translations: {
+        tr: { name: "YÖNETİCİ", slug: "yonetici" },
+        en: { name: "MANAGER", slug: "manager" },
+        ar: { name: "مدير", slug: "manager" }
+      }
+    },
+    {
+      name: "ÇALIŞMA",
+      slug: "calisma",
+      translations: {
+        tr: { name: "ÇALIŞMA", slug: "calisma" },
+        en: { name: "WORK", slug: "work" },
+        ar: { name: "عمل", slug: "work" }
+      }
+    },
+    {
+      name: "OPERASYONEL",
+      slug: "operasyonel",
+      translations: {
+        tr: { name: "OPERASYONEL", slug: "operasyonel" },
+        en: { name: "OPERATIONAL", slug: "operational" },
+        ar: { name: "تشغيلي", slug: "operational" }
+      }
+    },
+    {
+      name: "TOPLANTI",
+      slug: "toplanti",
+      translations: {
+        tr: { name: "TOPLANTI", slug: "toplanti" },
+        en: { name: "MEETING", slug: "meeting" },
+        ar: { name: "اجتماعات", slug: "meeting" }
+      }
+    },
+    {
+      name: "YÖNETİCİ KOLTUKLARI",
+      slug: "yonetici-koltuklari",
+      translations: {
+        tr: { name: "YÖNETİCİ KOLTUKLARI", slug: "yonetici-koltuklari" },
+        en: { name: "EXECUTIVE CHAIRS", slug: "executive-chairs" },
+        ar: { name: "كراسي مدير", slug: "executive-chairs" }
+      }
+    },
+    {
+      name: "ÇALIŞMA KOLTUKLARI",
+      slug: "calisma-koltuklari",
+      translations: {
+        tr: { name: "ÇALIŞMA KOLTUKLARI", slug: "calisma-koltuklari" },
+        en: { name: "TASK CHAIRS", slug: "task-chairs" },
+        ar: { name: "كراسي عمل", slug: "task-chairs" }
+      }
+    },
+    {
+      name: "MİSAFİR VE BEKLEME KOLTUKLARI",
+      slug: "misafir-ve-bekleme-koltuklari",
+      translations: {
+        tr: { name: "MİSAFİR VE BEKLEME KOLTUKLARI", slug: "misafir-ve-bekleme-koltuklari" },
+        en: { name: "GUEST & WAITING CHAIRS", slug: "guest-waiting-chairs" },
+        ar: { name: "كراسي ضيوف وانتظار", slug: "guest-waiting-chairs" }
+      }
+    },
+    {
+      name: "KOLTUKLAR",
+      slug: "koltuklar",
+      translations: {
+        tr: { name: "KOLTUKLAR", slug: "koltuklar" },
+        en: { name: "ARMCHAIRS", slug: "armchairs" },
+        ar: { name: "مقاعد", slug: "armchairs" }
+      }
+    },
+    {
+      name: "KANEPELER",
+      slug: "kanepeler",
+      translations: {
+        tr: { name: "KANEPELER", slug: "kanepeler" },
+        en: { name: "SOFAS", slug: "sofas" },
+        ar: { name: "أرائك", slug: "sofas" }
+      }
+    },
+    {
+      name: "SANDALYELER",
+      slug: "sandalyeler",
+      translations: {
+        tr: { name: "SANDALYELER", slug: "sandalyeler" },
+        en: { name: "CHAIRS", slug: "chairs" },
+        ar: { name: "كراسي", slug: "chairs" }
+      }
+    },
+    {
+      name: "BEKLEME ALANLARI",
+      slug: "bekleme-alanlari",
+      translations: {
+        tr: { name: "BEKLEME ALANLARI", slug: "bekleme-alanlari" },
+        en: { name: "WAITING AREAS", slug: "waiting-areas" },
+        ar: { name: "مناطق الانتظار", slug: "waiting-areas" }
+      }
+    },
+    {
+      name: "KESONLAR",
+      slug: "kesonlar",
+      translations: {
+        tr: { name: "KESONLAR", slug: "kesonlar" },
+        en: { name: "PEDESTALS", slug: "pedestals" },
+        ar: { name: "وحدات أدراج", slug: "pedestals" }
+      }
+    },
+    {
+      name: "DOLAPLAR",
+      slug: "dolaplar",
+      translations: {
+        tr: { name: "DOLAPLAR", slug: "dolaplar" },
+        en: { name: "CABINETS", slug: "cabinets" },
+        ar: { name: "خزائن", slug: "cabinets" }
+      }
+    },
+    {
+      name: "KİTAPLIK VE RAF SİSTEMLERİ",
+      slug: "kitaplik-ve-raf-sistemleri",
+      translations: {
+        tr: { name: "KİTAPLIK VE RAF SİSTEMLERİ", slug: "kitaplik-ve-raf-sistemleri" },
+        en: { name: "BOOKCASES & SHELVES", slug: "bookcases-shelves" },
+        ar: { name: "رفوف ومكتبات", slug: "bookcases-shelves" }
+      }
+    },
+    {
+      name: "SEHPALAR",
+      slug: "sehpalar",
+      translations: {
+        tr: { name: "SEHPALAR", slug: "sehpalar" },
+        en: { name: "COFFEE TABLES", slug: "coffee-tables" },
+        ar: { name: "طاولات قهوة", slug: "coffee-tables" }
+      }
+    },
+    {
+      name: "PUFLAR",
+      slug: "puflar",
+      translations: {
+        tr: { name: "PUFLAR", slug: "puflar" },
+        en: { name: "POUFS", slug: "poufs" },
+        ar: { name: "بوف", slug: "poufs" }
+      }
+    },
+    {
+      name: "ASKILIKLAR",
+      slug: "askiliklar",
+      translations: {
+        tr: { name: "ASKILIKLAR", slug: "askiliklar" },
+        en: { name: "COAT HANGERS", slug: "coat-hangers" },
+        ar: { name: "عlaqat malabis", slug: "coat-hangers" }
+      }
+    },
+    {
+      name: "ELEKTRİFİKASYON",
+      slug: "elektrifikasyon",
+      translations: {
+        tr: { name: "ELEKTRİFİKASYON", slug: "elektrifikasyon" },
+        en: { name: "ELECTRIFICATION", slug: "electrification" },
+        ar: { name: "أنظمة كهرباء", slug: "electrification" }
+      }
+    }
+  ]
+};
+
+const LEGACY_SLUG_MAP = {
+  'ust-yonetici-masalari': { name: 'ÜST YÖNETİCİ', isSubcategory: true, catSlug: 'masalar', subcatSlug: 'ust-yonetici' },
+  'yonetici-masalari': { name: 'YÖNETİCİ', isSubcategory: true, catSlug: 'masalar', subcatSlug: 'yonetici' },
+  'calisma-masalari': { name: 'ÇALIŞMA', isSubcategory: true, catSlug: 'masalar', subcatSlug: 'calisma' },
+  'operasyonel-masalar': { name: 'OPERASYONEL', isSubcategory: true, catSlug: 'masalar', subcatSlug: 'operasyonel' },
+  'toplanti-masalari': { name: 'TOPLANTI', isSubcategory: true, catSlug: 'masalar', subcatSlug: 'toplanti' },
+  'yonetici-koltuklari': { name: 'YÖNETİCİ KOLTUKLARI', isSubcategory: true, catSlug: 'ofis-koltuklari', subcatSlug: 'yonetici-koltuklari' },
+  'calisma-koltuklari': { name: 'ÇALIŞMA KOLTUKLARI', isSubcategory: true, catSlug: 'ofis-koltuklari', subcatSlug: 'calisma-koltuklari' },
+  'misafir-ve-bekleme-koltuklari': { name: 'MİSAFİR VE BEKLEME KOLTUKLARI', isSubcategory: true, catSlug: 'ofis-koltuklari', subcatSlug: 'misafir-ve-bekleme-koltuklari' },
+  'kitaplik-ve-raf-sistemleri': { name: 'KİTAPLIK VE RAF SİSTEMLERİ', isSubcategory: true, catSlug: 'depolama-sistemleri', subcatSlug: 'kitaplik-raf' },
+  'bekleme-alanlari': { name: 'BEKLEME ALANLARI', isSubcategory: true, catSlug: 'koltuklar-kanepeler', subcatSlug: 'bekleme-alanlari' }
+};
+
+function DynamicCategoryPage() {
+  const { categorySlug } = useParams();
+  const { tenantMapping, activeLang, setActivePageTranslations } = useSite();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [matchedCategory, setMatchedCategory] = useState(null);
+  const [parentCategory, setParentCategory] = useState(null);
+
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      setMatchedCategory(null);
+      setParentCategory(null);
+      try {
+        const catalogMeta = await getCatalogMetadata(tenantMapping.tenantId);
+        const categories = catalogMeta?.categories || STATIC_CATALOG_METADATA.categories;
+        const subcategories = catalogMeta?.subcategories || STATIC_CATALOG_METADATA.subcategories;
+        const allCategories = [...categories, ...subcategories];
+
+        let matched = null;
+        let parent = null;
+
+        if (LEGACY_SLUG_MAP[categorySlug]) {
+          const legacy = LEGACY_SLUG_MAP[categorySlug];
+          matched = allCategories.find(c => c.name === legacy.name);
+        }
+
+        if (!matched) {
+          matched = allCategories.find(c => {
+            if (c.translations?.[activeLang]?.slug === categorySlug) return true;
+            if (c.slug === categorySlug) return true;
+            for (const lang of ['tr', 'en', 'ar']) {
+              if (c.translations?.[lang]?.slug === categorySlug) return true;
+            }
+            return false;
+          });
+        }
+
+        if (matched) {
+          setMatchedCategory(matched);
+          if (matched.categoryId) {
+            parent = categories.find(c => c.id === matched.categoryId);
+            setParentCategory(parent);
+          }
+
+          const slugMap = {
+            tr: matched.translations?.tr?.slug || matched.slug,
+            en: matched.translations?.en?.slug || matched.slug,
+            ar: matched.translations?.ar?.slug || matched.slug
+          };
+          setActivePageTranslations(slugMap);
+
+          const allProducts = await getActiveProducts(tenantMapping.tenantId);
+          
+          // Filtreleme: Orijinal (çevrilmemiş) category/subcategory ile eşleştir
+          const filtered = allProducts.filter(p => 
+            p.category === matched.name || p.subcategory === matched.name
+          );
+          
+          // Görüntüleme: Çevrilen alanları ekle
+          const localized = filtered.map(p => ({
+            ...p,
+            title: resolveField(p, activeLang, 'title') || resolveField(p, activeLang, 'name') || '',
+            summary: resolveField(p, activeLang, 'summary') || '',
+          }));
+          setProducts(localized);
+        } else {
+          setProducts([]);
+        }
+      } catch (err) {
+        console.error('Category load error:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [categorySlug, activeLang, tenantMapping.tenantId, setActivePageTranslations]);
+
+  if (loading) return <div style={{ minHeight: '75vh' }} />;
+  if (!matchedCategory) return <BurobigNotFound />;
+
+  const categoryOverride = parentCategory ? parentCategory.slug : matchedCategory.slug;
+  const subcategoryOverride = parentCategory ? matchedCategory.slug : null;
+
+  return (
+    <BurobigProductList 
+      products={products} 
+      category={categoryOverride} 
+      subcategory={subcategoryOverride} 
+    />
+  );
+}
+
 function BurobigLangWrapper() {
   const { lang } = useParams();
   const navigate = useNavigate();
@@ -370,41 +699,36 @@ export default function App() {
           <Route index element={<BurobigHome />} />
           <Route path="blog" element={<BurobigBlogPage />} />
           <Route path="blog/:slug" element={<BurobigBlogDetail />} />
+
+          {/* Products & Details */}
           <Route path="urunler" element={<BurobigProductPage />} />
           <Route path="urunler/*" element={<BurobigProductDetailPage />} />
-          <Route path="ust-yonetici-masalari" element={<BurobigProductPage />} />
-          <Route path="yonetici-masalari" element={<BurobigProductPage />} />
-          <Route path="calisma-masalari" element={<BurobigProductPage />} />
-          <Route path="calisma" element={<BurobigProductPage />} />
-          <Route path="ofis-koltuklari" element={<BurobigProductPage />} />
-          <Route path="operasyonel-masalar" element={<BurobigProductPage />} />
-          <Route path="toplanti-masalari" element={<BurobigProductPage />} />
-          <Route path="yonetici-koltuklari" element={<BurobigProductPage />} />
-          <Route path="calisma-koltuklari" element={<BurobigProductPage />} />
-          <Route path="misafir-ve-bekleme-koltuklari" element={<BurobigProductPage />} />
-          <Route path="koltuklar" element={<BurobigProductPage />} />
-          <Route path="kanepeler" element={<BurobigProductPage />} />
-          <Route path="sandalyeler" element={<BurobigProductPage />} />
-          <Route path="bekleme-alanlari" element={<BurobigProductPage />} />
-          <Route path="koltuklar-kanepeler" element={<BurobigProductPage />} />
-          <Route path="kesonlar" element={<BurobigProductPage />} />
-          <Route path="dolaplar" element={<BurobigProductPage />} />
-          <Route path="kitaplik-ve-raf-sistemleri" element={<BurobigProductPage />} />
-          <Route path="depolama-sistemleri" element={<BurobigProductPage />} />
-          <Route path="sehpalar" element={<BurobigProductPage />} />
-          <Route path="puflar" element={<BurobigProductPage />} />
-          <Route path="askiliklar" element={<BurobigProductPage />} />
-          <Route path="elektrifikasyon" element={<BurobigProductPage />} />
-          <Route path="tamamlayicilar" element={<BurobigProductPage />} />
+          <Route path="products" element={<BurobigProductPage />} />
+          <Route path="products/*" element={<BurobigProductDetailPage />} />
+
+          {/* Corporate Static Pages */}
           <Route path="tasarimcilar" element={<BurobigDesigners />} />
+          <Route path="designers" element={<BurobigDesigners />} />
           <Route path="hikayemiz" element={<BurobigHistory />} />
+          <Route path="our-story" element={<BurobigHistory />} />
           <Route path="tasarim-sureci" element={<BurobigDesignProcess />} />
+          <Route path="design-process" element={<BurobigDesignProcess />} />
           <Route path="tasarim-felsefesi" element={<BurobigDesignPhilosophy />} />
+          <Route path="design-philosophy" element={<BurobigDesignPhilosophy />} />
           <Route path="manifesto" element={<BurobigManifesto />} />
           <Route path="kalite-politikamiz" element={<BurobigQualityPolicy />} />
+          <Route path="quality-policy" element={<BurobigQualityPolicy />} />
           <Route path="surdurulebilirlik" element={<BurobigSustainability />} />
+          <Route path="sustainability" element={<BurobigSustainability />} />
           <Route path="iletisim" element={<BurobigContactPage />} />
+          <Route path="contact" element={<BurobigContactPage />} />
+
+          {/* Dynamic Categories Catch-All */}
+          <Route path=":categorySlug" element={<DynamicCategoryPage />} />
+
+          {/* Legal Pages Catch-All */}
           <Route path=":slug" element={<BurobigLegalDetail />} />
+
           <Route path="*" element={<BurobigNotFound />} />
         </Route>
         <Route path="*" element={<Navigate to={defaultRedirect} replace />} />
