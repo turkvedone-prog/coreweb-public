@@ -10,19 +10,12 @@ import { resolveField } from '@coreweb/shared-ui';
 const DEFAULT_SLIDES = [];
 
 function normalizeSlide(slide, activeLang) {
-  const getField = (fieldBase) => {
-    if (activeLang === 'tr') {
-      return slide[`${fieldBase}_tr`] || slide[fieldBase] || '';
-    }
-    return slide[`${fieldBase}_en`] || slide[`${fieldBase}_tr`] || slide[fieldBase] || '';
-  };
-
-  const title = getField('title') || getField('headline') || '';
-  const description = getField('description') || getField('subtitle') || '';
+  const title = resolveField(slide, activeLang, 'title') || resolveField(slide, activeLang, 'headline') || '';
+  const description = resolveField(slide, activeLang, 'description') || resolveField(slide, activeLang, 'subtitle') || '';
   const image = slide.image || slide.imageUrl || slide.backgroundImage || '';
-  const ctaLabel = getField('ctaLabel') || getField('buttonText') || (activeLang === 'tr' ? 'Keşfet' : 'Discover');
+  const ctaLabel = resolveField(slide, activeLang, 'ctaLabel') || resolveField(slide, activeLang, 'buttonText') || (activeLang === 'ar' ? 'اكتشف' : (activeLang === 'tr' ? 'Keşfet' : 'Discover'));
   const ctaHref = slide.ctaHref || slide.link || '#';
-  const eyebrow = getField('eyebrow') || getField('category') || getField('tag') || '';
+  const eyebrow = resolveField(slide, activeLang, 'eyebrow') || resolveField(slide, activeLang, 'category') || resolveField(slide, activeLang, 'tag') || '';
   const id = slide.id || Math.random().toString();
   const isInternalLink = ctaHref.startsWith('/') && !ctaHref.startsWith('http');
   
@@ -136,10 +129,19 @@ export default function BurobigHome() {
 
   // Set custom document title and description using updateSEOMeta
   useEffect(() => {
-    const seoTitle = settings?.seo?.title || (activeLang === 'tr' ? "Bürobig Mobilya | Her Alan İçin Bir Vizyon" : "Burobig Furniture | A Vision for Every Space");
-    const seoDesc = settings?.seo?.description || (activeLang === 'tr' 
-      ? 'Çalışma ve yaşam alanlarınız için ilham veren, zamansız dokunuşlar. Modern ofis ve ev mobilyaları koleksiyonunu keşfedin.'
-      : 'Inspiring, timeless touches for your work and living spaces. Discover the modern office and home furniture collection.');
+    let seoTitle = '';
+    let seoDesc = '';
+
+    if (activeLang === 'tr') {
+      seoTitle = settings?.seo?.title || "Bürobig Mobilya | Her Alan İçin Bir Vizyon";
+      seoDesc = settings?.seo?.description || "Çalışma ve yaşam alanlarınız için ilham veren, zamansız dokunuşlar. Modern ofis ve ev mobilyaları koleksiyonunu keşfedin.";
+    } else if (activeLang === 'ar') {
+      seoTitle = settings?.translations?.ar?.seo?.title || settings?.seo?.translations?.ar?.title || "أثاث بيروبيج | رؤية لكل مساحة";
+      seoDesc = settings?.translations?.ar?.seo?.description || settings?.seo?.translations?.ar?.description || "لمسات خالدة وملهمة لمساحات العمل والمعيشة الخاصة بك. اكتشف مجموعة الأثاث المكتبي والمنزلي الحديثة.";
+    } else { // 'en'
+      seoTitle = settings?.translations?.en?.seo?.title || settings?.seo?.translations?.en?.title || "Burobig Furniture | A Vision for Every Space";
+      seoDesc = settings?.translations?.en?.seo?.description || settings?.seo?.translations?.en?.description || "Inspiring, timeless touches for your work and living spaces. Discover the modern office and home furniture collection.";
+    }
     
     const resolvedCompany = settings?.companyName || 'Bürobig';
     const hasCompany = seoTitle.toLowerCase().includes(resolvedCompany.toLowerCase()) || seoTitle.toLowerCase().includes('burobig');

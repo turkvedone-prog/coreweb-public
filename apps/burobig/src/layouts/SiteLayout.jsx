@@ -54,7 +54,7 @@ export default function SiteLayout({ children, activeLang }) {
     }
   }, [activeLang]);
 
-  // Dynamically inject link alternate hreflang tags for SEO
+  // Dynamically inject link alternate hreflang tags and canonical for SEO
   useEffect(() => {
     const existingLinks = document.querySelectorAll('link[rel="alternate"][hreflang]');
     existingLinks.forEach(link => link.remove());
@@ -118,7 +118,30 @@ export default function SiteLayout({ children, activeLang }) {
     defaultLink.href = `${origin}${defaultPath}`;
     document.head.appendChild(defaultLink);
 
-  }, [location.pathname, activePageTranslations]);
+    // Update canonical link dynamically
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      document.head.appendChild(canonical);
+    }
+    let canonicalPath = `/${activeLang}`;
+    if (subpathParts.length > 0) {
+      if (subpathParts.length >= 2 && (subpathParts[0] === 'urunler' || subpathParts[0] === 'blog') && activePageTranslations) {
+        const detailType = subpathParts[0];
+        const localizedSlug = activePageTranslations[activeLang];
+        if (localizedSlug) {
+          canonicalPath = `/${activeLang}/${detailType}/${localizedSlug}`;
+        } else {
+          canonicalPath = `/${activeLang}/${subpathParts.join('/')}`;
+        }
+      } else {
+        canonicalPath = `/${activeLang}/${subpathParts.join('/')}`;
+      }
+    }
+    canonical.href = `${origin}${canonicalPath}`;
+
+  }, [location.pathname, activePageTranslations, activeLang]);
 
   const isRtl = activeLang === 'ar';
 

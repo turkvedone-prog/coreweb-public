@@ -33,8 +33,8 @@ function BurobigNotFound() {
 
   useEffect(() => {
     updateSEOMeta({
-      title: activeLang === 'tr' ? 'Sayfa Bulunamadı | Bürobig Mobilya' : 'Page Not Found | Bürobig Mobilya',
-      description: activeLang === 'tr' ? 'Aradığınız sayfa bulunamadı.' : 'The page you are looking for could not be found.',
+      title: activeLang === 'ar' ? 'الصفحة غير موجودة | Bürobig Mobilya' : (activeLang === 'tr' ? 'Sayfa Bulunamadı | Bürobig Mobilya' : 'Page Not Found | Bürobig Mobilya'),
+      description: activeLang === 'ar' ? 'لم يتم العثور على الصفحة التي تبحث عنها.' : (activeLang === 'tr' ? 'Aradığınız sayfa bulunamadı.' : 'The page you are looking for could not be found.'),
       companyName: ''
     });
   }, [activeLang]);
@@ -44,12 +44,14 @@ function BurobigNotFound() {
       <div className="corporate-container" style={{ textAlign: 'center', padding: '6rem 2rem' }}>
         <h1 className="corporate-large-title" style={{ fontSize: '6rem', margin: 0, fontWeight: '300', opacity: 0.15 }}>404</h1>
         <h2 className="corporate-sub-title" style={{ fontSize: '1.5rem', marginBottom: '2rem', marginTop: '1rem' }}>
-          {activeLang === 'tr' ? 'Aradığınız Sayfa Bulunamadı' : 'Page Not Found'}
+          {activeLang === 'ar' ? 'الصفحة غير موجودة' : (activeLang === 'tr' ? 'Aradığınız Sayfa Bulunamadı' : 'Page Not Found')}
         </h2>
         <p style={{ maxWidth: '500px', margin: '0 auto 3rem auto', opacity: 0.7, fontSize: '0.95rem', lineHeight: '1.6' }}>
-          {activeLang === 'tr' 
-            ? 'Ulaşmaya çalıştığınız sayfa kaldırılmış, adı değiştirilmiş veya geçici olarak kullanım dışı olabilir.' 
-            : 'The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.'}
+          {activeLang === 'ar'
+            ? 'قد تكون الصفحة التي تبحث عنها قد تمت إزالتها أو تغيير اسمها أو أنها غير متاحة مؤقتًا.'
+            : (activeLang === 'tr'
+                ? 'Ulaşmaya çalıştığınız sayfa kaldırılmış, adı değiştirilmiş veya geçici olarak kullanım dışı olabilir.'
+                : 'The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.')}
         </p>
         <button 
           onClick={() => navigate(`/${activeLang}`)}
@@ -67,7 +69,7 @@ function BurobigNotFound() {
           onMouseOver={(e) => e.currentTarget.style.opacity = 0.8}
           onMouseOut={(e) => e.currentTarget.style.opacity = 1}
         >
-          {activeLang === 'tr' ? 'Ana Sayfaya Dön' : 'Back to Home'}
+          {activeLang === 'ar' ? 'العودة إلى الصفحة الرئيسية' : (activeLang === 'tr' ? 'Ana Sayfaya Dön' : 'Back to Home')}
         </button>
       </div>
     </main>

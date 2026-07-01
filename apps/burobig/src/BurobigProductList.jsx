@@ -55,8 +55,10 @@ export default function BurobigProductList({ products }) {
   const subParam = searchParams.get('sub');
 
   // Localized string translation helper
-  const translate = (tr, en) => {
-    return activeLang === 'tr' ? tr : en;
+  const translate = (tr, en, ar) => {
+    if (activeLang === 'ar') return ar || en || tr;
+    if (activeLang === 'en') return en || tr;
+    return tr;
   };
 
   const getLocalizedPath = (path) => `/${activeLang}${path}`;
