@@ -23,7 +23,7 @@ const BurobigSustainability = lazy(() => import('./BurobigSustainability'));
 const BurobigLegalDetail = lazy(() => import('./BurobigLegalDetail'));
 
 import { getActiveProducts, getActiveProductBySlug } from '../../services/publicContentService';
-import { submitLead, resolveField } from '@coreweb/shared-ui';
+import { submitLead, resolveField, loadRecaptchaScript, executeRecaptcha } from '@coreweb/shared-ui';
 import { updateSEOMeta } from '../../utils/seo';
 
 // ─── 404 Not Found Page ──────────────────────────────────────────────────────
@@ -155,7 +155,7 @@ function BurobigProductDetailPage() {
   if (slug.endsWith('/')) {
     slug = slug.slice(0, -1);
   }
-  const { tenantMapping, activeLang } = useSite();
+  const { tenantMapping, activeLang, setActivePageTranslations } = useSite();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -184,8 +184,16 @@ function BurobigProductDetailPage() {
         description: descText,
         companyName: ''
       });
+
+      // Set translation slugs for language switching
+      const slugMap = {
+        tr: resolveField(product, 'tr', 'slug') || product.slug || product.id,
+        en: resolveField(product, 'en', 'slug') || product.slug || product.id,
+        ar: resolveField(product, 'ar', 'slug') || product.slug || product.id,
+      };
+      setActivePageTranslations(slugMap);
     }
-  }, [product, activeLang]);
+  }, [product, activeLang, setActivePageTranslations]);
 
   if (loading) {
     return <div style={{ minHeight: '75vh' }} />;
@@ -198,7 +206,7 @@ function BurobigProductDetailPage() {
 function BurobigLangWrapper() {
   const { lang } = useParams();
   const navigate = useNavigate();
-  const enabledLangs = ['tr', 'en'];
+  const enabledLangs = ['tr', 'en', 'ar'];
 
   useEffect(() => {
     if (!enabledLangs.includes(lang)) {
@@ -221,6 +229,12 @@ function BurobigLangWrapper() {
 function BurobigContactPage() {
   const { activeLang, settings } = useSite();
   const translate = (tr, en) => (activeLang === 'tr' ? tr : en);
+
+  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LdUHg0tAAAAADUPLdrFQSEnyjWs6DbHXtjnROuK';
+
+  useEffect(() => {
+    loadRecaptchaScript(siteKey);
+  }, [siteKey]);
 
   const [formData, setFormData] = useState({
     name: '', email: '', phone: '', subject: '', message: '', website_dummy: ''
@@ -283,6 +297,17 @@ function BurobigContactPage() {
     }
 
     try {
+      let recaptchaToken = '';
+      if (window.grecaptcha && window.grecaptcha.enterprise) {
+        recaptchaToken = await window.grecaptcha.enterprise.execute(siteKey, { action: 'submitLead' });
+      } else {
+        try {
+          recaptchaToken = await executeRecaptcha(siteKey, 'submitLead');
+        } catch (err) {
+          // Silent fallback
+        }
+      }
+
       const payload = {
         tenantId: 'burobig',
         tenantSlug: 'burobig',
@@ -298,7 +323,8 @@ function BurobigContactPage() {
         website_dummy: formData.website_dummy,
         pageUrl: window.location.href,
         createdAt: new Date().toISOString(),
-        status: 'new'
+        status: 'new',
+        recaptchaToken
       };
 
       await submitLead(payload);

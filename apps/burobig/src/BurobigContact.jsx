@@ -1,5 +1,6 @@
 import React from 'react';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { useSite } from './layouts/SiteLayout';
 
 // Google Maps Iframe parser and domain validator
 const extractGoogleMapUrl = (iframeString) => {
@@ -56,12 +57,24 @@ export default function BurobigContact({
   handleChange,
   settings
 }) {
+  const { activeLang } = useSite();
+  const translate = (tr, en, ar) => {
+    if (activeLang === 'ar') return ar || en || tr;
+    if (activeLang === 'en') return en || tr;
+    return tr;
+  };
+
   const address = settings?.contact?.address || "Balıkhisar, Turgut Reis Cd. No: 3, 06750 Akyurt/Ankara";
   const phone = settings?.contact?.phone || settings?.contact?.phone1 || "+90 312 351 07 97";
   const phone2 = settings?.contact?.phone2 || null;
   const email = settings?.contact?.email || settings?.contact?.email1 || "info@burobig.com.tr";
   
-  const rawWorkingHours = settings?.contact?.workingHours || settings?.workingHours || "Hafta İçi: 08:00 - 18:30\nCumartesi: Kapalı\nPazar: Kapalı";
+  const defaultWorkingHours = translate(
+    "Hafta İçi: 08:00 - 18:30\nCumartesi: Kapalı\nPazar: Kapalı",
+    "Weekdays: 08:00 - 18:30\nSaturday: Closed\nSunday: Closed",
+    "أيام العمل: 08:00 - 18:30\nالسبت: مغلق\nالأحد: مغلق"
+  );
+  const rawWorkingHours = settings?.contact?.workingHours || settings?.workingHours || defaultWorkingHours;
   const workingHoursLines = typeof rawWorkingHours === 'string' ? rawWorkingHours.split('\n') : [];
 
   const customMapIframe = settings?.contact?.mapsIframe;
@@ -76,7 +89,7 @@ export default function BurobigContact({
         
         {/* Page Top Indicator */}
         <div className="corporate-top-bar">
-          <span className="corporate-top-title">KURUMSAL / İLETİŞİM</span>
+          <span className="corporate-top-title">{translate('KURUMSAL / İLETİŞİM', 'CORPORATE / CONTACT', 'الشركة / الاتصال')}</span>
         </div>
 
         <section className="contact-section">
@@ -84,9 +97,13 @@ export default function BurobigContact({
             
             {/* Left Column: Contact details */}
             <div className="contact-info-column">
-              <h1 className="contact-large-title">İletişim Kurun.</h1>
+              <h1 className="contact-large-title">{translate('İletişim Kurun.', 'Get in Touch.', 'اتصل بنا.')}</h1>
               <p className="contact-sub-text">
-                Bürobig premium ofis ve yaşam alanları ile ilgili sorularınız, özel projeleriniz veya teklif talepleriniz için ekibimizle dilediğiniz zaman irtibata geçebilirsiniz.
+                {translate(
+                  'Bürobig premium ofis ve yaşam alanları ile ilgili sorularınız, özel projeleriniz veya teklif talepleriniz için ekibimizle dilediğiniz zaman irtibata geçebilirsiniz.',
+                  'For questions about Bürobig premium office and living spaces, your special projects, or proposal requests, you can contact our team at any time.',
+                  'للأسئلة المتعلقة بمساحات المكاتب والمعيشة المتميزة من بيروبيج، أو مشاريعك الخاصة، أو طلبات العروض، يمكنك الاتصال بفريقنا في أي وقت.'
+                )}
               </p>
               
               <div className="contact-details-list">
@@ -96,7 +113,7 @@ export default function BurobigContact({
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div className="contact-detail-content">
-                    <span className="contact-detail-label">Adres</span>
+                    <span className="contact-detail-label">{translate('Adres', 'Address', 'العنوان')}</span>
                     <p className="contact-detail-value">{address}</p>
                   </div>
                 </div>
@@ -107,7 +124,7 @@ export default function BurobigContact({
                     <Phone className="h-5 w-5" />
                   </div>
                   <div className="contact-detail-content">
-                    <span className="contact-detail-label">Telefon</span>
+                    <span className="contact-detail-label">{translate('Telefon', 'Phone', 'الهاتف')}</span>
                     <div className="contact-detail-values">
                       <a href={`tel:${phone.replace(/\s+/g, '')}`} className="contact-detail-value">
                         {phone}
@@ -130,7 +147,7 @@ export default function BurobigContact({
                     <Mail className="h-5 w-5" />
                   </div>
                   <div className="contact-detail-content">
-                    <span className="contact-detail-label">E-Posta</span>
+                    <span className="contact-detail-label">{translate('E-Posta', 'Email', 'البريد الإلكتروني')}</span>
                     <a href={`mailto:${email}`} className="contact-detail-value">
                       {email}
                     </a>
@@ -143,7 +160,7 @@ export default function BurobigContact({
                     <Clock className="h-5 w-5" />
                   </div>
                   <div className="contact-detail-content">
-                    <span className="contact-detail-label">Çalışma Saatleri</span>
+                    <span className="contact-detail-label">{translate('Çalışma Saatleri', 'Working Hours', 'ساعات العمل')}</span>
                     <p className="contact-detail-value">
                       {workingHoursLines.length > 0 ? (
                         workingHoursLines.map((line, idx) => (
@@ -174,15 +191,19 @@ export default function BurobigContact({
                     <div className="success-icon-wrapper">
                       <CheckCircle2 className="h-10 w-10" />
                     </div>
-                    <h3>Mesajınız İletildi</h3>
+                    <h3>{translate('Mesajınız İletildi', 'Your Message Has Been Sent', 'تم إرسال رسالتك')}</h3>
                     <p>
-                      Talebiniz başarıyla alınmıştır. En kısa sürede sizinle iletişime geçeceğiz. İlginiz için teşekkür ederiz.
+                      {translate(
+                        'Talebiniz başarıyla alınmıştır. En kısa sürede sizinle iletişime geçeceğiz. İlginiz için teşekkür ederiz.',
+                        'Your request has been successfully received. We will contact you as soon as possible. Thank you for your interest.',
+                        'لقد تم استلام طلبك بنجاح. وسوف نتصل بك في أقرب وقت ممكن. نشكرك على اهتمامك.'
+                      )}
                     </p>
                   </div>
                 ) : (
                   /* Form View */
                   <>
-                    <h2 className="contact-form-title">İletişim Formu</h2>
+                    <h2 className="contact-form-title">{translate('İletişim Formu', 'Contact Form', 'نموذج الاتصال')}</h2>
                     
                     <form onSubmit={handleSubmit}>
                       {error && (
@@ -195,7 +216,7 @@ export default function BurobigContact({
                       )}
 
                       <div className="form-group">
-                        <label htmlFor="name" className="form-label">Ad Soyad *</label>
+                        <label htmlFor="name" className="form-label">{translate('Ad Soyad *', 'Name & Surname *', 'الاسم واللقب *')}</label>
                         <input
                           type="text"
                           id="name"
@@ -204,14 +225,14 @@ export default function BurobigContact({
                           onChange={handleChange}
                           required
                           className="form-input"
-                          placeholder="Adınız ve soyadınız"
+                          placeholder={translate('Adınız ve soyadınız', 'Your name and surname', 'اسمك ولقبك')}
                           disabled={loading}
                         />
                       </div>
                       
                       <div className="form-grid">
                         <div className="form-group">
-                          <label htmlFor="email" className="form-label">E-Posta *</label>
+                          <label htmlFor="email" className="form-label">{translate('E-Posta *', 'Email *', 'البريد الإلكتروني *')}</label>
                           <input
                             type="email"
                             id="email"
@@ -225,7 +246,7 @@ export default function BurobigContact({
                           />
                         </div>
                         <div className="form-group">
-                          <label htmlFor="phone" className="form-label">Telefon *</label>
+                          <label htmlFor="phone" className="form-label">{translate('Telefon *', 'Phone *', 'الهاتف *')}</label>
                           <input
                             type="tel"
                             id="phone"
@@ -241,7 +262,7 @@ export default function BurobigContact({
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor="subject" className="form-label">Mesaj Konusu *</label>
+                        <label htmlFor="subject" className="form-label">{translate('Mesaj Konusu *', 'Message Subject *', 'موضوع الرسالة *')}</label>
                         <input
                           type="text"
                           id="subject"
@@ -250,13 +271,13 @@ export default function BurobigContact({
                           onChange={handleChange}
                           required
                           className="form-input"
-                          placeholder="Mesaj konusu"
+                          placeholder={translate('Mesaj konusu', 'Message subject', 'موضوع الرسالة')}
                           disabled={loading}
                         />
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor="message" className="form-label">Mesajınız *</label>
+                        <label htmlFor="message" className="form-label">{translate('Mesajınız *', 'Your Message *', 'رسالتك *')}</label>
                         <textarea
                           id="message"
                           name="message"
@@ -265,7 +286,7 @@ export default function BurobigContact({
                           required
                           className="form-input"
                           rows="5"
-                          placeholder="Mesajınızı buraya yazın..."
+                          placeholder={translate('Mesajınızı buraya yazın...', 'Write your message here...', 'اكتب رسالتك هنا...')}
                           disabled={loading}
                         />
                       </div>
@@ -296,7 +317,11 @@ export default function BurobigContact({
                           disabled={loading}
                         />
                         <label htmlFor="kvkk" className="form-checkbox-label" style={{ cursor: 'pointer' }}>
-                          Kişisel verilerimin işlenmesine ilişkin KVKK Onay Metni'ni okudum ve kabul ediyorum.
+                          {translate(
+                            "Kişisel verilerimin işlenmesine ilişkin KVKK Onay Metni'ni okudum ve kabul ediyorum.",
+                            "I have read and agree to the KVKK Consent Text regarding the processing of my personal data.",
+                            "لقد قرأت وأوافق على نص موافقة KVKK بشأن معالجة بياناتي الشخصية."
+                          )}
                         </label>
                       </div>
 
@@ -308,11 +333,11 @@ export default function BurobigContact({
                         {loading ? (
                           <>
                             <Loader2 className="h-4.5 w-4.5 animate-spin" />
-                            <span>Gönderiliyor...</span>
+                            <span>{translate('Gönderiliyor...', 'Sending...', 'جارٍ الإرسال...')}</span>
                           </>
                         ) : (
                           <>
-                            <span>Gönder</span>
+                            <span>{translate('Gönder', 'Send', 'إرسال')}</span>
                             <Send className="h-4 w-4" />
                           </>
                         )}
@@ -337,7 +362,7 @@ export default function BurobigContact({
           allowFullScreen=""
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
-          title="Bürobig Fabrika Haritası"
+          title={translate('Bürobig Fabrika Haritası', 'Burobig Factory Map', 'خريطة مصنع بيروبيج')}
         ></iframe>
       </section>
     </main>

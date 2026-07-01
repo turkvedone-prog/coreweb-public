@@ -1,13 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSite } from '../../layouts/SiteLayout';
 import { getActiveProducts } from '../../services/publicContentService';
 import { resolveField } from '@coreweb/shared-ui';
 import './burobig.css';
 
 export default function BurobigHeader() {
-  const { tenantMapping, activeLang, settings } = useSite();
-  const translate = (tr, en) => activeLang === 'tr' ? tr : en;
+  const { tenantMapping, activeLang, settings, activePageTranslations } = useSite();
+  const translate = (tr, en, ar) => {
+    if (activeLang === 'ar') return ar || en || tr;
+    if (activeLang === 'en') return en || tr;
+    return tr;
+  };
+  const navigate = useNavigate();
   
   const getSplitProducts = (items) => {
     if (!items || items.length === 0) return { popular: [], featured: [] };
@@ -139,6 +144,45 @@ export default function BurobigHeader() {
   // Her ortamda /:lang prefix kullan (local = production ile aynı)
   const getLocalizedPath = (path) => `/${activeLang}${path}`;
 
+  const handleLangChange = (e, newLang) => {
+    e.preventDefault();
+    if (newLang === activeLang) return;
+
+    const pathname = window.location.pathname;
+    const parts = pathname.split('/').filter(Boolean);
+    if (parts.length === 0) {
+      navigate(`/${newLang}`, { replace: true });
+      return;
+    }
+
+    const currentLang = parts[0];
+    const enabledLangs = ['tr', 'en', 'ar'];
+    if (!enabledLangs.includes(currentLang)) {
+      navigate(`/${newLang}`, { replace: true });
+      return;
+    }
+
+    const subpathParts = parts.slice(1);
+    let targetPath = `/${newLang}`;
+
+    if (subpathParts.length > 0) {
+      if (subpathParts.length >= 2 && (subpathParts[0] === 'urunler' || subpathParts[0] === 'blog') && activePageTranslations) {
+        const detailType = subpathParts[0];
+        const localizedSlug = activePageTranslations[newLang];
+        if (localizedSlug) {
+          targetPath = `/${newLang}/${detailType}/${localizedSlug}`;
+        } else {
+          const fallbackSlug = activePageTranslations['tr'] || subpathParts[1];
+          targetPath = `/${newLang}/${detailType}/${fallbackSlug}`;
+        }
+      } else {
+        targetPath = `/${newLang}/${subpathParts.join('/')}`;
+      }
+    }
+
+    navigate(targetPath);
+  };
+
   const handleLogoClick = (e) => {
     const currentPath = window.location.pathname;
     const homePath = getLocalizedPath('/');
@@ -228,7 +272,7 @@ export default function BurobigHeader() {
                     setIsKurumsalOpen(false);
                   }}
                 >
-                  Ürünler
+                  {translate('Ürünler', 'Products', 'المنتجات')}
                   <svg className="nav__chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
                     <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                   </svg>
@@ -242,51 +286,51 @@ export default function BurobigHeader() {
                   <div className="mega-menu__container">
                     {/* Masalar */}
                     <div className="mega-menu__col">
-                      <h5 className="mega-menu__title">MASALAR</h5>
+                      <h5 className="mega-menu__title">{translate('MASALAR', 'DESKS', 'طاولات')}</h5>
                       <ul className="mega-menu__list">
-                        <li><Link to={getLocalizedPath('/ust-yonetici-masalari')}>Üst Yönetici Masaları</Link></li>
-                        <li><Link to={getLocalizedPath('/yonetici-masalari')}>Yönetici Masaları</Link></li>
-                        <li><Link to={getLocalizedPath('/calisma-masalari')}>Çalışma Masaları</Link></li>
-                        <li><Link to={getLocalizedPath('/operasyonel-masalar')}>Operasyonel Masalar</Link></li>
-                        <li><Link to={getLocalizedPath('/toplanti-masalari')}>Toplantı Masaları</Link></li>
+                        <li><Link to={getLocalizedPath('/ust-yonetici-masalari')}>{translate('Üst Yönetici Masaları', 'Executive Desks', 'طاولات المدير التنفيذي')}</Link></li>
+                        <li><Link to={getLocalizedPath('/yonetici-masalari')}>{translate('Yönetici Masaları', 'Manager Desks', 'طاولات المدير')}</Link></li>
+                        <li><Link to={getLocalizedPath('/calisma-masalari')}>{translate('Çalışma Masaları', 'Work Desks', 'طاولات العمل')}</Link></li>
+                        <li><Link to={getLocalizedPath('/operasyonel-masalar')}>{translate('Operasyonel Masalar', 'Operational Desks', 'الطاولات التشغيلية')}</Link></li>
+                        <li><Link to={getLocalizedPath('/toplanti-masalari')}>{translate('Toplantı Masaları', 'Meeting Desks', 'طاولات الاجتماعات')}</Link></li>
                       </ul>
                     </div>
                     {/* Ofis Koltukları */}
                     <div className="mega-menu__col">
-                      <h5 className="mega-menu__title">OFİS KOLTUKLARI</h5>
+                      <h5 className="mega-menu__title">{translate('OFİS KOLTUKLARI', 'OFFICE CHAIRS', 'كراسي المكتب')}</h5>
                       <ul className="mega-menu__list">
-                        <li><Link to={getLocalizedPath('/yonetici-koltuklari')}>Yönetici Koltukları</Link></li>
-                        <li><Link to={getLocalizedPath('/calisma-koltuklari')}>Çalışma Koltukları</Link></li>
-                        <li><Link to={getLocalizedPath('/misafir-ve-bekleme-koltuklari')}>Misafir ve Bekleme Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/yonetici-koltuklari')}>{translate('Yönetici Koltukları', 'Manager Chairs', 'كراسي المدير')}</Link></li>
+                        <li><Link to={getLocalizedPath('/calisma-koltuklari')}>{translate('Çalışma Koltukları', 'Work Chairs', 'كراسي العمل')}</Link></li>
+                        <li><Link to={getLocalizedPath('/misafir-ve-bekleme-koltuklari')}>{translate('Misafir ve Bekleme Koltukları', 'Guest & Waiting Chairs', 'كراسي الضيoph والانتظار')}</Link></li>
                       </ul>
                     </div>
                     {/* Koltuklar / Kanepeler */}
                     <div className="mega-menu__col">
-                      <h5 className="mega-menu__title">KOLTUKLAR / KANEPELER</h5>
+                      <h5 className="mega-menu__title">{translate('KOLTUKLAR / KANEPELER', 'SOFAS & SEATING', 'أرائك ومقاعد')}</h5>
                       <ul className="mega-menu__list">
-                        <li><Link to={getLocalizedPath('/koltuklar')}>Koltuklar</Link></li>
-                        <li><Link to={getLocalizedPath('/kanepeler')}>Kanepeler</Link></li>
-                        <li><Link to={getLocalizedPath('/sandalyeler')}>Sandalyeler</Link></li>
-                        <li><Link to={getLocalizedPath('/bekleme-alanlari')}>Bekleme Alanları</Link></li>
+                        <li><Link to={getLocalizedPath('/koltuklar')}>{translate('Koltuklar', 'Armchairs', 'مقاعد بذراعين')}</Link></li>
+                        <li><Link to={getLocalizedPath('/kanepeler')}>{translate('Kanepeler', 'Sofas', 'أرائك')}</Link></li>
+                        <li><Link to={getLocalizedPath('/sandalyeler')}>{translate('Sandalyeler', 'Chairs', 'كراسي')}</Link></li>
+                        <li><Link to={getLocalizedPath('/bekleme-alanlari')}>{translate('Bekleme Alanları', 'Waiting Areas', 'مناطق الانتظار')}</Link></li>
                       </ul>
                     </div>
                     {/* Depolama Sistemleri */}
                     <div className="mega-menu__col">
-                      <h5 className="mega-menu__title">DEPOLAMA SİSTEMLERİ</h5>
+                      <h5 className="mega-menu__title">{translate('DEPOLAMA SİSTEMLERİ', 'STORAGE SYSTEMS', 'أنظمة التخزين')}</h5>
                       <ul className="mega-menu__list">
-                        <li><Link to={getLocalizedPath('/kesonlar')}>Kesonlar</Link></li>
-                        <li><Link to={getLocalizedPath('/dolaplar')}>Dolaplar</Link></li>
-                        <li><Link to={getLocalizedPath('/kitaplik-ve-raf-sistemleri')}>Kitaplık ve Raf Sistemleri</Link></li>
+                        <li><Link to={getLocalizedPath('/kesonlar')}>{translate('Kesonlar', 'Pedestals', 'خزائن أدراج')}</Link></li>
+                        <li><Link to={getLocalizedPath('/dolaplar')}>{translate('Dolaplar', 'Cabinets', 'خزائن')}</Link></li>
+                        <li><Link to={getLocalizedPath('/kitaplik-ve-raf-sistemleri')}>{translate('Kitaplık ve Raf Sistemleri', 'Bookcases & Shelves', 'خزائن الكتب والرفوف')}</Link></li>
                       </ul>
                     </div>
                     {/* Tamamlayıcılar */}
                     <div className="mega-menu__col">
-                      <h5 className="mega-menu__title">TAMAMLAYICILAR</h5>
+                      <h5 className="mega-menu__title">{translate('TAMAMLAYICILAR', 'COMPLEMENTARY', 'تكميلي')}</h5>
                       <ul className="mega-menu__list">
-                        <li><Link to={getLocalizedPath('/sehpalar')}>Sehpalar</Link></li>
-                        <li><Link to={getLocalizedPath('/puflar')}>Puflar</Link></li>
-                        <li><Link to={getLocalizedPath('/askiliklar')}>Askılıklar</Link></li>
-                        <li><Link to={getLocalizedPath('/elektrifikasyon')}>Elektrifikasyon</Link></li>
+                        <li><Link to={getLocalizedPath('/sehpalar')}>{translate('Sehpalar', 'Coffee Tables', 'طاولات قهوة')}</Link></li>
+                        <li><Link to={getLocalizedPath('/puflar')}>{translate('Puflar', 'Poufs', 'بوف')}</Link></li>
+                        <li><Link to={getLocalizedPath('/askiliklar')}>{translate('Askılıklar', 'Hangers', 'علاقات ملابس')}</Link></li>
+                        <li><Link to={getLocalizedPath('/elektrifikasyon')}>{translate('Elektrifikasyon', 'Electrification', 'أنظمة الكهرباء')}</Link></li>
                       </ul>
                     </div>
                   </div>
@@ -309,7 +353,7 @@ export default function BurobigHeader() {
                     }
                   }}
                 >
-                  Kurumsal
+                  {translate('Kurumsal', 'Corporate', 'الشركة')}
                   <svg className="nav__chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
                     <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                   </svg>
@@ -320,18 +364,18 @@ export default function BurobigHeader() {
                   onClick={() => setIsKurumsalOpen(false)}
                 >
                   <ul className="dropdown-list">
-                    <li><Link to={getLocalizedPath('/hikayemiz')}>Hikayemiz</Link></li>
-                    <li><Link to={getLocalizedPath('/tasarim-sureci')}>Tasarım Süreci</Link></li>
-                    <li><Link to={getLocalizedPath('/manifesto')}>Manifesto</Link></li>
-                    <li><Link to={getLocalizedPath('/tasarim-felsefesi')}>Tasarım Felsefesi</Link></li>
-                    <li><Link to={getLocalizedPath('/kalite-politikamiz')}>Kalite Politikamız</Link></li>
-                    <li><Link to={getLocalizedPath('/surdurulebilirlik')}>Sürdürülebilirlik</Link></li>
+                    <li><Link to={getLocalizedPath('/hikayemiz')}>{translate('Hikayemiz', 'Our Story', 'قصتنا')}</Link></li>
+                    <li><Link to={getLocalizedPath('/tasarim-sureci')}>{translate('Tasarım Süreci', 'Design Process', 'عملية التصميم')}</Link></li>
+                    <li><Link to={getLocalizedPath('/manifesto')}>{translate('Manifesto', 'Manifesto', 'البيان')}</Link></li>
+                    <li><Link to={getLocalizedPath('/tasarim-felsefesi')}>{translate('Tasarım Felsefesi', 'Design Philosophy', 'فلسفة التصميم')}</Link></li>
+                    <li><Link to={getLocalizedPath('/kalite-politikamiz')}>{translate('Kalite Politikamız', 'Quality Policy', 'سياسة الجودة')}</Link></li>
+                    <li><Link to={getLocalizedPath('/surdurulebilirlik')}>{translate('Sürdürülebilirlik', 'Sustainability', 'الاستدامة')}</Link></li>
                   </ul>
                 </div>
               </li>
-              <li><Link to={getLocalizedPath('/tasarimcilar')} id="nav-tasarimcilar">Tasarımcılar</Link></li>
-              <li><Link to={getLocalizedPath('/blog')} id="nav-blog">Blog</Link></li>
-              <li><Link to={getLocalizedPath('/iletisim')} id="nav-iletisim">İletişim</Link></li>
+              <li><Link to={getLocalizedPath('/tasarimcilar')} id="nav-tasarimcilar">{translate('Tasarımcılar', 'Designers', 'المصممون')}</Link></li>
+              <li><Link to={getLocalizedPath('/blog')} id="nav-blog">{translate('Blog', 'Blog', 'المدونة')}</Link></li>
+              <li><Link to={getLocalizedPath('/iletisim')} id="nav-iletisim">{translate('İletişim', 'Contact', 'الاتصال')}</Link></li>
             </ul>
           </nav>
 
@@ -367,15 +411,15 @@ export default function BurobigHeader() {
 
             <div className="utility-dropdown">
               <button className="utility-link utility-lang" id="util-lang" aria-label="Dil seç">
-                TR
+                {activeLang ? activeLang.toUpperCase() : 'TR'}
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '4px' }}>
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </button>
               <div className="lang-dropdown-menu">
-                <a href="#en">EN</a>
-                <a href="#ar">AR</a>
-                <a href="#ru">RU</a>
+                <a href="#tr" onClick={(e) => handleLangChange(e, 'tr')}>TR</a>
+                <a href="#en" onClick={(e) => handleLangChange(e, 'en')}>EN</a>
+                <a href="#ar" onClick={(e) => handleLangChange(e, 'ar')}>AR</a>
               </div>
             </div>
             <button 
@@ -431,7 +475,7 @@ export default function BurobigHeader() {
                     className={`mobile-nav__link mobile-nav__accordion-header ${activeSubmenu === 'urunler' ? 'active' : ''}`}
                     onClick={() => setActiveSubmenu(activeSubmenu === 'urunler' ? null : 'urunler')}
                   >
-                    Ürünler
+                    {translate('Ürünler', 'Products', 'المنتجات')}
                     <svg className="nav__chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ transform: activeSubmenu === 'urunler' ? 'rotate(180deg)' : 'none' }}>
                       <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
@@ -439,51 +483,51 @@ export default function BurobigHeader() {
                   <div className={`mobile-nav__accordion-content ${activeSubmenu === 'urunler' ? 'active' : ''}`}>
                     {/* Masalar */}
                     <div className="mobile-submenu__section">
-                      <h6 className="mobile-submenu__title">MASALAR</h6>
+                      <h6 className="mobile-submenu__title">{translate('MASALAR', 'DESKS', 'طاولات')}</h6>
                       <ul>
-                        <li><Link to={getLocalizedPath('/ust-yonetici-masalari')} onClick={() => setIsMobileMenuOpen(false)}>Üst Yönetici Masaları</Link></li>
-                        <li><Link to={getLocalizedPath('/yonetici-masalari')} onClick={() => setIsMobileMenuOpen(false)}>Yönetici Masaları</Link></li>
-                        <li><Link to={getLocalizedPath('/calisma-masalari')} onClick={() => setIsMobileMenuOpen(false)}>Çalışma Masaları</Link></li>
-                        <li><Link to={getLocalizedPath('/operasyonel-masalar')} onClick={() => setIsMobileMenuOpen(false)}>Operasyonel Masalar</Link></li>
-                        <li><Link to={getLocalizedPath('/toplanti-masalari')} onClick={() => setIsMobileMenuOpen(false)}>Toplantı Masaları</Link></li>
+                        <li><Link to={getLocalizedPath('/ust-yonetici-masalari')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Üst Yönetici Masaları', 'Executive Desks', 'طاولات المدير التنفيذي')}</Link></li>
+                        <li><Link to={getLocalizedPath('/yonetici-masalari')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Yönetici Masaları', 'Manager Desks', 'طاولات المدير')}</Link></li>
+                        <li><Link to={getLocalizedPath('/calisma-masalari')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Çalışma Masaları', 'Work Desks', 'طاولات العمل')}</Link></li>
+                        <li><Link to={getLocalizedPath('/operasyonel-masalar')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Operasyonel Masalar', 'Operational Desks', 'الطاولات التشغيلية')}</Link></li>
+                        <li><Link to={getLocalizedPath('/toplanti-masalari')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Toplantı Masaları', 'Meeting Desks', 'طاولات الاجتماعات')}</Link></li>
                       </ul>
                     </div>
                     {/* Ofis Koltukları */}
                     <div className="mobile-submenu__section">
-                      <h6 className="mobile-submenu__title">OFİS KOLTUKLARI</h6>
+                      <h6 className="mobile-submenu__title">{translate('OFİS KOLTUKLARI', 'OFFICE CHAIRS', 'كراسي المكتب')}</h6>
                       <ul>
-                        <li><Link to={getLocalizedPath('/yonetici-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>Yönetici Koltukları</Link></li>
-                        <li><Link to={getLocalizedPath('/calisma-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>Çalışma Koltukları</Link></li>
-                        <li><Link to={getLocalizedPath('/misafir-ve-bekleme-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>Misafir ve Bekleme Koltukları</Link></li>
+                        <li><Link to={getLocalizedPath('/yonetici-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Yönetici Koltukları', 'Manager Chairs', 'كراسي المدير')}</Link></li>
+                        <li><Link to={getLocalizedPath('/calisma-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Çalışma Koltukları', 'Work Chairs', 'كراسي العمل')}</Link></li>
+                        <li><Link to={getLocalizedPath('/misafir-ve-bekleme-koltuklari')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Misafir ve Bekleme Koltukları', 'Guest & Waiting Chairs', 'كراسي الضيoph والانتظار')}</Link></li>
                       </ul>
                     </div>
                     {/* Koltuklar / Kanepeler */}
                     <div className="mobile-submenu__section">
-                      <h6 className="mobile-submenu__title">KOLTUKLAR / KANEPELER</h6>
+                      <h6 className="mobile-submenu__title">{translate('KOLTUKLAR / KANEPELER', 'SOFAS & SEATING', 'أرائك ومقاعد')}</h6>
                       <ul>
-                        <li><Link to={getLocalizedPath('/koltuklar')} onClick={() => setIsMobileMenuOpen(false)}>Koltuklar</Link></li>
-                        <li><Link to={getLocalizedPath('/kanepeler')} onClick={() => setIsMobileMenuOpen(false)}>Kanepeler</Link></li>
-                        <li><Link to={getLocalizedPath('/sandalyeler')} onClick={() => setIsMobileMenuOpen(false)}>Sandalyeler</Link></li>
-                        <li><Link to={getLocalizedPath('/bekleme-alanlari')} onClick={() => setIsMobileMenuOpen(false)}>Bekleme Alanları</Link></li>
+                        <li><Link to={getLocalizedPath('/koltuklar')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Koltuklar', 'Armchairs', 'مقاعد بذراعين')}</Link></li>
+                        <li><Link to={getLocalizedPath('/kanepeler')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Kanepeler', 'Sofas', 'أرائك')}</Link></li>
+                        <li><Link to={getLocalizedPath('/sandalyeler')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Sandalyeler', 'Chairs', 'كراسي')}</Link></li>
+                        <li><Link to={getLocalizedPath('/bekleme-alanlari')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Bekleme Alanları', 'Waiting Areas', 'مناطق الانتظار')}</Link></li>
                       </ul>
                     </div>
                     {/* Depolama Sistemleri */}
                     <div className="mobile-submenu__section">
-                      <h6 className="mobile-submenu__title">DEPOLAMA SİSTEMLERİ</h6>
+                      <h6 className="mobile-submenu__title">{translate('DEPOLAMA SİSTEMLERİ', 'STORAGE SYSTEMS', 'أنظمة التخزين')}</h6>
                       <ul>
-                        <li><Link to={getLocalizedPath('/kesonlar')} onClick={() => setIsMobileMenuOpen(false)}>Kesonlar</Link></li>
-                        <li><Link to={getLocalizedPath('/dolaplar')} onClick={() => setIsMobileMenuOpen(false)}>Dolaplar</Link></li>
-                        <li><Link to={getLocalizedPath('/kitaplik-ve-raf-sistemleri')} onClick={() => setIsMobileMenuOpen(false)}>Kitaplık ve Raf Sistemleri</Link></li>
+                        <li><Link to={getLocalizedPath('/kesonlar')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Kesonlar', 'Pedestals', 'خزائن أدراج')}</Link></li>
+                        <li><Link to={getLocalizedPath('/dolaplar')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Dolaplar', 'Cabinets', 'خزائن')}</Link></li>
+                        <li><Link to={getLocalizedPath('/kitaplik-ve-raf-sistemleri')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Kitaplık ve Raf Sistemleri', 'Bookcases & Shelves', 'خzائن الكتب والرفوف')}</Link></li>
                       </ul>
                     </div>
                     {/* Tamamlayıcılar */}
                     <div className="mobile-submenu__section">
-                      <h6 className="mobile-submenu__title">TAMAMLAYICILAR</h6>
+                      <h6 className="mobile-submenu__title">{translate('TAMAMLAYICILAR', 'COMPLEMENTARY', 'تكميلي')}</h6>
                       <ul>
-                        <li><Link to={getLocalizedPath('/sehpalar')} onClick={() => setIsMobileMenuOpen(false)}>Sehpalar</Link></li>
-                        <li><Link to={getLocalizedPath('/puflar')} onClick={() => setIsMobileMenuOpen(false)}>Puflar</Link></li>
-                        <li><Link to={getLocalizedPath('/askiliklar')} onClick={() => setIsMobileMenuOpen(false)}>Askılıklar</Link></li>
-                        <li><Link to={getLocalizedPath('/elektrifikasyon')} onClick={() => setIsMobileMenuOpen(false)}>Elektrifikasyon</Link></li>
+                        <li><Link to={getLocalizedPath('/sehpalar')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Sehpalar', 'Coffee Tables', 'طاولات قهوة')}</Link></li>
+                        <li><Link to={getLocalizedPath('/puflar')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Puflar', 'Poufs', 'بوف')}</Link></li>
+                        <li><Link to={getLocalizedPath('/askiliklar')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Askılıklar', 'Hangers', 'علاقات ملابس')}</Link></li>
+                        <li><Link to={getLocalizedPath('/elektrifikasyon')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Elektrifikasyon', 'Electrification', 'أنظمة الكهرباء')}</Link></li>
                       </ul>
                     </div>
                   </div>
@@ -495,7 +539,7 @@ export default function BurobigHeader() {
                     className={`mobile-nav__link mobile-nav__accordion-header ${activeSubmenu === 'kurumsal' ? 'active' : ''}`}
                     onClick={() => setActiveSubmenu(activeSubmenu === 'kurumsal' ? null : 'kurumsal')}
                   >
-                    Kurumsal
+                    {translate('Kurumsal', 'Corporate', 'الشركة')}
                     <svg className="nav__chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ transform: activeSubmenu === 'kurumsal' ? 'rotate(180deg)' : 'none' }}>
                       <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
@@ -503,25 +547,25 @@ export default function BurobigHeader() {
                   <div className={`mobile-nav__accordion-content ${activeSubmenu === 'kurumsal' ? 'active' : ''}`}>
                     <div className="mobile-submenu__section" style={{ marginTop: '0.75rem' }}>
                       <ul>
-                        <li><Link to={getLocalizedPath('/hikayemiz')} onClick={() => setIsMobileMenuOpen(false)}>Hikayemiz</Link></li>
-                        <li><Link to={getLocalizedPath('/tasarim-sureci')} onClick={() => setIsMobileMenuOpen(false)}>Tasarım Süreci</Link></li>
-                        <li><Link to={getLocalizedPath('/manifesto')} onClick={() => setIsMobileMenuOpen(false)}>Manifesto</Link></li>
-                        <li><Link to={getLocalizedPath('/tasarim-felsefesi')} onClick={() => setIsMobileMenuOpen(false)}>Tasarım Felsefesi</Link></li>
-                        <li><Link to={getLocalizedPath('/kalite-politikamiz')} onClick={() => setIsMobileMenuOpen(false)}>Kalite Politikamız</Link></li>
-                        <li><Link to={getLocalizedPath('/surdurulebilirlik')} onClick={() => setIsMobileMenuOpen(false)}>Sürdürülebilirlik</Link></li>
+                        <li><Link to={getLocalizedPath('/hikayemiz')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Hikayemiz', 'Our Story', 'قصتنا')}</Link></li>
+                        <li><Link to={getLocalizedPath('/tasarim-sureci')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Tasarım Süreci', 'Design Process', 'عملية التصميم')}</Link></li>
+                        <li><Link to={getLocalizedPath('/manifesto')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Manifesto', 'Manifesto', 'البيان')}</Link></li>
+                        <li><Link to={getLocalizedPath('/tasarim-felsefesi')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Tasarım Felsefesi', 'Design Philosophy', 'فلسفة التصميم')}</Link></li>
+                        <li><Link to={getLocalizedPath('/kalite-politikamiz')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Kalite Politikamız', 'Quality Policy', 'سياسة الجودة')}</Link></li>
+                        <li><Link to={getLocalizedPath('/surdurulebilirlik')} onClick={() => setIsMobileMenuOpen(false)}>{translate('Sürdürülebilirlik', 'Sustainability', 'الاستدامة')}</Link></li>
                       </ul>
                     </div>
                   </div>
                 </li>
 
                 <li className="mobile-nav__item">
-                  <Link to={getLocalizedPath('/tasarimcilar')} className="mobile-nav__link" onClick={() => setIsMobileMenuOpen(false)}>Tasarımcılar</Link>
+                  <Link to={getLocalizedPath('/tasarimcilar')} className="mobile-nav__link" onClick={() => setIsMobileMenuOpen(false)}>{translate('Tasarımcılar', 'Designers', 'المصممون')}</Link>
                 </li>
                 <li className="mobile-nav__item">
-                  <Link to={getLocalizedPath('/blog')} className="mobile-nav__link" onClick={() => setIsMobileMenuOpen(false)}>Blog</Link>
+                  <Link to={getLocalizedPath('/blog')} className="mobile-nav__link" onClick={() => setIsMobileMenuOpen(false)}>{translate('Blog', 'Blog', 'المدونة')}</Link>
                 </li>
                 <li className="mobile-nav__item">
-                  <Link to={getLocalizedPath('/iletisim')} className="mobile-nav__link" onClick={() => setIsMobileMenuOpen(false)}>İletişim</Link>
+                  <Link to={getLocalizedPath('/iletisim')} className="mobile-nav__link" onClick={() => setIsMobileMenuOpen(false)}>{translate('İletişim', 'Contact', 'الاتصال')}</Link>
                 </li>
               </ul>
             </nav>
@@ -546,7 +590,7 @@ export default function BurobigHeader() {
                     ref={searchInputRef}
                     type="text"
                     className="search-overlay__input"
-                    placeholder={translate('Ürün adı, kategori veya detay ara...', 'Search product title, category or details...')}
+                    placeholder={translate('Ürün adı, kategori veya detay ara...', 'Search product title, category or details...', 'ابحث عن اسم المنتج veya الفئة...')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     autoComplete="off"
@@ -555,7 +599,7 @@ export default function BurobigHeader() {
                     <button 
                       className="search-overlay__clear" 
                       onClick={() => setSearchQuery('')}
-                      aria-label={translate('Temizle', 'Clear')}
+                      aria-label={translate('Temizle', 'Clear', 'مسح')}
                     >
                       ✕
                     </button>
@@ -564,9 +608,9 @@ export default function BurobigHeader() {
                 <button 
                   className="search-overlay__close-btn" 
                   onClick={() => setIsSearchOpen(false)}
-                  aria-label={translate('Kapat', 'Close')}
+                  aria-label={translate('Kapat', 'Close', 'إغلاق')}
                 >
-                  <span>{translate('KAPAT', 'CLOSE')}</span>
+                  <span>{translate('KAPAT', 'CLOSE', 'إغلاق')}</span>
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -580,7 +624,7 @@ export default function BurobigHeader() {
                   <div className="search-overlay__suggestions">
                     <div className="search-overlay__suggest-col">
                       <h3 className="search-overlay__section-title">
-                        {translate('Popüler Ürünler', 'Popular Products')}
+                        {translate('Popüler Ürünler', 'Popular Products', 'المنتجات الشعبية')}
                       </h3>
                       <div className="search-overlay__featured-grid">
                         {popularProducts.map(p => {
@@ -608,7 +652,7 @@ export default function BurobigHeader() {
                     </div>
                     <div className="search-overlay__suggest-col">
                       <h3 className="search-overlay__section-title">
-                        {translate('Öne Çıkan Ürünler', 'Featured Products')}
+                        {translate('Öne Çıkan Ürünler', 'Featured Products', 'منتجات مميزة')}
                       </h3>
                       <div className="search-overlay__featured-grid">
                         {featuredProducts.map(p => {
@@ -638,12 +682,12 @@ export default function BurobigHeader() {
                 ) : (
                   <div className="search-overlay__results">
                     <h3 className="search-overlay__section-title">
-                      {translate(`Arama Sonuçları (${searchResults.length})`, `Search Results (${searchResults.length})`)}
+                      {translate(`Arama Sonuçları (${searchResults.length})`, `Search Results (${searchResults.length})`, `نتائج البحث (${searchResults.length})`)}
                     </h3>
                     {searchResults.length === 0 ? (
                       <div className="search-overlay__empty">
-                        <p>{translate(`"${searchQuery}" için eşleşen bir ürün bulunamadı.`, `No products found matching "${searchQuery}".`)}</p>
-                        <span>{translate('Farklı anahtar kelimelerle aramayı deneyebilirsiniz.', 'Please try searching with different keywords.')}</span>
+                        <p>{translate(`"${searchQuery}" için eşleşen bir ürün bulunamadı.`, `No products found matching "${searchQuery}".`, `لم يتم العثور على منتجات مطابقة لـ "${searchQuery}".`)}</p>
+                        <span>{translate('Farklı anahtar kelimelerle aramayı deneyebilirsiniz.', 'Please try searching with different keywords.', 'يمكنك محاولة البحث باستخدام كلمات رئيسية مختلفة.')}</span>
                       </div>
                     ) : (
                       <div className="search-overlay__results-grid">

@@ -8,7 +8,7 @@ import { Calendar, ChevronLeft } from 'lucide-react';
 
 export default function BurobigBlogDetail() {
   const { slug } = useParams();
-  const { tenantMapping, activeLang } = useSite();
+  const { tenantMapping, activeLang, setActivePageTranslations } = useSite();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -52,8 +52,18 @@ export default function BurobigBlogDetail() {
         description: blog.summary || '',
         companyName: ''
       });
+
+      // Set translations mapping for language switching
+      const slugMap = {
+        tr: resolveField(blog, 'tr', 'slug') || blog.slug || blog.id,
+        en: resolveField(blog, 'en', 'slug') || blog.slug || blog.id,
+        ar: resolveField(blog, 'ar', 'slug') || blog.slug || blog.id,
+      };
+      if (setActivePageTranslations) {
+        setActivePageTranslations(slugMap);
+      }
     }
-  }, [blog, activeLang]);
+  }, [blog, activeLang, setActivePageTranslations]);
 
   if (loading) {
     return (

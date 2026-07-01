@@ -4,7 +4,12 @@ import './burobig.css';
 
 export default function BurobigFooter() {
   const { tenantMapping, activeLang, settings } = useSite();
-    const getLocalizedPath = (path) => `/${activeLang}${path}`;
+  const getLocalizedPath = (path) => `/${activeLang}${path}`;
+  const translate = (tr, en, ar) => {
+    if (activeLang === 'ar') return ar || en || tr;
+    if (activeLang === 'en') return en || tr;
+    return tr;
+  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -14,7 +19,11 @@ export default function BurobigFooter() {
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
   };
 
-  const footerText = settings?.footerDescription || "Doğadan ilham alan yenilikçi çizgilerle, geleceğin premium ofis ve yaşam alanlarını tasarlıyoruz. İhtiyacınıza göre şekillenen, kalite ve konforla buluşan özgün çözümler.";
+  const footerText = settings?.footerDescription || translate(
+    "Doğadan ilham alan yenilikçi çizgilerle, geleceğin premium ofis ve yaşam alanlarını tasarlıyoruz. İhtiyacınıza göre şekillenen, kalite ve konforla buluşan özgün çözümler.",
+    "With innovative lines inspired by nature, we design premium office and living spaces of the future. Unique solutions shaped according to your needs, meeting quality and comfort.",
+    "من خلال خطوط مبتكرة مستوحاة من الطبيعة، نصمم مساحات مكتبية ومعيشة فاخرة للمستقبل. حلول فريدة تشكلت وفقًا لاحتياجاتك، وتلبي الجودة والراحة."
+  );
   const logoUrl = settings?.logos?.footer || "/assets/burobig/images/Burobig%20Logo%20Beyaz.svg";
 
   const rawWa = settings?.socials?.whatsapp || settings?.contact?.whatsapp || "905365433511";
@@ -83,40 +92,51 @@ export default function BurobigFooter() {
             </div>
 
             <div className="footer-col">
-              <h4>Kurumsal</h4>
+              <h4>{translate('Kurumsal', 'Corporate', 'الشركة')}</h4>
               <ul className="footer-links">
-                <li><Link to={getLocalizedPath('/hikayemiz')}>Hikayemiz</Link></li>
-                <li><Link to={getLocalizedPath('/tasarim-sureci')}>Tasarım Süreci</Link></li>
-                <li><Link to={getLocalizedPath('/manifesto')}>Manifesto</Link></li>
-                <li><Link to={getLocalizedPath('/tasarim-felsefesi')}>Tasarım Felsefesi</Link></li>
-                <li><Link to={getLocalizedPath('/kalite-politikamiz')}>Kalite Politikamız</Link></li>
-                <li><Link to={getLocalizedPath('/surdurulebilirlik')}>Sürdürülebilirlik</Link></li>
-                <li><Link to={getLocalizedPath('/tasarimcilar')}>Tasarımcılar</Link></li>
-                <li><Link to={getLocalizedPath('/blog')}>Blog</Link></li>
-                <li><Link to={getLocalizedPath('/iletisim')}>İletişim</Link></li>
+                <li><Link to={getLocalizedPath('/hikayemiz')}>{translate('Hikayemiz', 'Our Story', 'قصتنا')}</Link></li>
+                <li><Link to={getLocalizedPath('/tasarim-sureci')}>{translate('Tasarım Süreci', 'Design Process', 'عملية التصميم')}</Link></li>
+                <li><Link to={getLocalizedPath('/manifesto')}>{translate('Manifesto', 'Manifesto', 'البيان')}</Link></li>
+                <li><Link to={getLocalizedPath('/tasarim-felsefesi')}>{translate('Tasarım Felsefesi', 'Design Philosophy', 'فلسفة التصميم')}</Link></li>
+                <li><Link to={getLocalizedPath('/kalite-politikamiz')}>{translate('Kalite Politikamız', 'Quality Policy', 'سياسة الجودة')}</Link></li>
+                <li><Link to={getLocalizedPath('/surdurulebilirlik')}>{translate('Sürdürülebilirlik', 'Sustainability', 'الاستdامة')}</Link></li>
+                <li><Link to={getLocalizedPath('/tasarimcilar')}>{translate('Tasarımcılar', 'Designers', 'المصممون')}</Link></li>
+                <li><Link to={getLocalizedPath('/blog')}>{translate('Blog', 'Blog', 'المدونة')}</Link></li>
+                <li><Link to={getLocalizedPath('/iletisim')}>{translate('İletişim', 'Contact', 'الاتصال')}</Link></li>
               </ul>
             </div>
 
             <div className="footer-col">
-              <h4>Koleksiyonlar</h4>
+              <h4>{translate('Koleksiyonlar', 'Collections', 'المجموعات')}</h4>
               <ul className="footer-links">
-                <li><Link to={getLocalizedPath('/ust-yonetici-masalari')}>Üst Yönetici Masaları</Link></li>
-                <li><Link to={getLocalizedPath('/yonetici-masalari')}>Yönetici Masaları</Link></li>
-                <li><Link to={getLocalizedPath('/calisma-masalari')}>Çalışma Masaları</Link></li>
-                <li><Link to={getLocalizedPath('/operasyonel-masalar')}>Operasyonel Masalar</Link></li>
-                <li><Link to={getLocalizedPath('/toplanti-masalari')}>Toplantı Masaları</Link></li>
-                <li><Link to={getLocalizedPath('/yonetici-koltuklari')}>Yönetici Koltukları</Link></li>
-                <li><Link to={getLocalizedPath('/calisma-koltuklari')}>Çalışma Koltukları</Link></li>
-                <li><Link to={getLocalizedPath('/misafir-ve-bekleme-koltuklari')}>Misafir ve Bekleme Koltukları</Link></li>
+                <li><Link to={getLocalizedPath('/ust-yonetici-masalari')}>{translate('Üst Yönetici Masaları', 'Executive Desks', 'طاولات المدير التنفيذي')}</Link></li>
+                <li><Link to={getLocalizedPath('/yonetici-masalari')}>{translate('Yönetici Masaları', 'Manager Desks', 'طاولات المدير')}</Link></li>
+                <li><Link to={getLocalizedPath('/calisma-masalari')}>{translate('Çalışma Masaları', 'Work Desks', 'طاولات العمل')}</Link></li>
+                <li><Link to={getLocalizedPath('/operasyonel-masalar')}>{translate('Operasyonel Masalar', 'Operational Desks', 'الطاولات التشغيلية')}</Link></li>
+                <li><Link to={getLocalizedPath('/toplanti-masalari')}>{translate('Toplantı Masaları', 'Meeting Desks', 'طاولات الاجتماعات')}</Link></li>
+                <li><Link to={getLocalizedPath('/yonetici-koltuklari')}>{translate('Yönetici Koltukları', 'Manager Chairs', 'كراسي المدير')}</Link></li>
+                <li><Link to={getLocalizedPath('/calisma-koltuklari')}>{translate('Çalışma Koltukları', 'Work Chairs', 'كراسي العمل')}</Link></li>
+                <li><Link to={getLocalizedPath('/misafir-ve-bekleme-koltuklari')}>{translate('Misafir ve Bekleme Koltukları', 'Guest & Waiting Chairs', 'كراسي الضيoph والانتظار')}</Link></li>
               </ul>
             </div>
 
             <div className="footer-col contact-col">
-              <h4>E-Bülten Kayıt</h4>
-              <p style={{ marginBottom: '1.5rem', fontSize: '0.9rem' }}>Yeniliklerden ve özel koleksiyonlarımızdan ilk siz haberdar olun.</p>
+              <h4>{translate('E-Bülten Kayıt', 'Newsletter Subscription', 'الاشتراك في النشرة الإخبارية')}</h4>
+              <p style={{ marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+                {translate(
+                  'Yeniliklerden ve özel koleksiyonlarımızdan ilk siz haberdar olun.',
+                  'Be the first to know about innovations and our special collections.',
+                  'كن أول من يعرف عن الابتكارات ومجموعاتنا الخاصة.'
+                )}
+              </p>
               <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
-                <input type="email" placeholder="E-posta adresiniz" required aria-label="E-posta adresiniz" />
-                <button type="submit" aria-label="Kayıt Ol">
+                <input 
+                  type="email" 
+                  placeholder={translate('E-posta adresiniz', 'Your email address', 'عنوان بريدك الإلكتروني')} 
+                  required 
+                  aria-label={translate('E-posta adresiniz', 'Your email address', 'عنوان بريدك الإلكتروني')} 
+                />
+                <button type="submit" aria-label={translate('Kayıt Ol', 'Subscribe', 'اشتراك')}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
@@ -128,7 +148,9 @@ export default function BurobigFooter() {
 
           <div className="footer-bottom">
             <div className="footer-bottom-left">
-              <span>© {new Date().getFullYear()} <strong>Bürobig Ofis Mobilyaları</strong>. Tüm Hakları Saklıdır.</span>
+              <span>
+                © {new Date().getFullYear()} <strong>{translate('Bürobig Ofis Mobilyaları', 'Burobig Office Furniture', 'بيروبيج لأثاث المكاتب')}</strong>. {translate('Tüm Hakları Saklıdır.', 'All Rights Reserved.', 'جميع الحقوق محفوظة.')}
+              </span>
             </div>
             <div className="footer-bottom-right">
               <a href="https://www.coreweb.tr/" target="_blank" rel="noopener noreferrer" aria-label="CoreWeb">

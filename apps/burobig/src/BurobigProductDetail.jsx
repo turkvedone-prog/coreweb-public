@@ -6,7 +6,7 @@ import BurobigEcoBanner from './BurobigEcoBanner';
 
 import { getActiveProducts } from '../../services/publicContentService';
 import { getLocalizedContent } from '../../utils/i18nContent';
-import { resolveField, submitLead } from '@coreweb/shared-ui';
+import { resolveField, submitLead, loadRecaptchaScript, executeRecaptcha } from '@coreweb/shared-ui';
 
 const getSubcategoryColor = (subcategory, category) => {
   const name = (subcategory || category || '').toLowerCase().trim();
@@ -46,6 +46,12 @@ const getSubcategoryColor = (subcategory, category) => {
 export default function BurobigProductDetail({ product }) {
   const { tenantMapping, activeLang } = useSite();
   const { tenantId, tenantSlug } = tenantMapping;
+
+  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LdUHg0tAAAAADUPLdrFQSEnyjWs6DbHXtjnROuK';
+
+  useEffect(() => {
+    loadRecaptchaScript(siteKey);
+  }, [siteKey]);
 
   const productTitle = resolveField(product, activeLang, 'title') || resolveField(product, activeLang, 'name') || '';
   const productSummary = resolveField(product, activeLang, 'summary') || '';
@@ -353,6 +359,17 @@ export default function BurobigProductDetail({ product }) {
     }
 
     try {
+      let recaptchaToken = '';
+      if (window.grecaptcha && window.grecaptcha.enterprise) {
+        recaptchaToken = await window.grecaptcha.enterprise.execute(siteKey, { action: 'submitLead' });
+      } else {
+        try {
+          recaptchaToken = await executeRecaptcha(siteKey, 'submitLead');
+        } catch (err) {
+          // Silent fallback
+        }
+      }
+
       const payload = {
         tenantId: 'burobig',
         tenantSlug: 'burobig',
@@ -368,6 +385,7 @@ export default function BurobigProductDetail({ product }) {
         pageUrl: window.location.href,
         createdAt: new Date().toISOString(),
         status: 'new',
+        recaptchaToken,
         extraData: {
           "Ürün Adı": productTitle,
           "Ürün Linki": window.location.href,

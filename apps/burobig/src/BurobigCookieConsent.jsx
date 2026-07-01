@@ -38,33 +38,42 @@ export default function BurobigCookieConsent({ settings, activeLang }) {
 
   // Localizations
   const isTr = activeLang === 'tr';
-  const title = customTitle || (isTr ? 'Çerez Ayarları' : 'Cookie Settings');
-  const text = customText || (isTr 
+  const isAr = activeLang === 'ar';
+  const title = customTitle || (isAr ? 'إعدادات ملفات تعريف الارتباط' : isTr ? 'Çerez Ayarları' : 'Cookie Settings');
+  const text = customText || (isAr
+    ? 'نحن نستخدم ملفات تعريف الارتباط لنقدم لك تجربة أفضل ولتحسين خدماتنا.'
+    : isTr 
     ? 'Web sitemizde size daha iyi bir deneyim sunmak ve hizmetlerimizi geliştirmek için çerezler kullanıyoruz.' 
     : 'We use cookies to offer you a better experience and improve our services.');
   
-  const linkText = isTr ? 'Çerez politikası.' : 'Cookie policy.';
-  const linkUrl = isTr ? '/tr/cerez-politikasi' : '/en/cookie-policy';
+  const linkText = isAr ? 'سياسة ملفات تعريف الارتباط.' : isTr ? 'Çerez politikası.' : 'Cookie policy.';
+  const linkUrl = isTr ? '/tr/cerez-politikasi' : isAr ? '/ar/cookie-policy' : '/en/cookie-policy';
 
-  const labelNecessary = isTr ? 'Zorunlu / Teknik Çerezler' : 'Necessary / Technical Cookies';
-  const descNecessary = isTr 
+  const labelNecessary = isAr ? 'ملفات تعريف الارتباط الضرورية / الفنية' : isTr ? 'Zorunlu / Teknik Çerezler' : 'Necessary / Technical Cookies';
+  const descNecessary = isAr
+    ? 'مطلوبة لوظائف الموقع الأساسية.'
+    : isTr 
     ? 'Temel site işlevleri için zorunludur.' 
     : 'Required for basic site functionality.';
 
-  const labelAnalytic = isTr ? 'Analitik Çerezler' : 'Analytical Cookies';
-  const descAnalytic = isTr 
+  const labelAnalytic = isAr ? 'ملفات تعريف الارتباط التحليلية' : isTr ? 'Analitik Çerezler' : 'Analytical Cookies';
+  const descAnalytic = isAr
+    ? 'لإحصاءات الزوار وتحليل الأداء.'
+    : isTr 
     ? 'Ziyaretçi sayıları ve performans analizi için.' 
     : 'For visitor stats and performance analysis.';
 
-  const labelMarketing = isTr ? 'Hedef / Reklam Çerezleri' : 'Targeting / Advertising Cookies';
-  const descMarketing = isTr 
+  const labelMarketing = isAr ? 'ملفات تعريف الارتباط للتسويق / الإعلانات' : isTr ? 'Hedef / Reklam Çerezleri' : 'Targeting / Advertising Cookies';
+  const descMarketing = isAr
+    ? 'لتقديم إعلانات مخصصة.'
+    : isTr 
     ? 'Kişiselleştirilmiş reklamlar sunmak amacıyla.' 
     : 'To deliver personalized advertisements.';
 
-  const btnAcceptAll = isTr ? 'Tümünü Kabul Et' : 'Accept All';
-  const btnRejectAll = isTr ? 'Tümünü Reddet' : 'Reject All';
-  const btnSettings = isTr ? 'Ayarlar' : 'Settings';
-  const btnSave = isTr ? 'Seçimleri Kaydet' : 'Save Preferences';
+  const btnAcceptAll = isAr ? 'قبول الكل' : isTr ? 'Tümünü Kabul Et' : 'Accept All';
+  const btnRejectAll = isAr ? 'رفض الكل' : isTr ? 'Tümünü Reddet' : 'Reject All';
+  const btnSettings = isAr ? 'الإعدادات' : isTr ? 'Ayarlar' : 'Settings';
+  const btnSave = isAr ? 'حفظ التفضيلات' : isTr ? 'Seçimleri Kaydet' : 'Save Preferences';
 
   const saveConsent = (analytical, marketing) => {
     const payload = {
@@ -296,7 +305,7 @@ export default function BurobigCookieConsent({ settings, activeLang }) {
               style={{ ...btnRejectStyle, flex: '1' }} 
               onClick={() => setShowDetails(false)}
             >
-              {isTr ? 'Geri' : 'Back'}
+              {isAr ? 'رجوع' : isTr ? 'Geri' : 'Back'}
             </button>
             <button 
               style={{ ...btnAcceptStyle, flex: '1', marginTop: '0px' }} 

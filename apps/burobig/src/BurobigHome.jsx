@@ -32,6 +32,11 @@ function normalizeSlide(slide, activeLang) {
 export default function BurobigHome() {
   const { tenantMapping, activeLang, settings } = useSite();
   const getLocalizedPath = (path) => `/${activeLang}${path}`;
+  const translate = (tr, en, ar) => {
+    if (activeLang === 'ar') return ar || en || tr;
+    if (activeLang === 'en') return en || tr;
+    return tr;
+  };
 
   const [activeSlide, setActiveSlide] = useState(0);
   const [slides, setSlides] = useState([]);
@@ -324,19 +329,19 @@ export default function BurobigHome() {
         <section className="collections-section" id="koleksiyonlar" aria-labelledby="collections-heading">
           <div className="collections-wrapper">
             <header className="section-header">
-              <span className="section-label reveal-up">Koleksiyonlar</span>
-              <h2 id="collections-heading" className="reveal-up delay-100">Her Alan İçin<br />Bir Vizyon</h2>
-              <p className="reveal-up delay-200">İhtiyacınıza göre şekillenen, kaliteyle tasarlanan yaşam alanları.</p>
+              <span className="section-label reveal-up">{translate('Koleksiyonlar', 'Collections', 'المجموعات')}</span>
+              <h2 id="collections-heading" className="reveal-up delay-100">{translate('Her Alan İçin', 'A Vision for', 'رؤية لكل')}<br />{translate('Bir Vizyon', 'Every Space', 'مساحة')}</h2>
+              <p className="reveal-up delay-200">{translate('İhtiyacınıza göre şekillenen, kaliteyle tasarlanan yaşam alanları.', 'Living spaces shaped according to your needs, designed with quality.', 'مساحات معيشة تشكلت وفقًا لاحتياجاتك، ومصممة بجودة عالية.')}</p>
             </header>
 
             <div className="collections-grid" role="list">
               {/* FEATURED CARD */}
               <article className="collection-card collection-card--featured" role="listitem">
-                <Link to={getLocalizedPath('/ust-yonetici-masalari')} className="collection-card__link" id="card-makam" aria-label="Üst Yönetici Masaları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/ust-yonetici-masalari')} className="collection-card__link" id="card-makam" aria-label={translate('Üst Yönetici Masaları koleksiyonunu keşfet', 'Explore Executive Desks collection', 'اكتشف مجموعة طاولات المدير التنفيذي')}>
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-makam.jpg"
-                      alt="Prestijli makam takımı ve yönetici ofisi"
+                      alt={translate('Prestijli makam takımı ve yönetici ofisi', 'Prestigious executive suite and manager office', 'مجموعة مكتب المدير المرموقة ومكتب المدير')}
                       width="900"
                       height="1100"
                       loading="eager"
@@ -345,9 +350,9 @@ export default function BurobigHome() {
                   </figure>
                   <div className="collection-card__overlay">
                     <div className="collection-card__info">
-                      <h3 className="collection-card__title">Üst Yönetici<br />Masaları</h3>
+                      <h3 className="collection-card__title">{translate('Üst Yönetici', 'Executive', 'المدير التنفيذي')}<br />{translate('Masaları', 'Desks', 'طاولات')}</h3>
                       <span className="collection-card__cta">
-                        Keşfet{' '}
+                        {translate('Keşfet', 'Discover', 'اكتشف')}{' '}
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                           <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
@@ -359,11 +364,11 @@ export default function BurobigHome() {
 
               {/* CARD 2 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/operasyonel-masalar')} className="collection-card__link" id="card-operasyonel" aria-label="Operasyonel Masalar koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/operasyonel-masalar')} className="collection-card__link" id="card-operasyonel" aria-label={translate('Operasyonel Masalar koleksiyonunu keşfet', 'Explore Operational Desks collection', 'اكتشف مجموعة الطاولات التشغيلية')}>
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-operasyonel.jpg"
-                      alt="Modern operasyonel masalar ve açık ofis"
+                      alt={translate('Modern operasyonel masalar ve açık ofis', 'Modern operational desks and open office', 'طاولات تشغيلية حديثة ومكتب مفتوح')}
                       width="700"
                       height="550"
                       loading="lazy"
@@ -372,9 +377,9 @@ export default function BurobigHome() {
                   </figure>
                   <div className="collection-card__overlay">
                     <div className="collection-card__info">
-                      <h3 className="collection-card__title">Operasyonel<br />Masalar</h3>
+                      <h3 className="collection-card__title">{translate('Operasyonel', 'Operational', 'التشغيلية')}<br />{translate('Masalar', 'Desks', 'طاولات')}</h3>
                       <span className="collection-card__cta">
-                        Keşfet{' '}
+                        {translate('Keşfet', 'Discover', 'اكتشف')}{' '}
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                           <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
@@ -386,11 +391,11 @@ export default function BurobigHome() {
 
               {/* CARD 3 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/toplanti-masalari')} className="collection-card__link" id="card-toplanti" aria-label="Toplantı Masaları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/toplanti-masalari')} className="collection-card__link" id="card-toplanti" aria-label={translate('Toplantı Masaları koleksiyonunu keşfet', 'Explore Meeting Desks collection', 'اكتشف مجموعة طاولات الاجتماعات')}>
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-toplanti.png"
-                      alt="Şık toplantı odası masası"
+                      alt={translate('Şık toplantı odası masası', 'Stylish meeting room table', 'طاولة غرفة اجتماعات أنيقة')}
                       width="700"
                       height="550"
                       loading="lazy"
@@ -399,9 +404,9 @@ export default function BurobigHome() {
                   </figure>
                   <div className="collection-card__overlay">
                     <div className="collection-card__info">
-                      <h3 className="collection-card__title">Toplantı<br />Masaları</h3>
+                      <h3 className="collection-card__title">{translate('Toplantı', 'Meeting', 'الاجتماعات')}<br />{translate('Masaları', 'Desks', 'طاولات')}</h3>
                       <span className="collection-card__cta">
-                        Keşfet{' '}
+                        {translate('Keşfet', 'Discover', 'اكتشف')}{' '}
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                           <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
@@ -413,11 +418,11 @@ export default function BurobigHome() {
 
               {/* CARD 4 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/yonetici-koltuklari')} className="collection-card__link" id="card-koltuklar" aria-label="Yönetici Koltukları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/yonetici-koltuklari')} className="collection-card__link" id="card-koltuklar" aria-label={translate('Yönetici Koltukları koleksiyonunu keşfet', 'Explore Manager Chairs collection', 'اكتشف مجموعة كراسي المدير')}>
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-koltuklar.png"
-                      alt="Ergonomik yönetici koltukları"
+                      alt={translate('Ergonomik yönetici koltukları', 'Ergonomic manager chairs', 'كراسي المدير المriحة')}
                       width="700"
                       height="550"
                       loading="lazy"
@@ -426,9 +431,9 @@ export default function BurobigHome() {
                   </figure>
                   <div className="collection-card__overlay">
                     <div className="collection-card__info">
-                      <h3 className="collection-card__title">Yönetici<br />Koltukları</h3>
+                      <h3 className="collection-card__title">{translate('Yönetici', 'Manager', 'المدير')}<br />{translate('Koltukları', 'Chairs', 'كراسي')}</h3>
                       <span className="collection-card__cta">
-                        Keşfet{' '}
+                        {translate('Keşfet', 'Discover', 'اكتشف')}{' '}
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                           <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
@@ -440,11 +445,11 @@ export default function BurobigHome() {
 
               {/* CARD 5 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/bekleme-alanlari')} className="collection-card__link" id="card-bekleme" aria-label="Bekleme Alanları koleksiyonunu keşfet">
+                <Link to={getLocalizedPath('/bekleme-alanlari')} className="collection-card__link" id="card-bekleme" aria-label={translate('Bekleme Alanları koleksiyonunu keşfet', 'Explore Waiting Areas collection', 'اكتشف مجموعة مناطق الانتظار')}>
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-bekleme.jpg"
-                      alt="Lüks bekleme salonu ve lobi mobilyaları"
+                      alt={translate('Lüks bekleme salonu ve lobi mobilyaları', 'Luxury waiting lounge and lobby furniture', 'أثاث صالة الانتظار الفاخر واللوبي')}
                       width="700"
                       height="550"
                       loading="lazy"
@@ -453,9 +458,9 @@ export default function BurobigHome() {
                   </figure>
                   <div className="collection-card__overlay">
                     <div className="collection-card__info">
-                      <h3 className="collection-card__title">Bekleme<br />Alanları</h3>
+                      <h3 className="collection-card__title">{translate('Bekleme', 'Waiting', 'الانتظار')}<br />{translate('Alanları', 'Areas', 'مناطق')}</h3>
                       <span className="collection-card__cta">
-                        Keşfet{' '}
+                        {translate('Keşfet', 'Discover', 'اكتشف')}{' '}
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                           <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
@@ -472,15 +477,15 @@ export default function BurobigHome() {
         <section className="products-section" aria-labelledby="new-products-heading">
           <div className="products-wrapper">
             <header className="products-header reveal-up">
-              <h2 id="new-products-heading">{activeLang === 'tr' ? 'Yeni Ürünlerimiz' : 'Our New Products'}</h2>
+              <h2 id="new-products-heading">{translate('Yeni Ürünlerimiz', 'Our New Products', 'منتجاتنا الجديدة')}</h2>
               {latestProducts.length > visibleCount && (
                 <div className="carousel-controls">
-                  <button className="control-btn prev-btn" onClick={handlePrev} aria-label={activeLang === 'tr' ? 'Önceki Ürün' : 'Previous Product'}>
+                  <button className="control-btn prev-btn" onClick={handlePrev} aria-label={translate('Önceki Ürün', 'Previous Product', 'المنتج السابق')}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <polyline points="15 18 9 12 15 6"></polyline>
                     </svg>
                   </button>
-                  <button className="control-btn next-btn" onClick={handleNext} aria-label={activeLang === 'tr' ? 'Sonraki Ürün' : 'Next Product'}>
+                  <button className="control-btn next-btn" onClick={handleNext} aria-label={translate('Sonraki Ürün', 'Next Product', 'المنتج التالي')}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
@@ -515,10 +520,10 @@ export default function BurobigHome() {
                           <figure className="product-card__figure">
                             {product.isNewProduct && (
                               product.newProductBadgeStyle === 'pill' ? (
-                                <div className="badge-pill-new" style={{ top: '1rem', right: '1rem' }}>{activeLang === 'tr' ? 'YENİ' : 'NEW'}</div>
+                                <div className="badge-pill-new" style={{ top: '1rem', right: '1rem' }}>{translate('YENİ', 'NEW', 'جديد')}</div>
                               ) : (
                                 <div className="badge-ribbon-container">
-                                  <div className="badge-ribbon-new">{activeLang === 'tr' ? 'YENİ' : 'NEW'}</div>
+                                  <div className="badge-ribbon-new">{translate('YENİ', 'NEW', 'جديد')}</div>
                                 </div>
                               )
                             )}
@@ -544,7 +549,7 @@ export default function BurobigHome() {
               </div>
             ) : (
               <div className="no-products-message">
-                <p>{activeLang === 'tr' ? 'Ürün bulunamadı.' : 'No products found.'}</p>
+                <p>{translate('Ürün bulunamadı.', 'No products found.', 'لم يتم العثور على منتجات.')}</p>
               </div>
             )}
           </div>
@@ -554,7 +559,7 @@ export default function BurobigHome() {
         <section className="awards-section reveal-up" aria-labelledby="awards-heading" id="odullu-urunler">
           <div className="awards-container">
             <header className="awards-header">
-              <h2 id="awards-heading" className="awards-section-title">{activeLang === 'tr' ? 'Ödüllü Tasarımlar' : 'Award Winning Designs'}</h2>
+              <h2 id="awards-heading" className="awards-section-title">{translate('Ödüllü Tasarımlar', 'Award Winning Designs', 'تصاميم حائزة على جوائز')}</h2>
             </header>
 
             <div className="awards-grid">
@@ -582,7 +587,7 @@ export default function BurobigHome() {
                   </div>
                   <div className="award-card__info">
                     <h3 className="award-card__title">Duet</h3>
-                    <p className="award-card__subtitle">{activeLang === 'tr' ? 'Tasarım - Klan Studio' : 'Design - Klan Studio'}</p>
+                    <p className="award-card__subtitle">{translate('Tasarım - Klan Studio', 'Design - Klan Studio', 'تصميم - Klan Studio')}</p>
                   </div>
                 </div>
               </article>
@@ -611,7 +616,7 @@ export default function BurobigHome() {
                   </div>
                   <div className="award-card__info">
                     <h3 className="award-card__title">Graf</h3>
-                    <p className="award-card__subtitle">{activeLang === 'tr' ? 'Tasarım - Klan Studio' : 'Design - Klan Studio'}</p>
+                    <p className="award-card__subtitle">{translate('Tasarım - Klan Studio', 'Design - Klan Studio', 'تصميم - Klan Studio')}</p>
                   </div>
                 </div>
               </article>
@@ -621,10 +626,10 @@ export default function BurobigHome() {
 
         {/* Blog */}
         {blogs.length > 0 && (
-          <section className="blog-section" id="blog" aria-label="Blog Yazıları">
+          <section className="blog-section" id="blog" aria-label={translate('Blog Yazıları', 'Blog Posts', 'منشورات المدونة')}>
             <div className="blog-wrapper">
               <header className="blog-header reveal-up">
-                <h2 id="blog-heading">Blog Yazılarımız</h2>
+                <h2 id="blog-heading">{translate('Blog Yazılarımız', 'Our Blog Posts', 'منشورات المدونة الخاصة بنا')}</h2>
               </header>
 
               <div className="blog-grid">
@@ -648,7 +653,7 @@ export default function BurobigHome() {
                         <div className="blog-card__content">
                           <h3 className="blog-card__title">{blog.title}</h3>
                           <span className="blog-card__readmore">
-                            {activeLang === 'tr' ? 'Hemen İncele' : 'Read More'}{' '}
+                            {translate('Hemen İncele', 'Read More', 'اقرأ المزيد')}{' '}
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                               <line x1="5" y1="12" x2="19" y2="12"></line>
                               <polyline points="12 5 19 12 12 19"></polyline>
