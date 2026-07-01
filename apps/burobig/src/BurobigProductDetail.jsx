@@ -45,13 +45,10 @@ const getSubcategoryColor = (subcategory, category) => {
 
 const getLocalizedCategoryName = (name, lang) => {
   if (!name) return '';
-  const clean = name.toLowerCase().trim()
-    .replace(/[ğĞ]/g, 'g')
-    .replace(/[üÜ]/g, 'u')
-    .replace(/[şŞ]/g, 's')
-    .replace(/[ıİ]/g, 'i')
-    .replace(/[öÖ]/g, 'o')
-    .replace(/[çÇ]/g, 'c');
+  const clean = name.normalize('NFD')
+    .toLowerCase()
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
 
   const dict = {
     // Categories
@@ -262,15 +259,11 @@ export default function BurobigProductDetail({ product }) {
     if (!text) return '';
     return text
       .toString()
+      .normalize('NFD')
       .toLowerCase()
+      .replace(/[\u0300-\u036f]/g, '')
       .trim()
       .replace(/\s+/g, '-')
-      .replace(/[ğĞ]/g, 'g')
-      .replace(/[üÜ]/g, 'u')
-      .replace(/[şŞ]/g, 's')
-      .replace(/[ıİ]/g, 'i')
-      .replace(/[öÖ]/g, 'o')
-      .replace(/[çÇ]/g, 'c')
       .replace(/[^a-z0-9-]/g, '')
       .replace(/-+/g, '-');
   };
