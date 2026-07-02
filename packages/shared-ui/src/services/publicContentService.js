@@ -387,3 +387,23 @@ export async function getActiveProductBySlug(tenantId, slug, activeLang) {
     throw error;
   }
 }
+
+export async function getCatalogMetadata(tenantId) {
+  if (!tenantId) return null;
+  const cacheKey = `cw_catalog_${tenantId}`;
+  const cached = getCached(cacheKey);
+  if (cached) return cached;
+  try {
+    const docRef = doc(db, 'tenants', tenantId, 'settings', 'catalog_metadata');
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      setCache(cacheKey, data);
+      return data;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error in getCatalogMetadata:', error);
+    return null;
+  }
+}

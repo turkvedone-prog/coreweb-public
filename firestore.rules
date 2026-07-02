@@ -178,7 +178,7 @@ service cloud.firestore {
 
     // 3.4 tenants/{tenantId}/settings Alt Koleksiyonu
     match /tenants/{tenantId}/settings/{settingId} {
-      allow read: if (settingId == 'company' && isMappingActive(tenantId)) || (
+      allow read: if ((settingId == 'company' || settingId == 'catalog_metadata') && isMappingActive(tenantId)) || (
         isSignedIn() && (
           isSuperAdmin() || (
             belongsToTenant(tenantId) && (

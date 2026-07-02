@@ -22,9 +22,81 @@ function normalizeSlide(slide, activeLang) {
   return { id, eyebrow, title, description, image, ctaLabel, ctaHref, isInternalLink };
 }
 
+const STATIC_CATALOG_METADATA = {
+  categories: [
+    { name: "MASALAR", slug: "masalar", translations: { tr: { slug: "masalar" }, en: { slug: "desks" }, ar: { slug: "desks" } } },
+    { name: "OFİS KOLTUKLARI", slug: "ofis-koltuklari", translations: { tr: { slug: "ofis-koltuklari" }, en: { slug: "office-chairs" }, ar: { slug: "office-chairs" } } },
+    { name: "KOLTUKLAR / KANEPELER", slug: "koltuklar-kanepeler", translations: { tr: { slug: "koltuklar-kanepeler" }, en: { slug: "armchairs-sofas" }, ar: { slug: "armchairs-sofas" } } },
+    { name: "DEPOLAMA SİSTEMLERİ", slug: "depolama-sistemleri", translations: { tr: { slug: "depolama-sistemleri" }, en: { slug: "storage-systems" }, ar: { slug: "storage-systems" } } },
+    { name: "TAMAMLAYICILAR", slug: "tamamlayicilar", translations: { tr: { slug: "tamamlayicilar" }, en: { slug: "accessories" }, ar: { slug: "accessories" } } }
+  ],
+  subcategories: [
+    { name: "ÜST YÖNETİCİ", slug: "ust-yonetici", translations: { tr: { slug: "ust-yonetici" }, en: { slug: "executive" }, ar: { slug: "executive" } } },
+    { name: "YÖNETİCİ", slug: "yonetici", translations: { tr: { slug: "yonetici" }, en: { slug: "manager" }, ar: { slug: "manager" } } },
+    { name: "ÇALIŞMA", slug: "calisma", translations: { tr: { slug: "calisma" }, en: { slug: "work" }, ar: { slug: "work" } } },
+    { name: "OPERASYONEL", slug: "operasyonel", translations: { tr: { slug: "operasyonel" }, en: { slug: "operational" }, ar: { slug: "operational" } } },
+    { name: "TOPLANTI", slug: "toplanti", translations: { tr: { slug: "toplanti" }, en: { slug: "meeting" }, ar: { slug: "meeting" } } },
+    { name: "YÖNETİCİ KOLTUKLARI", slug: "yonetici-koltuklari", translations: { tr: { slug: "yonetici-koltuklari" }, en: { slug: "executive-chairs" }, ar: { slug: "executive-chairs" } } },
+    { name: "ÇALIŞMA KOLTUKLARI", slug: "calisma-koltuklari", translations: { tr: { slug: "calisma-koltuklari" }, en: { slug: "task-chairs" }, ar: { slug: "task-chairs" } } },
+    { name: "MİSAFİR VE BEKLEME KOLTUKLARI", slug: "misafir-ve-bekleme-koltuklari", translations: { tr: { slug: "misafir-ve-bekleme-koltuklari" }, en: { slug: "guest-waiting-chairs" }, ar: { slug: "guest-waiting-chairs" } } },
+    { name: "KOLTUKLAR", slug: "koltuklar", translations: { tr: { slug: "koltuklar" }, en: { slug: "armchairs" }, ar: { slug: "armchairs" } } },
+    { name: "KANEPELER", slug: "kanepeler", translations: { tr: { slug: "kanepeler" }, en: { slug: "sofas" }, ar: { slug: "sofas" } } },
+    { name: "SANDALYELER", slug: "sandalyeler", translations: { tr: { slug: "sandalyeler" }, en: { slug: "chairs" }, ar: { slug: "chairs" } } },
+    { name: "BEKLEME ALANLARI", slug: "bekleme-alanlari", translations: { tr: { slug: "bekleme-alanlari" }, en: { slug: "waiting-areas" }, ar: { slug: "waiting-areas" } } },
+    { name: "KESONLAR", slug: "kesonlar", translations: { tr: { slug: "kesonlar" }, en: { slug: "pedestals" }, ar: { slug: "pedestals" } } },
+    { name: "DOLAPLAR", slug: "dolaplar", translations: { tr: { slug: "dolaplar" }, en: { slug: "cabinets" }, ar: { slug: "cabinets" } } },
+    { name: "KİTAPLIK VE RAF SİSTEMLERİ", slug: "kitaplik-ve-raf-sistemleri", translations: { tr: { slug: "kitaplik-ve-raf-sistemleri" }, en: { slug: "bookcases-shelves" }, ar: { slug: "bookcases-shelves" } } },
+    { name: "SEHPALAR", slug: "sehpalar", translations: { tr: { slug: "sehpalar" }, en: { slug: "coffee-tables" }, ar: { slug: "coffee-tables" } } },
+    { name: "PUFLAR", slug: "puflar", translations: { tr: { slug: "puflar" }, en: { slug: "poufs" }, ar: { slug: "poufs" } } },
+    { name: "ASKILIKLAR", slug: "askiliklar", translations: { tr: { slug: "askiliklar" }, en: { slug: "coat-hangers" }, ar: { slug: "coat-hangers" } } },
+    { name: "ELEKTRİFİKASYON", slug: "elektrifikasyon", translations: { tr: { slug: "elektrifikasyon" }, en: { slug: "electrification" }, ar: { slug: "electrification" } } }
+  ]
+};
+
+const LEGACY_REVERSE_MAP = {
+  'ust-yonetici-masalari': 'ust-yonetici',
+  'yonetici-masalari': 'yonetici',
+  'calisma-masalari': 'calisma',
+  'operasyonel-masalar': 'operasyonel',
+  'toplanti-masalari': 'toplanti',
+  'yonetici-koltuklari': 'yonetici-koltuklari',
+  'calisma-koltuklari': 'calisma-koltuklari',
+  'misafir-ve-bekleme-koltuklari': 'misafir-ve-bekleme-koltuklari',
+  'kitaplik-ve-raf-sistemleri': 'kitaplik-ve-raf-sistemleri',
+  'bekleme-alanlari': 'bekleme-alanlari',
+  'koltuklar': 'koltuklar',
+  'kanepeler': 'kanepeler',
+  'sandalyeler': 'sandalyeler',
+  'kesonlar': 'kesonlar',
+  'dolaplar': 'dolaplar',
+  'sehpalar': 'sehpalar',
+  'puflar': 'puflar',
+  'askiliklar': 'askiliklar',
+  'elektrifikasyon': 'elektrifikasyon',
+  'masalar': 'masalar',
+  'ofis-koltuklari': 'ofis-koltuklari',
+  'koltuklar-kanepeler': 'koltuklar-kanepeler',
+  'depolama-sistemleri': 'depolama-sistemleri',
+  'tamamlayicilar': 'tamamlayicilar'
+};
+
+const getCategorySlug = (name, lang) => {
+  const categories = STATIC_CATALOG_METADATA.categories;
+  const subcategories = STATIC_CATALOG_METADATA.subcategories;
+  const all = [...categories, ...subcategories];
+  const matched = all.find(c => c.name === name || c.slug === name);
+  if (matched) {
+    return matched.translations?.[lang]?.slug || matched.slug;
+  }
+  return name;
+};
+
 export default function BurobigHome() {
   const { tenantMapping, activeLang, settings } = useSite();
   const getLocalizedPath = (path) => `/${activeLang}${path}`;
+  const getCatPath = (key) => {
+    return getLocalizedPath(`/${getCategorySlug(key, activeLang)}`);
+  };
   const translate = (tr, en, ar) => {
     if (activeLang === 'ar') return ar || en || tr;
     if (activeLang === 'en') return en || tr;
@@ -339,7 +411,7 @@ export default function BurobigHome() {
             <div className="collections-grid" role="list">
               {/* FEATURED CARD */}
               <article className="collection-card collection-card--featured" role="listitem">
-                <Link to={getLocalizedPath('/ust-yonetici-masalari')} className="collection-card__link" id="card-makam" aria-label={translate('Üst Yönetici Masaları koleksiyonunu keşfet', 'Explore Executive Desks collection', 'اكتشف مجموعة طاولات المدير التنفيذي')}>
+                <Link to={getCatPath('ust-yonetici')} className="collection-card__link" id="card-makam" aria-label={translate('Üst Yönetici Masaları koleksiyonunu keşfet', 'Explore Executive Desks collection', 'اكتشف مجموعة طاولات المدير التنفيذي')}>
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-makam.jpg"
@@ -366,7 +438,7 @@ export default function BurobigHome() {
 
               {/* CARD 2 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/operasyonel-masalar')} className="collection-card__link" id="card-operasyonel" aria-label={translate('Operasyonel Masalar koleksiyonunu keşfet', 'Explore Operational Desks collection', 'اكتشف مجموعة الطاولات التشغيلية')}>
+                <Link to={getCatPath('operasyonel')} className="collection-card__link" id="card-operasyonel" aria-label={translate('Operasyonel Masalar koleksiyonunu keşfet', 'Explore Operational Desks collection', 'اكتشف مجموعة الطاولات التشغيلية')}>
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-operasyonel.jpg"
@@ -393,7 +465,7 @@ export default function BurobigHome() {
 
               {/* CARD 3 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/toplanti-masalari')} className="collection-card__link" id="card-toplanti" aria-label={translate('Toplantı Masaları koleksiyonunu keşfet', 'Explore Meeting Desks collection', 'اكتشف مجموعة طاولات الاجتماعات')}>
+                <Link to={getCatPath('toplanti')} className="collection-card__link" id="card-toplanti" aria-label={translate('Toplantı Masaları koleksiyonunu keşfet', 'Explore Meeting Desks collection', 'اكتشف مجموعة طاولات الاجتماعات')}>
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-toplanti.png"
@@ -420,11 +492,11 @@ export default function BurobigHome() {
 
               {/* CARD 4 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/yonetici-koltuklari')} className="collection-card__link" id="card-koltuklar" aria-label={translate('Yönetici Koltukları koleksiyonunu keşfet', 'Explore Manager Chairs collection', 'اكتشف مجموعة كراسي المدير')}>
+                <Link to={getCatPath('yonetici-koltuklari')} className="collection-card__link" id="card-koltuklar" aria-label={translate('Yönetici Koltukları koleksiyonunu keşfet', 'Explore Manager Chairs collection', 'اكتشف مجموعة كراسي المدير')}>
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-koltuklar.png"
-                      alt={translate('Ergonomik yönetici koltukları', 'Ergonomic manager chairs', 'كراسي المدير المriحة')}
+                      alt={translate('Ergonomik yönetici koltukları', 'Ergonomic manager chairs', 'كراسي المدير المريحة')}
                       width="700"
                       height="550"
                       loading="lazy"
@@ -447,7 +519,7 @@ export default function BurobigHome() {
 
               {/* CARD 5 */}
               <article className="collection-card" role="listitem">
-                <Link to={getLocalizedPath('/bekleme-alanlari')} className="collection-card__link" id="card-bekleme" aria-label={translate('Bekleme Alanları koleksiyonunu keşfet', 'Explore Waiting Areas collection', 'اكتشف مجموعة مناطق الانتظار')}>
+                <Link to={getCatPath('bekleme-alanlari')} className="collection-card__link" id="card-bekleme" aria-label={translate('Bekleme Alanları koleksiyonunu keşfet', 'Explore Waiting Areas collection', 'اكتشف مجموعة مناطق الانتظار')}>
                   <figure className="collection-card__figure">
                     <img
                       src="/assets/burobig/images/collection-bekleme.jpg"
@@ -518,7 +590,7 @@ export default function BurobigHome() {
                           flex: `0 0 calc((100% - (${visibleCount} - 1) * var(--slider-gap)) / ${visibleCount})`
                         }}
                       >
-                        <Link to={getLocalizedPath(`/urunler/${product.slug}`)} className="product-card__link">
+                        <Link to={getLocalizedPath(`/${activeLang === 'tr' ? 'urunler' : 'products'}/${resolveField(product, activeLang, 'slug') || product.slug || product.id}`)} className="product-card__link">
                           <figure className="product-card__figure">
                             {product.isNewProduct && (
                               product.newProductBadgeStyle === 'pill' ? (

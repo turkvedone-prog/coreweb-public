@@ -23,7 +23,7 @@ const BurobigSustainability = lazy(() => import('./BurobigSustainability'));
 const BurobigLegalDetail = lazy(() => import('./BurobigLegalDetail'));
 
 import { getActiveProducts, getActiveProductBySlug } from '../../services/publicContentService';
-import { submitLead, resolveField, loadRecaptchaScript, executeRecaptcha, getCatalogMetadata } from '@coreweb/shared-ui';
+import { submitLead, resolveField, loadRecaptchaScript, executeRecaptcha, getCatalogMetadata, getCompanySettings } from '@coreweb/shared-ui';
 import { updateSEOMeta } from '../../utils/seo';
 
 // ─── 404 Not Found Page ──────────────────────────────────────────────────────
@@ -209,6 +209,7 @@ function BurobigProductDetailPage() {
 const STATIC_CATALOG_METADATA = {
   categories: [
     {
+      id: "masalar",
       name: "MASALAR",
       slug: "masalar",
       translations: {
@@ -218,6 +219,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      id: "ofis-koltuklari",
       name: "OFİS KOLTUKLARI",
       slug: "ofis-koltuklari",
       translations: {
@@ -227,6 +229,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      id: "koltuklar-kanepeler",
       name: "KOLTUKLAR / KANEPELER",
       slug: "koltuklar-kanepeler",
       translations: {
@@ -236,6 +239,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      id: "depolama-sistemleri",
       name: "DEPOLAMA SİSTEMLERİ",
       slug: "depolama-sistemleri",
       translations: {
@@ -245,6 +249,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      id: "tamamlayicilar",
       name: "TAMAMLAYICILAR",
       slug: "tamamlayicilar",
       translations: {
@@ -256,6 +261,7 @@ const STATIC_CATALOG_METADATA = {
   ],
   subcategories: [
     {
+      categoryId: "masalar",
       name: "ÜST YÖNETİCİ",
       slug: "ust-yonetici",
       translations: {
@@ -265,6 +271,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "masalar",
       name: "YÖNETİCİ",
       slug: "yonetici",
       translations: {
@@ -274,6 +281,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "masalar",
       name: "ÇALIŞMA",
       slug: "calisma",
       translations: {
@@ -283,6 +291,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "masalar",
       name: "OPERASYONEL",
       slug: "operasyonel",
       translations: {
@@ -292,6 +301,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "masalar",
       name: "TOPLANTI",
       slug: "toplanti",
       translations: {
@@ -301,6 +311,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "ofis-koltuklari",
       name: "YÖNETİCİ KOLTUKLARI",
       slug: "yonetici-koltuklari",
       translations: {
@@ -310,6 +321,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "ofis-koltuklari",
       name: "ÇALIŞMA KOLTUKLARI",
       slug: "calisma-koltuklari",
       translations: {
@@ -319,6 +331,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "ofis-koltuklari",
       name: "MİSAFİR VE BEKLEME KOLTUKLARI",
       slug: "misafir-ve-bekleme-koltuklari",
       translations: {
@@ -328,6 +341,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "koltuklar-kanepeler",
       name: "KOLTUKLAR",
       slug: "koltuklar",
       translations: {
@@ -337,6 +351,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "koltuklar-kanepeler",
       name: "KANEPELER",
       slug: "kanepeler",
       translations: {
@@ -346,6 +361,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "koltuklar-kanepeler",
       name: "SANDALYELER",
       slug: "sandalyeler",
       translations: {
@@ -355,6 +371,7 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "koltuklar-kanepeler",
       name: "BEKLEME ALANLARI",
       slug: "bekleme-alanlari",
       translations: {
@@ -364,15 +381,17 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "depolama-sistemleri",
       name: "KESONLAR",
       slug: "kesonlar",
       translations: {
         tr: { name: "KESONLAR", slug: "kesonlar" },
         en: { name: "PEDESTALS", slug: "pedestals" },
-        ar: { name: "وحدات أدراج", slug: "pedestals" }
+        ar: { name: "أدراج", slug: "pedestals" }
       }
     },
     {
+      categoryId: "depolama-sistemleri",
       name: "DOLAPLAR",
       slug: "dolaplar",
       translations: {
@@ -382,48 +401,53 @@ const STATIC_CATALOG_METADATA = {
       }
     },
     {
+      categoryId: "depolama-sistemleri",
       name: "KİTAPLIK VE RAF SİSTEMLERİ",
       slug: "kitaplik-ve-raf-sistemleri",
       translations: {
         tr: { name: "KİTAPLIK VE RAF SİSTEMLERİ", slug: "kitaplik-ve-raf-sistemleri" },
-        en: { name: "BOOKCASES & SHELVES", slug: "bookcases-shelves" },
-        ar: { name: "رفوف ومكتبات", slug: "bookcases-shelves" }
+        en: { name: "BOOKCASES & SHELVING", slug: "bookcases-shelving" },
+        ar: { name: "خزائن كتب ورفوف", slug: "bookcases-shelving" }
       }
     },
     {
+      categoryId: "tamamlayicilar",
       name: "SEHPALAR",
       slug: "sehpalar",
       translations: {
         tr: { name: "SEHPALAR", slug: "sehpalar" },
         en: { name: "COFFEE TABLES", slug: "coffee-tables" },
-        ar: { name: "طاولات قهوة", slug: "coffee-tables" }
+        ar: { name: "طاولات جانبية", slug: "coffee-tables" }
       }
     },
     {
+      categoryId: "tamamlayicilar",
       name: "PUFLAR",
       slug: "puflar",
       translations: {
         tr: { name: "PUFLAR", slug: "puflar" },
         en: { name: "POUFS", slug: "poufs" },
-        ar: { name: "بوف", slug: "poufs" }
+        ar: { name: "مقاعد صغيرة", slug: "poufs" }
       }
     },
     {
+      categoryId: "tamamlayicilar",
       name: "ASKILIKLAR",
       slug: "askiliklar",
       translations: {
         tr: { name: "ASKILIKLAR", slug: "askiliklar" },
         en: { name: "COAT HANGERS", slug: "coat-hangers" },
-        ar: { name: "عlaqat malabis", slug: "coat-hangers" }
+        ar: { name: "علاقات", slug: "coat-hangers" }
       }
     },
     {
+      categoryId: "tamamlayicilar",
       name: "ELEKTRİFİKASYON",
       slug: "elektrifikasyon",
       translations: {
         tr: { name: "ELEKTRİFİKASYON", slug: "elektrifikasyon" },
         en: { name: "ELECTRIFICATION", slug: "electrification" },
-        ar: { name: "أنظمة كهرباء", slug: "electrification" }
+        ar: { name: "كهربة", slug: "electrification" }
       }
     }
   ]
@@ -456,7 +480,21 @@ function DynamicCategoryPage() {
       setMatchedCategory(null);
       setParentCategory(null);
       try {
-        const catalogMeta = await getCatalogMetadata(tenantMapping.tenantId);
+        let catalogMeta = null;
+        try {
+          catalogMeta = await getCatalogMetadata(tenantMapping.tenantId);
+        } catch (e) {
+          console.warn('getCatalogMetadata failed, trying company settings fallback:', e);
+          try {
+            const companySettings = await getCompanySettings(tenantMapping.tenantId);
+            if (companySettings?.catalogMetadata) {
+              catalogMeta = companySettings.catalogMetadata;
+            }
+          } catch (compErr) {
+            console.warn('Company settings fallback failed:', compErr);
+          }
+        }
+
         const categories = catalogMeta?.categories || STATIC_CATALOG_METADATA.categories;
         const subcategories = catalogMeta?.subcategories || STATIC_CATALOG_METADATA.subcategories;
         const allCategories = [...categories, ...subcategories];

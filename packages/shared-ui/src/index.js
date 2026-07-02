@@ -13,7 +13,8 @@ export {
   getPublishedNews,
   getPublishedNewsBySlug,
   getActiveProducts,
-  getActiveProductBySlug
+  getActiveProductBySlug,
+  getCatalogMetadata
 } from './services/publicContentService';
 
 // Utils

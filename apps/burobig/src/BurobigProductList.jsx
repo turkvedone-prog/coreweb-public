@@ -7,7 +7,7 @@ import { getLocalizedContent } from '../../utils/i18nContent';
 import { resolveField } from '@coreweb/shared-ui';
 
 
-export default function BurobigProductList({ products }) {
+export default function BurobigProductList({ products, category, subcategory }) {
   const { activeLang } = useSite();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
@@ -78,8 +78,8 @@ export default function BurobigProductList({ products }) {
   };
 
   // Determine current active category and subcategory target slugs
-  let targetCatSlug = catParam ? slugify(catParam) : null;
-  let targetSubcatSlug = subParam ? slugify(subParam) : null;
+  let targetCatSlug = category ? slugify(category) : (catParam ? slugify(catParam) : null);
+  let targetSubcatSlug = subcategory ? slugify(subcategory) : (subParam ? slugify(subParam) : null);
 
   if (isUstYoneticiPath) {
     targetCatSlug = 'masalar';
@@ -369,7 +369,8 @@ export default function BurobigProductList({ products }) {
             <div className="product-grid">
               {filteredProducts.map((product, index) => {
                 const productSlug = resolveField(product, activeLang, 'slug') || product.slug || product.id;
-                const detailPath = getLocalizedPath(`/urunler/${productSlug}`);
+                const productPath = activeLang === 'tr' ? 'urunler' : 'products';
+                const detailPath = getLocalizedPath(`/${productPath}/${productSlug}`);
                 const cardNumber = (index + 1).toString().padStart(2, '0');
                 const fallbackImage = '/assets/burobig/images/INKA 01.jpg';
                 const productTitle = resolveField(product, activeLang, 'title') || resolveField(product, activeLang, 'name') || '';

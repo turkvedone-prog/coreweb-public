@@ -8,6 +8,75 @@ import { getActiveProducts } from '../../services/publicContentService';
 import { getLocalizedContent } from '../../utils/i18nContent';
 import { resolveField, submitLead, loadRecaptchaScript, executeRecaptcha } from '@coreweb/shared-ui';
 
+const STATIC_CATALOG_METADATA = {
+  categories: [
+    { name: "MASALAR", slug: "masalar", translations: { tr: { slug: "masalar" }, en: { slug: "desks" }, ar: { slug: "desks" } } },
+    { name: "OFİS KOLTUKLARI", slug: "ofis-koltuklari", translations: { tr: { slug: "ofis-koltuklari" }, en: { slug: "office-chairs" }, ar: { slug: "office-chairs" } } },
+    { name: "KOLTUKLAR / KANEPELER", slug: "koltuklar-kanepeler", translations: { tr: { slug: "koltuklar-kanepeler" }, en: { slug: "armchairs-sofas" }, ar: { slug: "armchairs-sofas" } } },
+    { name: "DEPOLAMA SİSTEMLERİ", slug: "depolama-sistemleri", translations: { tr: { slug: "depolama-sistemleri" }, en: { slug: "storage-systems" }, ar: { slug: "storage-systems" } } },
+    { name: "TAMAMLAYICILAR", slug: "tamamlayicilar", translations: { tr: { slug: "tamamlayicilar" }, en: { slug: "accessories" }, ar: { slug: "accessories" } } }
+  ],
+  subcategories: [
+    { name: "ÜST YÖNETİCİ", slug: "ust-yonetici", translations: { tr: { slug: "ust-yonetici" }, en: { slug: "executive" }, ar: { slug: "executive" } } },
+    { name: "YÖNETİCİ", slug: "yonetici", translations: { tr: { slug: "yonetici" }, en: { slug: "manager" }, ar: { slug: "manager" } } },
+    { name: "ÇALIŞMA", slug: "calisma", translations: { tr: { slug: "calisma" }, en: { slug: "work" }, ar: { slug: "work" } } },
+    { name: "OPERASYONEL", slug: "operasyonel", translations: { tr: { slug: "operasyonel" }, en: { slug: "operational" }, ar: { slug: "operational" } } },
+    { name: "TOPLANTI", slug: "toplanti", translations: { tr: { slug: "toplanti" }, en: { slug: "meeting" }, ar: { slug: "meeting" } } },
+    { name: "YÖNETİCİ KOLTUKLARI", slug: "yonetici-koltuklari", translations: { tr: { slug: "yonetici-koltuklari" }, en: { slug: "executive-chairs" }, ar: { slug: "executive-chairs" } } },
+    { name: "ÇALIŞMA KOLTUKLARI", slug: "calisma-koltuklari", translations: { tr: { slug: "calisma-koltuklari" }, en: { slug: "task-chairs" }, ar: { slug: "task-chairs" } } },
+    { name: "MİSAFİR VE BEKLEME KOLTUKLARI", slug: "misafir-ve-bekleme-koltuklari", translations: { tr: { slug: "misafir-ve-bekleme-koltuklari" }, en: { slug: "guest-waiting-chairs" }, ar: { slug: "guest-waiting-chairs" } } },
+    { name: "KOLTUKLAR", slug: "koltuklar", translations: { tr: { slug: "koltuklar" }, en: { slug: "armchairs" }, ar: { slug: "armchairs" } } },
+    { name: "KANEPELER", slug: "kanepeler", translations: { tr: { slug: "kanepeler" }, en: { slug: "sofas" }, ar: { slug: "sofas" } } },
+    { name: "SANDALYELER", slug: "sandalyeler", translations: { tr: { slug: "sandalyeler" }, en: { slug: "chairs" }, ar: { slug: "chairs" } } },
+    { name: "BEKLEME ALANLARI", slug: "bekleme-alanlari", translations: { tr: { slug: "bekleme-alanlari" }, en: { slug: "waiting-areas" }, ar: { slug: "waiting-areas" } } },
+    { name: "KESONLAR", slug: "kesonlar", translations: { tr: { slug: "kesonlar" }, en: { slug: "pedestals" }, ar: { slug: "pedestals" } } },
+    { name: "DOLAPLAR", slug: "dolaplar", translations: { tr: { slug: "dolaplar" }, en: { slug: "cabinets" }, ar: { slug: "cabinets" } } },
+    { name: "KİTAPLIK VE RAF SİSTEMLERİ", slug: "kitaplik-ve-raf-sistemleri", translations: { tr: { slug: "kitaplik-ve-raf-sistemleri" }, en: { slug: "bookcases-shelves" }, ar: { slug: "bookcases-shelves" } } },
+    { name: "SEHPALAR", slug: "sehpalar", translations: { tr: { slug: "sehpalar" }, en: { slug: "coffee-tables" }, ar: { slug: "coffee-tables" } } },
+    { name: "PUFLAR", slug: "puflar", translations: { tr: { slug: "puflar" }, en: { slug: "poufs" }, ar: { slug: "poufs" } } },
+    { name: "ASKILIKLAR", slug: "askiliklar", translations: { tr: { slug: "askiliklar" }, en: { slug: "coat-hangers" }, ar: { slug: "coat-hangers" } } },
+    { name: "ELEKTRİFİKASYON", slug: "elektrifikasyon", translations: { tr: { slug: "elektrifikasyon" }, en: { slug: "electrification" }, ar: { slug: "electrification" } } }
+  ]
+};
+
+const LEGACY_REVERSE_MAP = {
+  'ust-yonetici-masalari': 'ust-yonetici',
+  'yonetici-masalari': 'yonetici',
+  'calisma-masalari': 'calisma',
+  'operasyonel-masalar': 'operasyonel',
+  'toplanti-masalari': 'toplanti',
+  'yonetici-koltuklari': 'yonetici-koltuklari',
+  'calisma-koltuklari': 'calisma-koltuklari',
+  'misafir-ve-bekleme-koltuklari': 'misafir-ve-bekleme-koltuklari',
+  'kitaplik-ve-raf-sistemleri': 'kitaplik-ve-raf-sistemleri',
+  'bekleme-alanlari': 'bekleme-alanlari',
+  'koltuklar': 'koltuklar',
+  'kanepeler': 'kanepeler',
+  'sandalyeler': 'sandalyeler',
+  'kesonlar': 'kesonlar',
+  'dolaplar': 'dolaplar',
+  'sehpalar': 'sehpalar',
+  'puflar': 'puflar',
+  'askiliklar': 'askiliklar',
+  'elektrifikasyon': 'elektrifikasyon',
+  'masalar': 'masalar',
+  'ofis-koltuklari': 'ofis-koltuklari',
+  'koltuklar-kanepeler': 'koltuklar-kanepeler',
+  'depolama-sistemleri': 'depolama-sistemleri',
+  'tamamlayicilar': 'tamamlayicilar'
+};
+
+const getCategorySlug = (name, lang) => {
+  const categories = STATIC_CATALOG_METADATA.categories;
+  const subcategories = STATIC_CATALOG_METADATA.subcategories;
+  const all = [...categories, ...subcategories];
+  const matched = all.find(c => c.name === name || c.slug === name);
+  if (matched) {
+    return matched.translations?.[lang]?.slug || matched.slug;
+  }
+  return name;
+};
+
 const getSubcategoryColor = (subcategory, category) => {
   const name = (subcategory || category || '').toLowerCase().trim();
   
@@ -203,7 +272,9 @@ export default function BurobigProductDetail({ product }) {
     return '/urunler';
   };
 
-  const categoryPath = getCategoryPath(product?.category, product?.subcategory, productTitle, productSlug);
+  const rawCategoryPath = getCategoryPath(product?.category, product?.subcategory, productTitle, productSlug);
+  const cleanCategorySlug = LEGACY_REVERSE_MAP[rawCategoryPath.replace('/', '')] || rawCategoryPath.replace('/', '');
+  const categoryPath = '/' + getCategorySlug(cleanCategorySlug, activeLang);
 
   const FALLBACK_IMAGE = '/assets/burobig/images/INKA 01.jpg';
 
@@ -478,7 +549,7 @@ export default function BurobigProductDetail({ product }) {
         <p style={{ color: '#64748b', marginBottom: '2rem' }}>
           {translate('Aradığınız ürün sistemde bulunmamaktadır veya kaldırılmış olabilir.', 'The product you are looking for does not exist or may have been removed.')}
         </p>
-        <Link to={getLocalizedPath('/urunler')} className="btn-primary-dark" style={{ display: 'inline-block' }}>
+        <Link to={getLocalizedPath(activeLang === 'tr' ? '/urunler' : '/products')} className="btn-primary-dark" style={{ display: 'inline-block' }}>
           {translate('Tüm Ürünlere Dön', 'Back to All Products')}
         </Link>
       </div>
@@ -844,8 +915,9 @@ export default function BurobigProductDetail({ product }) {
               <div className="related-carousel-track">
                 {/* Original set + duplicated set for seamless infinite loop */}
                 {[...relatedProducts, ...relatedProducts].map((item, idx) => {
-                  const itemSlug = item.slug || item.id;
-                  const itemPath = getLocalizedPath(`/urunler/${itemSlug}`);
+                  const itemSlug = resolveField(item, activeLang, 'slug') || item.slug || item.id;
+                  const productPath = activeLang === 'tr' ? 'urunler' : 'products';
+                  const itemPath = getLocalizedPath(`/${productPath}/${itemSlug}`);
 
                   return (
                     <Link key={`${item.id}-${idx}`} to={itemPath} className="carousel-item">
