@@ -444,6 +444,16 @@ service cloud.firestore {
       allow delete: if isSuperAdmin();
     }
 
+    // 3.15 tenants/{tenantId}/publicStats Alt Koleksiyonu (Ziyaretçi ve Tıklama Sayaçları)
+    match /tenants/{tenantId}/publicStats/{docId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['visitors', 'whatsappClicks', 'phoneClicks']) &&
+                    (request.resource.data.visitors == resource.data.visitors || request.resource.data.visitors == resource.data.visitors + 1) &&
+                    (request.resource.data.whatsappClicks == resource.data.whatsappClicks || request.resource.data.whatsappClicks == resource.data.whatsappClicks + 1) &&
+                    (request.resource.data.phoneClicks == resource.data.phoneClicks || request.resource.data.phoneClicks == resource.data.phoneClicks + 1);
+    }
+
     // 4. tenantData Koleksiyonu
     match /tenantData/{tenantId} {
       allow read: if isSignedIn() && (

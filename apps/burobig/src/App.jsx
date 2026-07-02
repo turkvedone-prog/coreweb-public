@@ -23,7 +23,7 @@ const BurobigSustainability = lazy(() => import('./BurobigSustainability'));
 const BurobigLegalDetail = lazy(() => import('./BurobigLegalDetail'));
 
 import { getActiveProducts, getActiveProductBySlug } from '../../services/publicContentService';
-import { submitLead, resolveField, loadRecaptchaScript, executeRecaptcha, getCatalogMetadata, getCompanySettings } from '@coreweb/shared-ui';
+import { submitLead, resolveField, loadRecaptchaScript, executeRecaptcha, getCatalogMetadata, getCompanySettings, logPublicEvent } from '@coreweb/shared-ui';
 import { updateSEOMeta } from '../../utils/seo';
 
 // ─── 404 Not Found Page ──────────────────────────────────────────────────────

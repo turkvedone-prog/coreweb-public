@@ -14,7 +14,8 @@ export {
   getPublishedNewsBySlug,
   getActiveProducts,
   getActiveProductBySlug,
-  getCatalogMetadata
+  getCatalogMetadata,
+  logPublicEvent
 } from './services/publicContentService';
 
 // Utils

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { useSite } from './layouts/SiteLayout';
+import { logPublicEvent } from '@coreweb/shared-ui';
 
 // Google Maps Iframe parser and domain validator
 const extractGoogleMapUrl = (iframeString) => {
@@ -57,7 +58,7 @@ export default function BurobigContact({
   handleChange,
   settings
 }) {
-  const { activeLang } = useSite();
+  const { activeLang, tenantMapping } = useSite();
   const translate = (tr, en, ar) => {
     if (activeLang === 'ar') return ar || en || tr;
     if (activeLang === 'en') return en || tr;
@@ -126,13 +127,21 @@ export default function BurobigContact({
                   <div className="contact-detail-content">
                     <span className="contact-detail-label">{translate('Telefon', 'Phone', 'الهاتف')}</span>
                     <div className="contact-detail-values">
-                      <a href={`tel:${phone.replace(/\s+/g, '')}`} className="contact-detail-value">
+                      <a 
+                        href={`tel:${phone.replace(/\s+/g, '')}`} 
+                        className="contact-detail-value"
+                        onClick={() => logPublicEvent(tenantMapping?.tenantId, 'phone')}
+                      >
                         {phone}
                       </a>
                       {phone2 && (
                         <>
                           <span className="contact-detail-separator"> - </span>
-                          <a href={`tel:${phone2.replace(/\s+/g, '')}`} className="contact-detail-value">
+                          <a 
+                            href={`tel:${phone2.replace(/\s+/g, '')}`} 
+                            className="contact-detail-value"
+                            onClick={() => logPublicEvent(tenantMapping?.tenantId, 'phone')}
+                          >
                             {phone2}
                           </a>
                         </>

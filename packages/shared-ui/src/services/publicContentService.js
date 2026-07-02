@@ -1,5 +1,5 @@
 import { db } from '../config/firebase';
-import { doc, getDoc, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs, orderBy, updateDoc, setDoc, increment } from 'firebase/firestore';
 
 // ─── Cache Yardımcıları ───────────────────────────────────────────
 const IS_DEV = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
@@ -405,5 +405,33 @@ export async function getCatalogMetadata(tenantId) {
   } catch (error) {
     console.error('Error in getCatalogMetadata:', error);
     return null;
+  }
+}
+
+export async function logPublicEvent(tenantId, type) {
+  if (!tenantId) return;
+  const docRef = doc(db, 'tenants', tenantId, 'publicStats', 'counters');
+  try {
+    const updateObj = {};
+    if (type === 'visitor') updateObj.visitors = increment(1);
+    else if (type === 'whatsapp') updateObj.whatsappClicks = increment(1);
+    else if (type === 'phone') updateObj.phoneClicks = increment(1);
+    
+    await updateDoc(docRef, updateObj);
+  } catch (error) {
+    // If document doesn't exist, initialize it
+    if (error.code === 'not-found') {
+      try {
+        const initData = { visitors: 0, whatsappClicks: 0, phoneClicks: 0 };
+        if (type === 'visitor') initData.visitors = 1;
+        else if (type === 'whatsapp') initData.whatsappClicks = 1;
+        else if (type === 'phone') initData.phoneClicks = 1;
+        await setDoc(docRef, initData);
+      } catch (err) {
+        console.warn("Failed to initialize public counters:", err.message);
+      }
+    } else {
+      console.warn("Failed to log public event:", error.message);
+    }
   }
 }

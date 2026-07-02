@@ -4,6 +4,7 @@ import BurobigHeader from '../BurobigHeader';
 import BurobigFooter from '../BurobigFooter';
 import BurobigCookieConsent from '../BurobigCookieConsent';
 import { getCompanySettings } from '../../services/publicContentService';
+import { logPublicEvent } from '@coreweb/shared-ui';
 
 const SiteContext = createContext(null);
 
@@ -45,6 +46,15 @@ export default function SiteLayout({ children, activeLang }) {
       .catch(() => {
         // Silent catch to avoid console spam as per specification
       });
+  }, [tenantMapping.tenantId]);
+
+  // Ziyaretçi takibi (sessionStorage ile tekil ziyaretçi)
+  useEffect(() => {
+    const isTracked = sessionStorage.getItem('cw_tracked');
+    if (!isTracked) {
+      sessionStorage.setItem('cw_tracked', 'true');
+      logPublicEvent(tenantMapping.tenantId, 'visitor');
+    }
   }, [tenantMapping.tenantId]);
 
   useEffect(() => {
